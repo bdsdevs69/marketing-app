@@ -78,8 +78,8 @@ export default function LoginPage() {
         }
         
         @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(203, 255, 0, 0.3); }
-          50% { box-shadow: 0 0 30px rgba(203, 255, 0, 0.5); }
+          0%, 100% { box-shadow: 0 0 20px rgba(52, 211, 153, 0.3); }
+          50% { box-shadow: 0 0 30px rgba(52, 211, 153, 0.5); }
         }
         
         @keyframes pulse {
@@ -104,7 +104,7 @@ export default function LoginPage() {
         }
         
         .lime-gradient {
-          background: linear-gradient(135deg, #cbff00 0%, #9fff00 100%);
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
         }
         
         .hover-lift:hover {
@@ -113,7 +113,7 @@ export default function LoginPage() {
         }
         
         .hover-glow:hover {
-          box-shadow: 0 0 20px rgba(203, 255, 0, 0.4);
+          box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
           transition: all 0.3s ease;
         }
         
@@ -135,22 +135,22 @@ export default function LoginPage() {
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(203, 255, 0, 0.2), transparent);
+          background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.2), transparent);
           animation: shimmer 2s infinite;
         }
       `}</style>
 
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#cbff00]/5 to-transparent rotate-12 transform"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#cbff00]/5 to-transparent -rotate-12 transform"></div>
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#34d399]/5 to-transparent rotate-12 transform"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#34d399]/5 to-transparent -rotate-12 transform"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo Section */}
-        <div className="w-34 h-26 bg-black rounded-xl flex items-center justify-center p-3 mx-auto mb-4 shimmer-effect">
+        <div className="w-40 flex items-center justify-center mx-auto mb-6">
             <img 
-                src="/logo.png" 
+                src="/logo-money.png" 
                 alt="Digital Networking Agency Logo"
                 className="w-full h-full object-contain"
             />
@@ -197,7 +197,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all hover-lift"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all hover-lift"
                   placeholder="Enter your email"
                 />
               </div>
@@ -214,7 +214,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="w-full pl-11 pr-12 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all hover-lift"
+                  className="w-full pl-11 pr-12 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all hover-lift"
                   placeholder="Enter your password"
                 />
                 <button

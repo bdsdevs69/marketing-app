@@ -118,7 +118,7 @@ export default function UserManagementPage() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="flex items-center space-x-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#cbff00]"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#34d399]"></div>
           <span className="text-gray-400">Loading users...</span>
         </div>
       </div>
@@ -147,7 +147,7 @@ export default function UserManagementPage() {
         }
         
         .lime-gradient {
-          background: linear-gradient(135deg, #cbff00 0%, #9fff00 100%);
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
         }
         
         .hover-lift:hover {
@@ -156,7 +156,7 @@ export default function UserManagementPage() {
         }
         
         .hover-glow:hover {
-          box-shadow: 0 0 20px rgba(203, 255, 0, 0.4);
+          box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
           transition: all 0.3s ease;
         }
       `}</style>
@@ -214,8 +214,8 @@ export default function UserManagementPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fadeIn">
           <div className="bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 p-6 hover-glow">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-[#cbff00]/20 rounded-lg flex items-center justify-center">
-                <Users size={24} className="text-[#cbff00]" />
+              <div className="w-12 h-12 bg-[#34d399]/20 rounded-lg flex items-center justify-center">
+                <Users size={24} className="text-[#34d399]" />
               </div>
               <div>
                 <p className="text-gray-400 text-sm">Total Users</p>
@@ -271,8 +271,8 @@ export default function UserManagementPage() {
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-[#cbff00]/20 rounded-full flex items-center justify-center">
-                          <Mail size={16} className="text-[#cbff00]" />
+                        <div className="w-10 h-10 bg-[#34d399]/20 rounded-full flex items-center justify-center">
+                          <Mail size={16} className="text-[#34d399]" />
                         </div>
                         <div>
                           <div className="text-sm font-medium text-white">

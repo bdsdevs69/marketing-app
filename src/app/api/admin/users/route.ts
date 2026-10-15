@@ -6,6 +6,10 @@ import db from '@/lib/db';
 export async function GET(request: NextRequest) {
   try {
     // Verify session and check if user is admin
+    const sessionData = await verifySession(request);
+    if (!sessionData || sessionData.role !== 'admin') {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
 
     // Fetch all users (exclude password_hash)
     const result = await db.query(`

@@ -92,7 +92,7 @@ export default function InvitationModal({ isOpen, onClose, userRole }: Invitatio
         }
         
         .lime-gradient {
-          background: linear-gradient(135deg, #cbff00 0%, #9fff00 100%);
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
         }
         
         .hover-lift:hover {
@@ -155,17 +155,17 @@ export default function InvitationModal({ isOpen, onClose, userRole }: Invitatio
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                       placeholder="user@example.com"
                     />
                   </div>
                 </div>
 
-                <div className="bg-[#cbff00]/10 border border-[#cbff00]/20 rounded-lg p-4">
+                <div className="bg-[#34d399]/10 border border-[#34d399]/20 rounded-lg p-4">
                   <div className="flex items-start space-x-3">
-                    <Mail size={16} className="text-[#cbff00] mt-0.5" />
+                    <Mail size={16} className="text-[#34d399] mt-0.5" />
                     <div>
-                      <p className="text-xs font-medium text-[#cbff00] mb-1">What happens next:</p>
+                      <p className="text-xs font-medium text-[#34d399] mb-1">What happens next:</p>
                       <ul className="text-xs text-gray-300 space-y-1">
                         <li>• User receives an invitation email</li>
                         <li>• They click the link to create their account</li>

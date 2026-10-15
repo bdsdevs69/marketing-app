@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Filter, Search, Database, Tv, Radio, ChevronDown, LogOut, UserPlus, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Mail, Star, Tag } from 'lucide-react';
+import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useLayoutEffect } from 'react';
+import { Filter, Search, Database, Tv, Radio, ChevronDown, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Mail, Star, Tag } from 'lucide-react';
 
 // Import the invitation modal
 import InvitationModal from '../components/InvitationModal';
+import CreateUserModal from '../components/CreateUserModal';
+import PublicationFilters, { turnaroundMaxDays } from '../components/PublicationFilters';
 
 // Add proper type for formatHeader function
 const formatHeader = (header: string): string => {
@@ -14,6 +16,19 @@ const formatHeader = (header: string): string => {
     .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
     .trim(); // Remove any leading/trailing spaces
 };
+
+// Only the rows you can actually see are kept in the DOM. A full table is
+// ~7,000 cells, which is what made switching tables stutter.
+const EST_ROW_HEIGHT = 76;   // starting guess, replaced by real measurements
+const OVERSCAN_PX = 900;     // rendered above/below the viewport
+const VIEWPORT_FALLBACK = 720;
+
+// Publications store genres/regions as a single delimited string.
+const splitList = (raw: unknown): string[] =>
+  String(raw ?? '')
+    .split(/[,/|]/)
+    .map((v) => v.trim().toLowerCase())
+    .filter(Boolean);
 
 // Define types for your data structures
 interface DataItem {
@@ -52,8 +67,9 @@ interface Filters {
     search: string;
     minPrice: string;
     maxPrice: string;
-    region: string;
-    genre: string; // Added genre filter for publications
+    genres: string[];
+    regions: string[];
+    maxTatDays: string; // '' = any turnaround
   };
   listicles: {
     search: string;
@@ -100,7 +116,7 @@ const PricingTiers = ({ priceText }: { priceText?: string | number }) => {
   
   // If it's a number, display it normally
   if (typeof priceText === 'number') {
-    return <span className="text-[#cbff00] font-semibold">${priceText.toLocaleString()}</span>;
+    return <span className="text-[#fbbf24] font-semibold">${priceText.toLocaleString()}</span>;
   }
   
   // If it's a string, parse pricing tiers
@@ -142,12 +158,12 @@ const PricingTiers = ({ priceText }: { priceText?: string | number }) => {
             return (
               <div
                 key={index}
-                className="inline-flex flex-col items-center px-3 py-2 rounded-lg text-xs font-medium bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 hover:border-[#cbff00] transition-all duration-300"
+                className="inline-flex flex-col items-center px-3 py-2 rounded-lg text-xs font-medium bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 hover:border-[#34d399] transition-all duration-300"
               >
                 <span className="text-gray-300 text-xs font-normal mb-0.5">
                   {label}
                 </span>
-                <span className="text-[#cbff00] font-bold">
+                <span className="text-[#fbbf24] font-bold">
                   ${parseInt(price).toLocaleString()}
                 </span>
               </div>
@@ -159,7 +175,7 @@ const PricingTiers = ({ priceText }: { priceText?: string | number }) => {
   }
   
   // If it doesn't match the tier format, display as is
-  return <span className="text-[#cbff00] font-semibold">{priceString}</span>;
+  return <span className="text-[#fbbf24] font-semibold">{priceString}</span>;
 };
 
 // Component for Featured Publication Card
@@ -176,7 +192,7 @@ const FeaturedPublicationCard = ({ publication }: { publication: DataItem }) => 
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl border-2 border-[#cbff00] p-6 mb-6 shadow-2xl relative overflow-hidden">
+    <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl border-2 border-[#34d399] p-6 mb-6 shadow-2xl relative overflow-hidden">
       {/* Sale Badge */}
       <div className="absolute -top-2 -right-2 z-10">
         <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-bl-2xl rounded-tr-2xl shadow-lg flex items-center space-x-2">
@@ -186,21 +202,21 @@ const FeaturedPublicationCard = ({ publication }: { publication: DataItem }) => 
       </div>
       
       {/* Animated background glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#cbff00]/5 via-transparent to-[#cbff00]/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-[#34d399]/5 via-transparent to-[#34d399]/5"></div>
       
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#cbff00] to-[#9fff00] rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-[#34d399] to-[#10b981] rounded-xl flex items-center justify-center shadow-lg">
               <Star size={24} className="text-black" />
             </div>
             <div>
               <h3 className="text-xl font-bold text-white mb-1">{publication.name}</h3>
               <div className="flex items-center space-x-2">
-                <span className="text-[#cbff00] font-semibold text-lg">
+                <span className="text-[#fbbf24] font-semibold text-lg">
                   ${typeof publication.price === 'number' ? publication.price.toLocaleString() : publication.price}
                 </span>
-                <span className="bg-[#cbff00]/20 text-[#cbff00] px-2 py-1 rounded-full text-xs font-medium">
+                <span className="bg-[#fbbf24]/20 text-[#fbbf24] px-2 py-1 rounded-full text-xs font-medium">
                   Best Value
                 </span>
               </div>
@@ -236,7 +252,7 @@ const FeaturedPublicationCard = ({ publication }: { publication: DataItem }) => 
             {/* Always show PDF download button */}
             <button
               onClick={handleExampleClick}
-              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#cbff00] to-[#9fff00] text-black font-semibold rounded-lg transform hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl"
+              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#34d399] to-[#10b981] text-black font-semibold rounded-lg transform hover:scale-105 transition-transform duration-200 shadow-lg hover:shadow-xl"
             >
               <Download size={16} />
               <span>Download Example PDF</span>
@@ -247,7 +263,7 @@ const FeaturedPublicationCard = ({ publication }: { publication: DataItem }) => 
                 href={publication.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-4 py-2 border-2 border-[#cbff00] text-[#cbff00] font-semibold rounded-lg hover:bg-[#cbff00] hover:text-black transition-colors duration-200"
+                className="flex items-center space-x-2 px-4 py-2 border-2 border-[#34d399] text-[#34d399] font-semibold rounded-lg hover:bg-[#34d399] hover:text-black transition-colors duration-200"
               >
                 <span>Visit Website</span>
               </a>
@@ -256,7 +272,7 @@ const FeaturedPublicationCard = ({ publication }: { publication: DataItem }) => 
           
           <div className="text-right">
             <p className="text-xs text-gray-400 mb-1">Contact for pricing & availability</p>
-            <p className="text-[#cbff00] font-semibold">sam@digitalnetworkingagency.com</p>
+            <p className="text-[#34d399] font-semibold">sam@digitalnetworkingagency.com</p>
           </div>
         </div>
       </div>
@@ -275,7 +291,7 @@ export default function Page() {
 
   const [data, setData] = useState<DataItem[]>([]);
   const [filters, setFilters] = useState<Filters>({ 
-    publication: { search: '', minPrice: '', maxPrice: '', region: '', genre: '' }, // Added genre
+    publication: { search: '', minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' },
     listicles: { search: '', genre: '' },
     television: { search: '', affiliate: '', state: '' }, 
     broadcast_television: { callSign: '' } 
@@ -285,6 +301,17 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
   const [invitationModalOpen, setInvitationModalOpen] = useState<boolean>(false);
+  const [createUserModalOpen, setCreateUserModalOpen] = useState<boolean>(false);
+  // Rendering a 1000+ row table is heavy; mark the swap as a transition so the
+  // click stays responsive instead of freezing while React rebuilds the rows.
+  const [isSwitching, startSwitching] = useTransition();
+  // Laying out 1000+ rows at once costs ~350ms of frozen frame on every table
+  // switch, so rows are rendered in chunks and grown as the user scrolls.
+  const scrollBoxRef = useRef<HTMLDivElement | null>(null);
+  const rowHeights = useRef<Map<number, number>>(new Map());
+  const [scrollTop, setScrollTop] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(VIEWPORT_FALLBACK);
+  const [measureTick, setMeasureTick] = useState(0);
   const [userRole, setUserRole] = useState<string>('user');
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   
@@ -319,6 +346,15 @@ export default function Page() {
 
   // Function to fetch data based on table type
   const fetchData = async (tableType: TableType) => {
+    // Already loaded once this session — show it immediately instead of
+    // refetching, which is what made switching tabs stutter.
+    const cached = allData[tableType];
+    if (cached && cached.length > 0) {
+      setData(cached);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       let endpoint: string;
@@ -341,8 +377,6 @@ export default function Page() {
       
       const res = await fetch(endpoint);
       const fetchedData: DataItem[] = await res.json();
-      
-      console.log(`Fetched ${tableType} data:`, fetchedData.slice(0, 2)); // Debug log
       
       setData(fetchedData);
       setAllData(prev => ({
@@ -373,14 +407,25 @@ export default function Page() {
         const price = typeof item.price === 'number' ? item.price : 0;
         const minMatch = pubFilters.minPrice === '' || price >= parseFloat(pubFilters.minPrice || '0');
         const maxMatch = pubFilters.maxPrice === '' || price <= parseFloat(pubFilters.maxPrice || '100000');
-        const regionMatch = pubFilters.region === '' || 
-          new RegExp(pubFilters.region, 'i').test(item.regions || '');
-        
-        // Enhanced genre matching - searches within comma-separated genres
-        const genreMatch = pubFilters.genre === '' || 
-          (item.genres && item.genres.toLowerCase().includes(pubFilters.genre.toLowerCase()));
-        
-        return searchMatch && minMatch && maxMatch && regionMatch && genreMatch;
+
+        // Genres and regions are multi-select: a row matches if it has ANY of
+        // the picked values.
+        const itemGenres = splitList(item.genres);
+        const genreMatch =
+          pubFilters.genres.length === 0 ||
+          pubFilters.genres.some((g) => itemGenres.includes(g.toLowerCase()));
+
+        const itemRegions = splitList(item.regions);
+        const regionMatch =
+          pubFilters.regions.length === 0 ||
+          pubFilters.regions.some((r) => itemRegions.includes(r.toLowerCase()));
+
+        // Turnaround is capped by the longest time the quoted range can take.
+        const tatLimit = pubFilters.maxTatDays === '' ? null : Number(pubFilters.maxTatDays);
+        const itemTat = turnaroundMaxDays(item.estimated_time);
+        const tatMatch = tatLimit === null || (itemTat !== null && itemTat <= tatLimit);
+
+        return searchMatch && minMatch && maxMatch && regionMatch && genreMatch && tatMatch;
       } else if (activeTable === 'listicles') {
         const listFilters = filters[activeTable] as Filters['listicles'];
         const searchMatch = item.name?.toLowerCase().includes((listFilters.search || '').toLowerCase());
@@ -469,10 +514,128 @@ export default function Page() {
     }));
   }, [activeTable]);
 
+  // Every genre / region / price actually present in the publication data, so
+  // the filter chips always reflect the real catalogue.
+  const publicationFacets = useMemo(() => {
+    // Only ever derived from the publication dataset. Depending on `data` too
+    // made this rescan all 1,100+ rows on every table switch.
+    const source = allData.publication ?? [];
+    const genres = new Set<string>();
+    const regions = new Set<string>();
+    let min = Infinity;
+    let max = 0;
+
+    for (const item of source) {
+      for (const g of String(item.genres ?? '').split(/[,/|]/)) {
+        const v = g.trim();
+        if (v) genres.add(v);
+      }
+      for (const r of String(item.regions ?? '').split(/[,/|]/)) {
+        const v = r.trim();
+        if (v) regions.add(v);
+      }
+      const price = typeof item.price === 'number' ? item.price : NaN;
+      if (Number.isFinite(price)) {
+        if (price < min) min = price;
+        if (price > max) max = price;
+      }
+    }
+
+    const collator = new Intl.Collator(undefined, { sensitivity: 'base' });
+    return {
+      genres: [...genres].sort(collator.compare),
+      regions: [...regions].sort(collator.compare),
+      priceMin: Number.isFinite(min) ? Math.floor(min) : 0,
+      priceMax: max > 0 ? Math.ceil(max) : 10000,
+    };
+  }, [allData.publication]);
+
+  // A new table (or filter) starts from the top with no stale measurements.
+  useEffect(() => {
+    rowHeights.current.clear();
+    setScrollTop(0);
+    setMeasureTick((t) => t + 1);
+    if (scrollBoxRef.current) scrollBoxRef.current.scrollTop = 0;
+  }, [activeTable, filteredAndSortedData]);
+
+  // Track how tall the scroll box is so the window covers it.
+  useEffect(() => {
+    const box = scrollBoxRef.current;
+    if (!box) return;
+    const update = () => setViewportHeight(box.clientHeight || VIEWPORT_FALLBACK);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(box);
+    return () => ro.disconnect();
+  }, [activeTable]);
+
+  // Which slice of rows to actually render, plus the spacer heights that keep
+  // the scrollbar honest. Heights start as an estimate and are replaced with
+  // real measurements as rows are rendered.
+  const virtualWindow = useMemo(() => {
+    const total = regularData.length;
+    const heightAt = (i: number) => rowHeights.current.get(i) ?? EST_ROW_HEIGHT;
+
+    const top = Math.max(0, scrollTop - OVERSCAN_PX);
+    let start = 0;
+    let padTop = 0;
+    while (start < total && padTop + heightAt(start) <= top) {
+      padTop += heightAt(start);
+      start++;
+    }
+
+    const budget = viewportHeight + OVERSCAN_PX * 2;
+    let end = start;
+    let used = 0;
+    while (end < total && used < budget) {
+      used += heightAt(end);
+      end++;
+    }
+
+    let padBottom = 0;
+    for (let i = end; i < total; i++) padBottom += heightAt(i);
+
+    return { start, end, padTop, padBottom };
+    // measureTick forces a recompute once real heights are known.
+  }, [regularData, scrollTop, viewportHeight, measureTick]);
+
+  // Measure each row once, the first time it is rendered. Re-measuring on every
+  // render made scrolling ping-pong between renders and cost ~150ms a frame.
+  useLayoutEffect(() => {
+    const box = scrollBoxRef.current;
+    if (!box) return;
+
+    const rows = box.querySelectorAll<HTMLTableRowElement>('tr[data-row-index]');
+    let drift = 0;
+    rows.forEach((tr) => {
+      const index = Number(tr.dataset.rowIndex);
+      if (rowHeights.current.has(index)) return; // already known
+      const measured = tr.offsetHeight;
+      if (measured > 0) {
+        rowHeights.current.set(index, measured);
+        drift += Math.abs(measured - EST_ROW_HEIGHT);
+      }
+    });
+
+    // Only recompute when the estimates were off by enough to shift the layout.
+    if (drift > 24) setMeasureTick((t) => t + 1);
+  });
+
+  // Coalesce scroll events into one state update per frame.
+  const scrollFrame = useRef<number | null>(null);
+  const handleTableScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const next = e.currentTarget.scrollTop;
+    if (scrollFrame.current !== null) return;
+    scrollFrame.current = requestAnimationFrame(() => {
+      scrollFrame.current = null;
+      setScrollTop(next);
+    });
+  }, []);
+
   // Optimize table switch with useCallback
   const handleTableSwitch = useCallback((tableType: TableType) => {
-    setActiveTable(tableType);
     setFiltersOpen(false);
+    startSwitching(() => setActiveTable(tableType));
   }, []);
 
   // Optimize sort handling with useCallback
@@ -547,8 +710,8 @@ export default function Page() {
         }
         
         @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(203, 255, 0, 0.3); }
-          50% { box-shadow: 0 0 30px rgba(203, 255, 0, 0.5); }
+          0%, 100% { box-shadow: 0 0 20px rgba(52, 211, 153, 0.3); }
+          50% { box-shadow: 0 0 30px rgba(52, 211, 153, 0.5); }
         }
         
         .animate-fadeIn {
@@ -567,8 +730,18 @@ export default function Page() {
           animation: glow 2s infinite;
         }
         
-        .table-row-enter {
-          animation: fadeIn 0.4s ease-out;
+        .table-swap {
+          animation: tableSwap 0.22s ease-out;
+        }
+
+        .table-swap.is-switching {
+          opacity: 0.55;
+          transition: opacity 0.12s ease-out;
+        }
+
+        @keyframes tableSwap {
+          from { opacity: 0; transform: translateY(6px); }
+          to { opacity: 1; transform: none; }
         }
         
         .filter-panel-enter {
@@ -576,7 +749,7 @@ export default function Page() {
         }
         
         .lime-gradient {
-          background: linear-gradient(135deg, #cbff00 0%, #9fff00 100%);
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
         }
         
         .hover-lift:hover {
@@ -585,7 +758,7 @@ export default function Page() {
         }
         
         .hover-glow:hover {
-          box-shadow: 0 0 15px rgba(203, 255, 0, 0.3) !important;
+          box-shadow: 0 0 15px rgba(52, 211, 153, 0.3) !important;
           transition: box-shadow 0.15s ease !important;
         }
         
@@ -607,7 +780,7 @@ export default function Page() {
             <div className="flex items-center space-x-3 animate-slideInLeft">
               <div className="w-24 h-16 rounded-lg flex items-center justify-center shadow-md shadow-indigo-500/10">
                 <img 
-                  src="/logo.png" 
+                  src="/logo-money.png" 
                   alt="Digital Networking Agency Logo"
                   className="w-full h-full object-contain"
                 />
@@ -648,6 +821,17 @@ export default function Page() {
                 </button>
               )}
               
+              {/* Admin Only - Create User Button */}
+              {userRole === 'admin' && (
+                <button 
+                  onClick={() => setCreateUserModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
+                >
+                  <KeyRound size={16} className="text-black" />
+                  <span className="hidden sm:inline text-sm text-black font-medium">Create User</span>
+                </button>
+              )}
+
               {/* Admin Only - Send Invitation Button */}
               {userRole === 'admin' && (
                 <button 
@@ -687,22 +871,22 @@ export default function Page() {
               <div className="flex-1">
                 <div className="space-y-3">
                   <p className="text-gray-300 text-sm leading-relaxed">
-                    <span className="text-[#cbff00] font-medium">Important Notice:</span> Once we have published the article for you, any further edits may include an extra charge.
+                    <span className="text-[#34d399] font-medium">Important Notice:</span> Once we have published the article for you, any further edits may include an extra charge.
                   </p>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     Digital Networking Agency will use reasonable good faith efforts to ensure that such article will remain publicly available in the applicable publication for at least 12 months.
                   </p>
                   
                   {/* Enhanced Contact Section */}
-                  <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-xl border border-[#cbff00]/30 p-4 mt-4">
+                  <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-xl border border-[#34d399]/30 p-4 mt-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#cbff00] to-[#9fff00] rounded-full flex items-center justify-center shadow-lg">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#34d399] to-[#10b981] rounded-full flex items-center justify-center shadow-lg">
                         <Mail size={18} className="text-black" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[#cbff00] text-sm font-medium">For orders please contact:</p>
+                        <p className="text-[#34d399] text-sm font-medium">For orders please contact:</p>
                         <a 
-                          className="text-white hover:text-[#cbff00] font-bold text-lg transition-colors duration-300 hover:underline"
+                          className="text-white hover:text-[#34d399] font-bold text-lg transition-colors duration-300 hover:underline"
                         >
                           sam@digitalnetworkingagency.com
                         </a>
@@ -715,7 +899,7 @@ export default function Page() {
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8">
                 <button
                   onClick={() => window.open('https://docs.google.com/document/d/1hFgAovf6BFj71lvEWBuj-q3I3UFxGSoWjU6KkzvUwW4/edit?usp=sharing', '_blank')}
-                  className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-[#cbff00] text-[#cbff00] hover:bg-[#cbff00] hover:text-black font-medium rounded-lg transition-all hover-lift"
+                  className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-black font-medium rounded-lg transition-all hover-lift"
                 >
                   <Download size={16} />
                   <span>Download PR Questionnaire</span>
@@ -723,7 +907,7 @@ export default function Page() {
                 
                 <button
                   onClick={() => window.open('https://docs.google.com/document/d/1VKongYU8yeVJQq8JgAmc80c8BWp2Ditj4CrQPdR77r8/edit?addon_store&tab=t.0', '_blank')}
-                  className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-[#cbff00] text-[#cbff00] hover:bg-[#cbff00] hover:text-black font-medium rounded-lg transition-all hover-lift"
+                  className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-black font-medium rounded-lg transition-all hover-lift"
                 >
                   <Download size={16} />
                   <span>Download TV Questionnaire</span>
@@ -742,8 +926,7 @@ export default function Page() {
               <button
                 key={type}
                 onClick={() => handleTableSwitch(type)}
-                style={{ animationDelay: `${index * 0.1}s` }}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all hover-lift animate-fadeIn whitespace-nowrap ${
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 whitespace-nowrap ${
                   activeTable === type
                     ? 'lime-gradient text-black shadow-lg'
                     : 'text-gray-300 hover:text-white hover:bg-gray-800 border border-gray-700'
@@ -776,7 +959,7 @@ export default function Page() {
               onClick={() => setFiltersOpen(!filtersOpen)}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all hover-lift ${
                 filtersOpen
-                  ? 'lime-gradient text-black border-[#cbff00] shadow-lg animate-glow'
+                  ? 'lime-gradient text-black border-[#34d399] shadow-lg animate-glow'
                   : 'bg-gray-800 text-white border-gray-700 hover:border-gray-600 hover-glow'
               }`}
             >
@@ -791,7 +974,7 @@ export default function Page() {
                 onClick={handleSort}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all hover-lift ${
                   sortDirection
-                    ? 'lime-gradient text-black border-[#cbff00] shadow-lg'
+                    ? 'lime-gradient text-black border-[#34d399] shadow-lg'
                     : 'bg-gray-800 text-white border-gray-700 hover:border-gray-600 hover-glow'
                 }`}
               >
@@ -805,7 +988,7 @@ export default function Page() {
               <button
                 onClick={() => {
                   if (activeTable === 'publication') {
-                    updateFilters({ search: '', minPrice: '', maxPrice: '', region: '', genre: '' });
+                    updateFilters({ search: '', minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' });
                   } else if (activeTable === 'listicles') {
                     updateFilters({ search: '', genre: '' });
                   } else if (activeTable === 'television') {
@@ -815,7 +998,7 @@ export default function Page() {
                   }
                   setSortDirection(null);
                 }}
-                className="text-sm text-gray-400 hover:text-[#cbff00] transition-colors animate-fadeIn"
+                className="text-sm text-gray-400 hover:text-[#34d399] transition-colors animate-fadeIn"
               >
                 Clear all
               </button>
@@ -823,9 +1006,9 @@ export default function Page() {
           </div>
           
           <div className="text-sm text-gray-400">
-            Showing <span className="text-[#cbff00] font-semibold">{filteredAndSortedData.length}</span> of <span className="text-white">{data.length}</span> results
+            Showing <span className="text-[#34d399] font-semibold">{filteredAndSortedData.length}</span> of <span className="text-white">{data.length}</span> results
             {sortDirection && activeTable !== 'listicles' && (
-              <span className="ml-2 text-[#cbff00]">
+              <span className="ml-2 text-[#34d399]">
                 • Sorted by {activeTable === 'publication' ? 'Price' : 'Rate'} ({sortDirection === 'asc' ? 'Low to High' : 'High to Low'})
               </span>
             )}
@@ -835,67 +1018,18 @@ export default function Page() {
         {/* Filters Panel */}
         {filtersOpen && (
           <div className="bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 p-6 mb-6 shadow-2xl filter-panel-enter hover-glow">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className={activeTable === 'publication' ? '' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'}>
               {activeTable === 'publication' ? (
-                <>
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.1s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Search Publications</label>
-                    <div className="relative">
-                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Enter name..."
-                        value={(currentFilters as Filters['publication']).search || ''}
-                        onChange={(e) => updateFilters({ search: e.target.value })}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Genre</label>
-                    <input
-                      type="text"
-                      placeholder="Search genres..."
-                      value={(currentFilters as Filters['publication']).genre || ''}
-                      onChange={(e) => updateFilters({ genre: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Min Price</label>
-                    <input
-                      type="number"
-                      placeholder="$ Min"
-                      value={(currentFilters as Filters['publication']).minPrice || ''}
-                      onChange={(e) => updateFilters({ minPrice: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.4s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Max Price</label>
-                    <input
-                      type="number"
-                      placeholder="$ Max"
-                      value={(currentFilters as Filters['publication']).maxPrice || ''}
-                      onChange={(e) => updateFilters({ maxPrice: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.5s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Region</label>
-                    <input
-                      type="text"
-                      placeholder="Enter region..."
-                      value={(currentFilters as Filters['publication']).region || ''}
-                      onChange={(e) => updateFilters({ region: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                </>
+                <PublicationFilters
+                  value={currentFilters as Filters['publication']}
+                  onChange={(patch) => updateFilters(patch)}
+                  genres={publicationFacets.genres}
+                  regions={publicationFacets.regions}
+                  priceMin={publicationFacets.priceMin}
+                  priceMax={publicationFacets.priceMax}
+                  matchCount={filteredAndSortedData.length}
+                  totalCount={data.length}
+                />
               ) : activeTable === 'listicles' ? (
                 <>
                   <div className="animate-fadeIn" style={{ animationDelay: '0.1s' }}>
@@ -907,7 +1041,7 @@ export default function Page() {
                         placeholder="Enter name..."
                         value={(currentFilters as Filters['listicles']).search || ''}
                         onChange={(e) => updateFilters({ search: e.target.value })}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                       />
                     </div>
                   </div>
@@ -919,7 +1053,7 @@ export default function Page() {
                       placeholder="Search genres..."
                       value={(currentFilters as Filters['listicles']).genre || ''}
                       onChange={(e) => updateFilters({ genre: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                     />
                   </div>
                 </>
@@ -934,7 +1068,7 @@ export default function Page() {
                         placeholder="Call sign or program..."
                         value={(currentFilters as Filters['television']).search || ''}
                         onChange={(e) => updateFilters({ search: e.target.value })}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                       />
                     </div>
                   </div>
@@ -946,7 +1080,7 @@ export default function Page() {
                       placeholder="CBS, NBC, ABC..."
                       value={(currentFilters as Filters['television']).affiliate || ''}
                       onChange={(e) => updateFilters({ affiliate: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                     />
                   </div>
                   
@@ -957,7 +1091,7 @@ export default function Page() {
                       placeholder="Enter state..."
                       value={(currentFilters as Filters['television']).state || ''}
                       onChange={(e) => updateFilters({ state: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                     />
                   </div>
                 </>
@@ -971,7 +1105,7 @@ export default function Page() {
                       placeholder="Enter call sign..."
                       value={(currentFilters as Filters['broadcast_television']).callSign || ''}
                       onChange={(e) => updateFilters({ callSign: e.target.value })}
-                      className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all"
+                      className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
                     />
                   </div>
                 </div>
@@ -981,16 +1115,21 @@ export default function Page() {
         )}
 
         {/* Table */}
-        <div className="bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden shadow-2xl animate-fadeIn">
+        <div key={activeTable} className={`bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden shadow-2xl table-swap${isSwitching ? ' is-switching' : ''}`}>
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="flex items-center space-x-3">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#cbff00]"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#34d399]"></div>
                 <span className="text-gray-400">Loading data...</span>
               </div>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div
+              ref={scrollBoxRef}
+              onScroll={handleTableScroll}
+              className="overflow-auto table-scroll"
+              style={{ maxHeight: 'min(72vh, 820px)' }}
+            >
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-800 lime-gradient">
@@ -1006,12 +1145,19 @@ export default function Page() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-800">
+                  {virtualWindow.padTop > 0 && (
+                    <tr aria-hidden="true" style={{ height: virtualWindow.padTop }}>
+                      <td colSpan={visibleColumns.length} className="p-0 border-0" />
+                    </tr>
+                  )}
                   {regularData.length > 0 ? (
-                    regularData.map((row, idx) => (
+                    regularData.slice(virtualWindow.start, virtualWindow.end).map((row, offset) => {
+                      const idx = virtualWindow.start + offset;
+                      return (
                       <tr 
-                        key={idx} 
-                        style={{ animationDelay: `${idx * 0.05}s` }}
-                        className="hover:bg-gray-800/50 transition-all duration-300 hover-lift table-row-enter"
+                        key={idx}
+                        data-row-index={idx}
+                        className="hover:bg-gray-800/50 transition-colors duration-150"
                       >
                         {visibleColumns.map((key) => {
                           const cellValue = row[key as keyof DataItem];
@@ -1026,7 +1172,7 @@ export default function Page() {
                                   rel="noopener noreferrer"
                                   className="inline-block transition-all duration-300 hover:scale-110"
                                 >
-                                  <div className="w-10 h-10 bg-gradient-to-br from-[#cbff00] to-[#9fff00] rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-[#34d399] to-[#10b981] rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl">
                                     <span className="text-black text-lg">🖼️</span>
                                   </div>
                                 </a>
@@ -1045,7 +1191,7 @@ export default function Page() {
                                         href={row.url} 
                                         target="_blank" 
                                         rel="noopener noreferrer"
-                                        className="text-[#cbff00] hover:text-[#9fff00] font-medium transition-colors block break-words leading-5"
+                                        className="text-[#34d399] hover:text-[#10b981] font-medium transition-colors block break-words leading-5"
                                       >
                                         {cellValue}
                                       </a>
@@ -1058,12 +1204,12 @@ export default function Page() {
                                 activeTable === 'listicles' ? (
                                   <PricingTiers priceText={cellValue as string | number} />
                                 ) : (
-                                  <span className="text-[#cbff00] font-semibold">
+                                  <span className="text-[#fbbf24] font-semibold">
                                     ${(cellValue as number)?.toLocaleString()}
                                   </span>
                                 )
                               ) : key === 'rate' ? (
-                                <span className="text-[#cbff00] font-semibold">
+                                <span className="text-[#fbbf24] font-semibold">
                                   ${(cellValue as number)?.toLocaleString()}
                                 </span>
                               ) : key === 'affiliate' ? (
@@ -1089,7 +1235,8 @@ export default function Page() {
                           );
                         })}
                       </tr>
-                    ))
+                      );
+                    })
                   ) : (
                     <tr>
                       <td colSpan={visibleColumns.length} className="px-6 py-12 text-center">
@@ -1099,6 +1246,11 @@ export default function Page() {
                           <p className="text-gray-500">Try adjusting your filters to see more data</p>
                         </div>
                       </td>
+                    </tr>
+                  )}
+                  {virtualWindow.padBottom > 0 && (
+                    <tr aria-hidden="true" style={{ height: virtualWindow.padBottom }}>
+                      <td colSpan={visibleColumns.length} className="p-0 border-0" />
                     </tr>
                   )}
                 </tbody>
@@ -1126,6 +1278,13 @@ export default function Page() {
       <InvitationModal 
         isOpen={invitationModalOpen}
         onClose={() => setInvitationModalOpen(false)}
+        userRole={userRole}
+      />
+
+      {/* Admin Create User Modal */}
+      <CreateUserModal
+        isOpen={createUserModalOpen}
+        onClose={() => setCreateUserModalOpen(false)}
         userRole={userRole}
       />
     </div>

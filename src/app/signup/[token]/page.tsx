@@ -134,8 +134,8 @@ export default function SignupPage() {
         }
         
         @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(203, 255, 0, 0.3); }
-          50% { box-shadow: 0 0 30px rgba(203, 255, 0, 0.5); }
+          0%, 100% { box-shadow: 0 0 20px rgba(52, 211, 153, 0.3); }
+          50% { box-shadow: 0 0 30px rgba(52, 211, 153, 0.5); }
         }
         
         .animate-fadeIn {
@@ -155,7 +155,7 @@ export default function SignupPage() {
         }
         
         .lime-gradient {
-          background: linear-gradient(135deg, #cbff00 0%, #9fff00 100%);
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
         }
         
         .hover-lift:hover {
@@ -164,7 +164,7 @@ export default function SignupPage() {
         }
         
         .hover-glow:hover {
-          box-shadow: 0 0 20px rgba(203, 255, 0, 0.4);
+          box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
           transition: all 0.3s ease;
         }
         
@@ -186,23 +186,23 @@ export default function SignupPage() {
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(203, 255, 0, 0.2), transparent);
+          background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.2), transparent);
           animation: shimmer 2s infinite;
         }
       `}</style>
 
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#cbff00]/5 to-transparent rotate-12 transform"></div>
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#cbff00]/5 to-transparent -rotate-12 transform"></div>
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#34d399]/5 to-transparent rotate-12 transform"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#34d399]/5 to-transparent -rotate-12 transform"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo Section */}
         <div className="text-center mb-8 animate-fadeIn">
-          <div className="w-24 h-16 bg-white rounded-xl flex items-center justify-center p-3 mx-auto mb-4 shimmer-effect">
+          <div className="w-36 flex items-center justify-center mx-auto mb-5">
             <img 
-              src="/logo.png" 
+              src="/logo-money.png" 
               alt="Digital Marketing Agency Logo"
               className="w-full h-full object-contain"
             />
@@ -215,7 +215,7 @@ export default function SignupPage() {
         <div className="glass-effect rounded-2xl p-8 shadow-2xl animate-slideUp hover-glow">
           {verifying ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#cbff00] mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#34d399] mx-auto mb-4"></div>
               <p className="text-gray-400">Verifying invitation...</p>
             </div>
           ) : success ? (
@@ -233,7 +233,7 @@ export default function SignupPage() {
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Invalid Invitation</h3>
               <p className="text-gray-400 mb-4">{error}</p>
-              <a href="/login" className="text-[#cbff00] hover:text-[#9fff00] transition-colors">
+              <a href="/login" className="text-[#34d399] hover:text-[#10b981] transition-colors">
                 Go to Login
               </a>
             </div>
@@ -242,7 +242,7 @@ export default function SignupPage() {
               <div className="text-center mb-6">
                 <h2 className="text-xl font-semibold text-white mb-2">Complete Your Account</h2>
                 <p className="text-gray-400 text-sm">
-                  Creating account for: <span className="text-[#cbff00] font-medium">{email}</span>
+                  Creating account for: <span className="text-[#34d399] font-medium">{email}</span>
                 </p>
               </div>
 
@@ -266,7 +266,7 @@ export default function SignupPage() {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all hover-lift"
+                        className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all hover-lift"
                         placeholder="First name"
                       />
                     </div>
@@ -281,7 +281,7 @@ export default function SignupPage() {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all hover-lift"
+                        className="w-full pl-11 pr-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all hover-lift"
                         placeholder="Last name"
                       />
                     </div>
@@ -299,7 +299,7 @@ export default function SignupPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      className="w-full pl-11 pr-12 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all hover-lift"
+                      className="w-full pl-11 pr-12 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all hover-lift"
                       placeholder="Create a password"
                     />
                     <button
@@ -323,7 +323,7 @@ export default function SignupPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      className="w-full pl-11 pr-12 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white placeholder-gray-400 transition-all hover-lift"
+                      className="w-full pl-11 pr-12 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all hover-lift"
                       placeholder="Confirm your password"
                     />
                     <button
@@ -337,8 +337,8 @@ export default function SignupPage() {
                 </div>
 
                 {/* Password Requirements */}
-                <div className="p-3 bg-[#cbff00]/10 border border-[#cbff00]/20 rounded-lg">
-                  <p className="text-xs text-[#cbff00] font-medium mb-1">Password Requirements:</p>
+                <div className="p-3 bg-[#34d399]/10 border border-[#34d399]/20 rounded-lg">
+                  <p className="text-xs text-[#34d399] font-medium mb-1">Password Requirements:</p>
                   <ul className="text-xs text-gray-300 space-y-0.5">
                     <li>• At least 6 characters long</li>
                     <li>• Passwords must match</li>

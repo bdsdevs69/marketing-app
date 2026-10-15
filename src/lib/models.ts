@@ -86,10 +86,12 @@ export class InvitationModel {
 
 // User Model
 export class UserModel {
+  // Email is matched case-insensitively: addresses are not case sensitive in
+  // practice, and users type their own capitalisation when logging in.
   static async findByEmail(email: string): Promise<User | null> {
     try {
       const result = await db.query(
-        'SELECT * FROM users WHERE email = $1',
+        'SELECT * FROM users WHERE lower(email) = lower($1) ORDER BY id LIMIT 1',
         [email]
       );
       return result.rows[0] || null;
@@ -102,7 +104,7 @@ export class UserModel {
   static async findActiveByEmail(email: string): Promise<User | null> {
     try {
       const result = await db.query(
-        'SELECT * FROM users WHERE email = $1 AND is_active = true',
+        'SELECT * FROM users WHERE lower(email) = lower($1) AND is_active = true ORDER BY id LIMIT 1',
         [email]
       );
       return result.rows[0] || null;

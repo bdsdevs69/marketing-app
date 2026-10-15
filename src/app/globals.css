@@ -1,26 +1,436 @@
 @import "tailwindcss";
 
+/* =====================================================================
+   DNA money theme — same look as the client portal.
+   Deep emerald base, emerald accents, gold reserved for money figures.
+   ===================================================================== */
+
+/* The app is written against Tailwind's gray scale, so the whole palette is
+   retinted here rather than touching hundreds of class names. Every utility
+   that references these tokens (bg-, text-, border-, from-/via-/to-, and the
+   /opacity variants) picks the new colours up automatically. */
+@theme {
+  --color-black: #06110c;
+  --color-gray-950: #040f0a;
+  --color-gray-900: #0e2219;
+  --color-gray-800: #143125;
+  --color-gray-700: #1e4435;
+  --color-gray-600: #2c5f4a;
+  --color-gray-500: #7d9b8d;
+  --color-gray-400: #a3bcb0;
+  --color-gray-300: #cddbd3;
+  --color-gray-200: #e3ede8;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-syne), var(--font-manrope), sans-serif;
+}
+
 :root {
-  --background: #000000;
-  --foreground: #000000;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #ededed;
-  }
+  --bg: #06110c;
+  --ink: #ecfdf5;
+  --emerald: #34d399;
+  --gold: #fbbf24;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Emerald glow top-left, a faint gold one top-right — as on the portal. */
+  background:
+    radial-gradient(1100px 520px at 0% -10%, rgba(16, 185, 129, 0.15), transparent 60%),
+    radial-gradient(900px 480px at 105% 0%, rgba(251, 191, 36, 0.13), transparent 60%),
+    radial-gradient(820px 520px at 12% 108%, rgba(217, 119, 6, 0.12), transparent 62%),
+    radial-gradient(760px 420px at 88% 92%, rgba(13, 148, 136, 0.12), transparent 62%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The page shells paint their own flat background over the body gradient. */
+body .min-h-screen.bg-black {
+  background: transparent;
+}
+
+/* Numbers and headings use Syne, like the portal's money figures. */
+h1,
+h2,
+.money-num {
+  font-family: var(--font-syne), var(--font-manrope), sans-serif;
+}
+
+/* ---------------------------------------------------------------------
+   Top bar and table headers.
+   These carry .lime-gradient from styled-jsx (specificity 0,2,0), so the
+   overrides need !important to win. The portal's bar is dark, not a bright
+   band, and its contents are light rather than black.
+   --------------------------------------------------------------------- */
+header.lime-gradient,
+thead tr.lime-gradient {
+  background: rgba(6, 17, 12, 0.97) !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(12px);
+}
+
+thead tr.lime-gradient {
+  background: #0a1b13 !important;
+}
+
+header.lime-gradient .text-black,
+thead tr.lime-gradient .text-black,
+thead tr.lime-gradient th {
+  color: var(--ink) !important;
+}
+
+header.lime-gradient .text-black\/70 {
+  color: #a3bcb0 !important;
+}
+
+thead tr.lime-gradient th {
+  color: #fcd34d !important;
+  letter-spacing: 0.14em;
+}
+
+thead tr.lime-gradient {
+  border-bottom: 1px solid rgba(251, 191, 36, 0.22) !important;
+}
+
+/* Header buttons read as subtle glass pills instead of black-on-lime. */
+header.lime-gradient .bg-black\/20 {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+header.lime-gradient .hover\:bg-black\/30:hover {
+  background: rgba(52, 211, 153, 0.16) !important;
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+/* The wordmark in the bar gets the portal's shimmering money gradient. */
+header.lime-gradient h1.text-black,
+header.lime-gradient h1 {
+  background: linear-gradient(
+    90deg,
+    #fde68a 0%,
+    #34d399 35%,
+    #fff7d6 50%,
+    #34d399 65%,
+    #fde68a 100%
+  ) !important;
+  background-size: 220% 100% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  animation: moneyShine 7s ease-in-out infinite;
+}
+
+@keyframes moneyShine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Everything else that still assumes a bright lime button.
+   --------------------------------------------------------------------- */
+
+/* Non-header .lime-gradient surfaces (buttons, icon tiles, modal headers)
+   become the portal's emerald fill with light text. */
+.lime-gradient:not(header):not(tr) {
+  background: linear-gradient(180deg, #10b981, #047857) !important;
+  color: #ffffff !important;
+}
+
+.lime-gradient:not(header):not(tr) .text-black,
+.lime-gradient:not(header):not(tr) svg {
+  color: #ffffff !important;
+}
+
+/* Primary action buttons that paint lime-gradient AND text-black. */
+button.lime-gradient,
+a.lime-gradient {
+  color: #ffffff !important;
+}
+
+/* Inputs: dark emerald wells with an emerald focus ring. */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  background-color: #0a1812;
+  color: var(--ink);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #5f7d6f;
+}
+
+select option {
+  background: #0a1812;
+  color: var(--ink);
+}
+
+/* Native dropdown arrows / date pickers render for a dark surface. */
+select,
+input[type="date"],
+input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+/* Cards lift on an emerald edge rather than a grey one. */
+.hover-glow:hover {
+  box-shadow:
+    0 0 0 1px rgba(52, 211, 153, 0.18),
+    0 14px 34px -14px rgba(0, 0, 0, 0.75),
+    0 0 40px -22px rgba(16, 185, 129, 0.75) !important;
+}
+
+/* Money figures shimmer like the portal's revenue numbers. */
+.text-\[\#fbbf24\] {
+  font-family: var(--font-syne), var(--font-manrope), sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header.lime-gradient h1.text-black,
+  header.lime-gradient h1 {
+    animation: none;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Ambient money layer — giant "$" watermark and drifting gold coins,
+   same idea as the portal's hero. Sits behind everything, inert.
+   --------------------------------------------------------------------- */
+.money-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.money-watermark {
+  position: absolute;
+  right: -40px;
+  top: -90px;
+  font: 900 420px/1 var(--font-syne), sans-serif;
+  color: rgba(252, 211, 77, 0.055);
+  transform: rotate(-8deg);
+  user-select: none;
+}
+
+.money-coins {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.money-coin {
+  position: absolute;
+  bottom: -60px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    #fffbeb 0%,
+    #fde68a 22%,
+    #fbbf24 52%,
+    #d97706 82%,
+    #92400e 100%
+  );
+  box-shadow:
+    inset 0 -3px 5px rgba(120, 53, 15, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.7),
+    0 8px 18px -4px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(251, 191, 36, 0.25);
+  color: #78350f;
+  font: 800 calc(var(--size) * 0.52) / var(--size) var(--font-syne), sans-serif;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: coinFloat var(--dur) linear var(--delay) infinite;
+}
+
+@keyframes coinFloat {
+  0% {
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate3d(var(--drift), -55vh, 0) rotateY(360deg);
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(calc(var(--drift) * -1), -110vh, 0) rotateY(720deg);
+    opacity: 0;
+  }
+}
+
+/* Page content must sit above the backdrop. */
+.app-shell > *:not(.money-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .money-coin {
+    animation: none;
+    opacity: 0.25;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Filter panel controls.
+   --------------------------------------------------------------------- */
+
+/* Price slider, gold to match the money figures it filters. */
+input[type="range"].price-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f59e0b, #fcd34d);
+  outline: none;
+}
+
+input[type="range"].price-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fffbeb 0%, #fde68a 30%, #fbbf24 70%, #d97706 100%);
+  border: 2px solid #3b2708;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+}
+
+input[type="range"].price-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fbbf24;
+  border: 2px solid #3b2708;
+  cursor: pointer;
+}
+
+/* Scrollable region list. */
+.filter-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filter-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb {
+  background: rgba(251, 191, 36, 0.35);
+  border-radius: 999px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(251, 191, 36, 0.55);
+}
+
+/* ---------------------------------------------------------------------
+   Break up the green: warm accents on the pieces that carry value.
+   --------------------------------------------------------------------- */
+
+/* Featured publication card reads as gold rather than another green panel. */
+.border-\[\#34d399\].border-2 {
+  border-color: rgba(251, 191, 36, 0.55) !important;
+  box-shadow: 0 20px 50px -28px rgba(0, 0, 0, 0.85),
+    0 0 50px -30px rgba(245, 158, 11, 0.6) !important;
+}
+
+/* Filter / sort controls get a warm outline so the toolbar isn't all emerald. */
+.filter-panel-enter {
+  border-color: rgba(251, 191, 36, 0.18) !important;
+}
+
+/* ---------------------------------------------------------------------
+   Virtualised table: fixed-height scroll box, sticky header, and a
+   deliberate transition while a different table is prepared.
+   --------------------------------------------------------------------- */
+.table-scroll {
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+.table-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(251, 191, 36, 0.3);
+  border-radius: 999px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(251, 191, 36, 0.5);
+}
+
+/* Column headings stay put while the rows scroll under them. */
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #0a1b13;
+}
+
+/* Spacer rows must never pick up row borders or hover styling. */
+.table-scroll tbody tr[aria-hidden='true'] {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+/* While a switch is in flight, sweep a gold shimmer across the table so the
+   change reads as deliberate rather than as a stall. */
+.table-swap.is-switching {
+  position: relative;
+  pointer-events: none;
+}
+
+.table-swap.is-switching::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.10) 45%, rgba(52, 211, 153, 0.10) 55%, transparent 100%),
+    rgba(6, 17, 12, 0.45);
+  background-size: 220% 100%, 100% 100%;
+  animation: tableSweep 0.9s ease-in-out infinite;
+}
+
+@keyframes tableSweep {
+  0% { background-position: -60% 0, 0 0; }
+  100% { background-position: 160% 0, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table-swap.is-switching::after {
+    animation: none;
+  }
 }

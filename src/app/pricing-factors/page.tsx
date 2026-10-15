@@ -178,7 +178,7 @@ export default function PricingFactorsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#cbff00]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#34d399]"></div>
       </div>
     );
   }
@@ -196,7 +196,7 @@ export default function PricingFactorsPage() {
         }
         
         .lime-gradient {
-          background: linear-gradient(135deg, #cbff00 0%, #9fff00 100%);
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
         }
         
         .hover-lift:hover {
@@ -324,7 +324,7 @@ export default function PricingFactorsPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white"
+                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white"
                     placeholder="e.g., Premium Pricing"
                   />
                 </div>
@@ -335,7 +335,7 @@ export default function PricingFactorsPage() {
                     type="text"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#cbff00] focus:border-[#cbff00] text-white"
+                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white"
                     placeholder="Optional description"
                   />
                 </div>
@@ -347,7 +347,7 @@ export default function PricingFactorsPage() {
                   <button
                     type="button"
                     onClick={addRule}
-                    className="flex items-center space-x-2 px-3 py-1.5 bg-[#cbff00] text-black rounded-lg hover:bg-[#9fff00] transition-all"
+                    className="flex items-center space-x-2 px-3 py-1.5 bg-[#34d399] text-black rounded-lg hover:bg-[#10b981] transition-all"
                   >
                     <Plus size={16} />
                     <span>Add Rule</span>
@@ -422,7 +422,7 @@ export default function PricingFactorsPage() {
               <div className="flex items-center space-x-4">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-[#cbff00] text-black font-medium rounded-lg hover:bg-[#9fff00] transition-all"
+                  className="px-6 py-2 bg-[#34d399] text-black font-medium rounded-lg hover:bg-[#10b981] transition-all"
                 >
                   {editingFactor ? 'Update Factor' : 'Create Factor'}
                 </button>
