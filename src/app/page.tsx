@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useLayoutEffect } from 'react';
-import { Filter, Search, Database, Tv, Radio, ChevronDown, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Mail, Star, Tag } from 'lucide-react';
+import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useLayoutEffect, useDeferredValue } from 'react';
+import { Filter, Search, SlidersHorizontal, X, Database, Tv, Radio, ChevronDown, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Mail, Star, Tag } from 'lucide-react';
 
 // Import the invitation modal
 import InvitationModal from '../components/InvitationModal';
 import CreateUserModal from '../components/CreateUserModal';
-import PublicationFilters, { turnaroundMaxDays } from '../components/PublicationFilters';
+import PublicationFilters, { matchesPublication, countDrawerFilters } from '../components/PublicationFilters';
+import FilterDrawer from '../components/FilterDrawer';
 
 // Add proper type for formatHeader function
 const formatHeader = (header: string): string => {
@@ -23,12 +24,20 @@ const EST_ROW_HEIGHT = 76;   // starting guess, replaced by real measurements
 const OVERSCAN_PX = 900;     // rendered above/below the viewport
 const VIEWPORT_FALLBACK = 720;
 
-// Publications store genres/regions as a single delimited string.
-const splitList = (raw: unknown): string[] =>
-  String(raw ?? '')
-    .split(/[,/|]/)
-    .map((v) => v.trim().toLowerCase())
-    .filter(Boolean);
+// Toolbar search placeholder and result noun for each table.
+const SEARCH_PLACEHOLDER: Record<string, string> = {
+  publication: 'Search name or URL…',
+  listicles: 'Search listicles…',
+  television: 'Search call sign or program…',
+  broadcast_television: 'Search call signs…',
+};
+
+const RESULT_NOUN: Record<string, string> = {
+  publication: 'publications',
+  listicles: 'listicles',
+  television: 'TV shows',
+  broadcast_television: 'stations',
+};
 
 // Define types for your data structures
 interface DataItem {
@@ -298,6 +307,9 @@ export default function Page() {
   });
   
   const [activeTable, setActiveTable] = useState<TableType>('publication');
+  // Read by in-flight fetches to tell whether their table is still on screen.
+  const activeTableRef = useRef<TableType>('publication');
+  activeTableRef.current = activeTable;
   const [loading, setLoading] = useState<boolean>(false);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
   const [invitationModalOpen, setInvitationModalOpen] = useState<boolean>(false);
@@ -308,6 +320,7 @@ export default function Page() {
   // Laying out 1000+ rows at once costs ~350ms of frozen frame on every table
   // switch, so rows are rendered in chunks and grown as the user scrolls.
   const scrollBoxRef = useRef<HTMLDivElement | null>(null);
+  const searchRef = useRef<HTMLInputElement | null>(null);
   const rowHeights = useRef<Map<number, number>>(new Map());
   const [scrollTop, setScrollTop] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(VIEWPORT_FALLBACK);
@@ -378,16 +391,18 @@ export default function Page() {
       const res = await fetch(endpoint);
       const fetchedData: DataItem[] = await res.json();
       
-      setData(fetchedData);
+      // Always cache the response, but only show it if the user is still on
+      // that table — a slow response must not overwrite a newer switch.
       setAllData(prev => ({
         ...prev,
         [tableType]: fetchedData
       }));
+      if (activeTableRef.current === tableType) setData(fetchedData);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setData([]);
+      if (activeTableRef.current === tableType) setData([]);
     } finally {
-      setLoading(false);
+      if (activeTableRef.current === tableType) setLoading(false);
     }
   };
 
@@ -398,36 +413,17 @@ export default function Page() {
   }, [activeTable]);
 
   // Memoize filtered and sorted data to prevent unnecessary recalculations
+  // Typing updates the search box at once; filtering 1,000+ rows runs against
+  // a deferred copy so keystrokes never wait on it.
+  const deferredFilters = useDeferredValue(filters);
+
   const filteredAndSortedData = useMemo(() => {
     // Enhanced filtering logic that searches within genres
     const filtered = data.filter((item: DataItem) => {
       if (activeTable === 'publication') {
-        const pubFilters = filters[activeTable] as Filters['publication'];
-        const searchMatch = item.name?.toLowerCase().includes(pubFilters.search?.toLowerCase() || '');
-        const price = typeof item.price === 'number' ? item.price : 0;
-        const minMatch = pubFilters.minPrice === '' || price >= parseFloat(pubFilters.minPrice || '0');
-        const maxMatch = pubFilters.maxPrice === '' || price <= parseFloat(pubFilters.maxPrice || '100000');
-
-        // Genres and regions are multi-select: a row matches if it has ANY of
-        // the picked values.
-        const itemGenres = splitList(item.genres);
-        const genreMatch =
-          pubFilters.genres.length === 0 ||
-          pubFilters.genres.some((g) => itemGenres.includes(g.toLowerCase()));
-
-        const itemRegions = splitList(item.regions);
-        const regionMatch =
-          pubFilters.regions.length === 0 ||
-          pubFilters.regions.some((r) => itemRegions.includes(r.toLowerCase()));
-
-        // Turnaround is capped by the longest time the quoted range can take.
-        const tatLimit = pubFilters.maxTatDays === '' ? null : Number(pubFilters.maxTatDays);
-        const itemTat = turnaroundMaxDays(item.estimated_time);
-        const tatMatch = tatLimit === null || (itemTat !== null && itemTat <= tatLimit);
-
-        return searchMatch && minMatch && maxMatch && regionMatch && genreMatch && tatMatch;
+        return matchesPublication(item, deferredFilters.publication);
       } else if (activeTable === 'listicles') {
-        const listFilters = filters[activeTable] as Filters['listicles'];
+        const listFilters = deferredFilters[activeTable] as Filters['listicles'];
         const searchMatch = item.name?.toLowerCase().includes((listFilters.search || '').toLowerCase());
         
         // Enhanced genre matching for listicles too
@@ -436,7 +432,7 @@ export default function Page() {
         
         return searchMatch && genreMatch;
       } else if (activeTable === 'television') {
-        const tvFilters = filters[activeTable] as Filters['television'];
+        const tvFilters = deferredFilters[activeTable] as Filters['television'];
         const searchMatch = tvFilters.search === '' || 
           item.calls?.toLowerCase().includes(tvFilters.search.toLowerCase()) ||
           item.programName?.toLowerCase().includes(tvFilters.search.toLowerCase());
@@ -446,7 +442,7 @@ export default function Page() {
           item.state?.toLowerCase().includes(tvFilters.state.toLowerCase());
         return searchMatch && affiliateMatch && stateMatch;
       } else if (activeTable === 'broadcast_television') {
-        const bcFilters = filters[activeTable] as Filters['broadcast_television'];
+        const bcFilters = deferredFilters[activeTable] as Filters['broadcast_television'];
         return item.CallSign?.toLowerCase().includes((bcFilters.callSign || '').toLowerCase());
       }
       return true;
@@ -466,7 +462,7 @@ export default function Page() {
         return bValue - aValue;
       }
     });
-  }, [data, filters, activeTable, sortDirection]);
+  }, [data, deferredFilters, activeTable, sortDirection]);
 
   // Find and separate the featured PR Blast publication
   const featuredPublication = useMemo(() => {
@@ -549,6 +545,19 @@ export default function Page() {
       priceMax: max > 0 ? Math.ceil(max) : 10000,
     };
   }, [allData.publication]);
+
+  // Cmd/Ctrl+K jumps to the search box from anywhere on the page.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchRef.current?.focus();
+        searchRef.current?.select();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // A new table (or filter) starts from the top with no stale measurements.
   useEffect(() => {
@@ -670,6 +679,22 @@ export default function Page() {
 
   // Get current filters based on active table
   const currentFilters = filters[activeTable];
+
+  // The toolbar search box maps onto whichever field each table searches by.
+  const searchKey = activeTable === 'broadcast_television' ? 'callSign' : 'search';
+  const currentSearch = String((currentFilters as Record<string, unknown>)[searchKey] ?? '');
+  const setCurrentSearch = (value: string) =>
+    updateFilters({ [searchKey]: value } as Partial<Filters[TableType]>);
+
+  // How many filters are set inside the drawer (shown as a badge on the button).
+  const drawerFilterCount =
+    activeTable === 'publication'
+      ? countDrawerFilters(filters.publication)
+      : activeTable === 'listicles'
+        ? (filters.listicles.genre ? 1 : 0)
+        : activeTable === 'television'
+          ? (filters.television.affiliate ? 1 : 0) + (filters.television.state ? 1 : 0)
+          : 0;
 
   const getTableIcon = (type: TableType) => {
     switch (type) {
@@ -952,167 +977,153 @@ export default function Page() {
           <FeaturedPublicationCard publication={featuredPublication} />
         )}
 
-        {/* Filters Toggle and Quick Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0 animate-fadeIn">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setFiltersOpen(!filtersOpen)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all hover-lift ${
-                filtersOpen
-                  ? 'lime-gradient text-black border-[#34d399] shadow-lg animate-glow'
-                  : 'bg-gray-800 text-white border-gray-700 hover:border-gray-600 hover-glow'
-              }`}
-            >
-              <Filter size={18} />
-              <span className="font-medium">Filters</span>
-              <ChevronDown size={16} className={`transition-transform duration-300 ${filtersOpen ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {/* Sort Button - Only show for publication, television, and broadcast_television */}
-            {activeTable !== 'listicles' && (
+        {/* Toolbar: search is always visible; everything else lives in the drawer */}
+        <div className="filter-toolbar mb-4">
+          <div className="relative flex-1 min-w-[220px] max-w-md">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+            <input
+              ref={searchRef}
+              type="text"
+              value={currentSearch}
+              onChange={(e) => setCurrentSearch(e.target.value)}
+              placeholder={SEARCH_PLACEHOLDER[activeTable]}
+              className="toolbar-search"
+              aria-label="Search"
+            />
+            {currentSearch ? (
               <button
-                onClick={handleSort}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg border transition-all hover-lift ${
-                  sortDirection
-                    ? 'lime-gradient text-black border-[#34d399] shadow-lg'
-                    : 'bg-gray-800 text-white border-gray-700 hover:border-gray-600 hover-glow'
-                }`}
-              >
-                {getSortIcon()}
-                <span className="font-medium hidden sm:inline">{getSortLabel()}</span>
-                <span className="font-medium sm:hidden">Sort</span>
-              </button>
-            )}
-            
-            {(filtersOpen || sortDirection) && (
-              <button
+                type="button"
                 onClick={() => {
-                  if (activeTable === 'publication') {
-                    updateFilters({ search: '', minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' });
-                  } else if (activeTable === 'listicles') {
-                    updateFilters({ search: '', genre: '' });
-                  } else if (activeTable === 'television') {
-                    updateFilters({ search: '', affiliate: '', state: '' });
-                  } else if (activeTable === 'broadcast_television') {
-                    updateFilters({ callSign: '' });
-                  }
-                  setSortDirection(null);
+                  setCurrentSearch('');
+                  searchRef.current?.focus();
                 }}
-                className="text-sm text-gray-400 hover:text-[#34d399] transition-colors animate-fadeIn"
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded text-gray-500 hover:text-white"
               >
-                Clear all
+                <X size={14} />
               </button>
+            ) : (
+              <kbd className="toolbar-kbd">⌘K</kbd>
             )}
           </div>
-          
-          <div className="text-sm text-gray-400">
-            Showing <span className="text-[#34d399] font-semibold">{filteredAndSortedData.length}</span> of <span className="text-white">{data.length}</span> results
-            {sortDirection && activeTable !== 'listicles' && (
-              <span className="ml-2 text-[#34d399]">
-                • Sorted by {activeTable === 'publication' ? 'Price' : 'Rate'} ({sortDirection === 'asc' ? 'Low to High' : 'High to Low'})
-              </span>
-            )}
-          </div>
+
+          {activeTable !== 'broadcast_television' && (
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(true)}
+              className={`toolbar-filters${drawerFilterCount > 0 ? ' has-filters' : ''}`}
+            >
+              <SlidersHorizontal size={16} />
+              <span>{drawerFilterCount > 0 ? 'Filters' : 'Add filters'}</span>
+              {drawerFilterCount > 0 && <span className="toolbar-badge">{drawerFilterCount}</span>}
+            </button>
+          )}
+
+          {activeTable !== 'listicles' && (
+            <button
+              type="button"
+              onClick={handleSort}
+              className={`toolbar-button${sortDirection ? ' is-active' : ''}`}
+            >
+              {getSortIcon()}
+              <span className="hidden sm:inline">{getSortLabel()}</span>
+              <span className="sm:hidden">Sort</span>
+            </button>
+          )}
+
+          {(drawerFilterCount > 0 || currentSearch || sortDirection) && (
+            <button
+              type="button"
+              onClick={() => {
+                if (activeTable === 'publication') {
+                  updateFilters({ search: '', minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' });
+                } else if (activeTable === 'listicles') {
+                  updateFilters({ search: '', genre: '' });
+                } else if (activeTable === 'television') {
+                  updateFilters({ search: '', affiliate: '', state: '' });
+                } else if (activeTable === 'broadcast_television') {
+                  updateFilters({ callSign: '' });
+                }
+                setSortDirection(null);
+              }}
+              className="text-sm font-semibold text-gray-400 hover:text-white transition-colors px-1"
+            >
+              Clear all
+            </button>
+          )}
         </div>
 
-        {/* Filters Panel */}
-        {filtersOpen && (
-          <div className="bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 p-6 mb-6 shadow-2xl filter-panel-enter hover-glow">
-            <div className={activeTable === 'publication' ? '' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'}>
-              {activeTable === 'publication' ? (
-                <PublicationFilters
-                  value={currentFilters as Filters['publication']}
-                  onChange={(patch) => updateFilters(patch)}
-                  genres={publicationFacets.genres}
-                  regions={publicationFacets.regions}
-                  priceMin={publicationFacets.priceMin}
-                  priceMax={publicationFacets.priceMax}
-                  matchCount={filteredAndSortedData.length}
-                  totalCount={data.length}
+        <p className="text-sm text-gray-400 mb-4">
+          Showing{' '}
+          <span className="font-semibold text-white tabular-nums">{filteredAndSortedData.length.toLocaleString()}</span>
+          {' '}of{' '}
+          <span className="tabular-nums">{data.length.toLocaleString()}</span>{' '}
+          {RESULT_NOUN[activeTable]}
+          {sortDirection && activeTable !== 'listicles' && (
+            <span className="ml-2 text-[#fcd34d]">
+              · {activeTable === 'publication' ? 'Price' : 'Rate'} {sortDirection === 'asc' ? 'low to high' : 'high to low'}
+            </span>
+          )}
+        </p>
+
+        {/* Filter drawers */}
+        <PublicationFilters
+          open={filtersOpen && activeTable === 'publication'}
+          onClose={() => setFiltersOpen(false)}
+          applied={filters.publication}
+          onApply={(next) => updateFilters({ ...next, search: filters.publication.search })}
+          items={allData.publication ?? []}
+          genres={publicationFacets.genres}
+          regions={publicationFacets.regions}
+        />
+
+        <FilterDrawer
+          open={filtersOpen && (activeTable === 'listicles' || activeTable === 'television')}
+          onClose={() => setFiltersOpen(false)}
+          onReset={() =>
+            activeTable === 'listicles'
+              ? updateFilters({ genre: '' })
+              : updateFilters({ affiliate: '', state: '' })
+          }
+          resetDisabled={drawerFilterCount === 0}
+          footerLabel={`Show ${filteredAndSortedData.length.toLocaleString()} ${RESULT_NOUN[activeTable]}`}
+        >
+          {activeTable === 'listicles' ? (
+            <section className="filter-section">
+              <h3 className="filter-label">Genre</h3>
+              <input
+                type="text"
+                placeholder="e.g. Business, Tech…"
+                value={(filters.listicles as Filters['listicles']).genre}
+                onChange={(e) => updateFilters({ genre: e.target.value })}
+                className="filter-input"
+              />
+            </section>
+          ) : (
+            <>
+              <section className="filter-section">
+                <h3 className="filter-label">Affiliate</h3>
+                <input
+                  type="text"
+                  placeholder="CBS, NBC, ABC…"
+                  value={(filters.television as Filters['television']).affiliate}
+                  onChange={(e) => updateFilters({ affiliate: e.target.value })}
+                  className="filter-input"
                 />
-              ) : activeTable === 'listicles' ? (
-                <>
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.1s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Search Listicles</label>
-                    <div className="relative">
-                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Enter name..."
-                        value={(currentFilters as Filters['listicles']).search || ''}
-                        onChange={(e) => updateFilters({ search: e.target.value })}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Genre</label>
-                    <input
-                      type="text"
-                      placeholder="Search genres..."
-                      value={(currentFilters as Filters['listicles']).genre || ''}
-                      onChange={(e) => updateFilters({ genre: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                </>
-              ) : activeTable === 'television' ? (
-                <>
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.1s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Search TV Shows</label>
-                    <div className="relative">
-                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                      <input
-                        type="text"
-                        placeholder="Call sign or program..."
-                        value={(currentFilters as Filters['television']).search || ''}
-                        onChange={(e) => updateFilters({ search: e.target.value })}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Affiliate</label>
-                    <input
-                      type="text"
-                      placeholder="CBS, NBC, ABC..."
-                      value={(currentFilters as Filters['television']).affiliate || ''}
-                      onChange={(e) => updateFilters({ affiliate: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                  
-                  <div className="animate-fadeIn" style={{ animationDelay: '0.3s' }}>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">State</label>
-                    <input
-                      type="text"
-                      placeholder="Enter state..."
-                      value={(currentFilters as Filters['television']).state || ''}
-                      onChange={(e) => updateFilters({ state: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                </>
-              ) : (
-                <div className="md:col-span-2 animate-fadeIn">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Search Call Signs</label>
-                  <div className="relative">
-                    <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Enter call sign..."
-                      value={(currentFilters as Filters['broadcast_television']).callSign || ''}
-                      onChange={(e) => updateFilters({ callSign: e.target.value })}
-                      className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-[#34d399] focus:border-[#34d399] text-white placeholder-gray-400 transition-all"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+              </section>
+              <section className="filter-section">
+                <h3 className="filter-label">State</h3>
+                <input
+                  type="text"
+                  placeholder="e.g. Texas"
+                  value={(filters.television as Filters['television']).state}
+                  onChange={(e) => updateFilters({ state: e.target.value })}
+                  className="filter-input"
+                />
+              </section>
+            </>
+          )}
+        </FilterDrawer>
 
         {/* Table */}
         <div key={activeTable} className={`bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden shadow-2xl table-swap${isSwitching ? ' is-switching' : ''}`}>
@@ -1133,11 +1144,10 @@ export default function Page() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-800 lime-gradient">
-                    {visibleColumns.map((header, index) => (
+                    {visibleColumns.map((header) => (
                       <th 
                         key={header} 
-                        style={{ animationDelay: `${index * 0.1}s` }}
-                        className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider animate-fadeIn"
+                        className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider"
                       >
                         {formatHeader(header)}
                       </th>
