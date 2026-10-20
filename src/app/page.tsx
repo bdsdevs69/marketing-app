@@ -1,13 +1,24 @@
 'use client';
 
-import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useLayoutEffect, useDeferredValue } from 'react';
-import { Filter, Search, SlidersHorizontal, X, Database, Tv, Radio, ChevronDown, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Mail, Star, Tag } from 'lucide-react';
+import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useDeferredValue } from 'react';
+import { Filter, Search, SlidersHorizontal, X, Mic, Database, Tv, Radio, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Star, Tag } from 'lucide-react';
 
 // Import the invitation modal
 import InvitationModal from '../components/InvitationModal';
 import CreateUserModal from '../components/CreateUserModal';
-import PublicationFilters, { matchesPublication, countDrawerFilters } from '../components/PublicationFilters';
+import PublicationFilters, { matchesPublication, countDrawerFilters, CLEARED_DRAWER } from '../components/PublicationFilters';
 import FilterDrawer from '../components/FilterDrawer';
+import CatalogTable from '../components/CatalogTable';
+import ScrollButtons from '../components/ScrollButtons';
+import PortalHero from '../components/PortalHero';
+import {
+  broadcastColumns,
+  listicleColumns,
+  podcastColumns,
+  publicationColumns,
+  televisionColumns,
+  type Row,
+} from '../components/catalog-columns';
 
 // Add proper type for formatHeader function
 const formatHeader = (header: string): string => {
@@ -18,18 +29,21 @@ const formatHeader = (header: string): string => {
     .trim(); // Remove any leading/trailing spaces
 };
 
-// Only the rows you can actually see are kept in the DOM. A full table is
-// ~7,000 cells, which is what made switching tables stutter.
-const EST_ROW_HEIGHT = 76;   // starting guess, replaced by real measurements
-const OVERSCAN_PX = 900;     // rendered above/below the viewport
-const VIEWPORT_FALLBACK = 720;
+
+
+// Shown first in the publication table regardless of sorting.
+const PINNED_PUBLICATION = 'dna-pr-blast';
+
+// Height of the pinned toolbar; the table's column headings stick right under it.
+const TOOLBAR_STICKY_HEIGHT = 72;
 
 // Toolbar search placeholder and result noun for each table.
 const SEARCH_PLACEHOLDER: Record<string, string> = {
-  publication: 'Search name or URL…',
+  publication: 'Find a publication or domain…',
   listicles: 'Search listicles…',
   television: 'Search call sign or program…',
   broadcast_television: 'Search call signs…',
+  podcasts: 'Search podcast, category or outlet…',
 };
 
 const RESULT_NOUN: Record<string, string> = {
@@ -37,6 +51,7 @@ const RESULT_NOUN: Record<string, string> = {
   listicles: 'listicles',
   television: 'TV shows',
   broadcast_television: 'stations',
+  podcasts: 'podcasts',
 };
 
 // Define types for your data structures
@@ -79,6 +94,14 @@ interface Filters {
     genres: string[];
     regions: string[];
     maxTatDays: string; // '' = any turnaround
+    minVisits: string;
+    badges: string[];
+    sponsored: string[];
+    doFollow: string[];
+    indexed: string[];
+    llm: string[];
+    niches: string[];
+    listiclesOnly: boolean;
   };
   listicles: {
     search: string;
@@ -92,9 +115,23 @@ interface Filters {
   broadcast_television: {
     callSign: string;
   };
+  podcasts: {
+    search: string;
+  };
 }
 
-type TableType = 'publication' | 'listicles' | 'television' | 'broadcast_television';
+type TableType = 'publication' | 'listicles' | 'television' | 'broadcast_television' | 'podcasts';
+
+const ROLE_CACHE_KEY = 'dna-pricing-role';
+
+const ALL_TABLES: TableType[] = ['publication', 'listicles', 'television', 'broadcast_television', 'podcasts'];
+const TABLE_ENDPOINTS: Record<TableType, string> = {
+  publication: '/api/data',
+  listicles: '/api/listicles',
+  television: '/api/television',
+  broadcast_television: '/api/broadcast_television',
+  podcasts: '/api/podcasts',
+};
 type SortDirection = 'asc' | 'desc' | null;
 
 // Component to render genre boxes with consistent dark theme styling
@@ -295,15 +332,17 @@ export default function Page() {
     publication: [],
     listicles: [],
     television: [],
-    broadcast_television: []
+    broadcast_television: [],
+    podcasts: []
   });
 
   const [data, setData] = useState<DataItem[]>([]);
   const [filters, setFilters] = useState<Filters>({ 
-    publication: { search: '', minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' },
+    publication: { search: '', ...CLEARED_DRAWER },
     listicles: { search: '', genre: '' },
     television: { search: '', affiliate: '', state: '' }, 
-    broadcast_television: { callSign: '' } 
+    broadcast_television: { callSign: '' },
+    podcasts: { search: '' }
   });
   
   const [activeTable, setActiveTable] = useState<TableType>('publication');
@@ -319,14 +358,10 @@ export default function Page() {
   const [isSwitching, startSwitching] = useTransition();
   // Laying out 1000+ rows at once costs ~350ms of frozen frame on every table
   // switch, so rows are rendered in chunks and grown as the user scrolls.
-  const scrollBoxRef = useRef<HTMLDivElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
-  const rowHeights = useRef<Map<number, number>>(new Map());
-  const [scrollTop, setScrollTop] = useState(0);
-  const [viewportHeight, setViewportHeight] = useState(VIEWPORT_FALLBACK);
-  const [measureTick, setMeasureTick] = useState(0);
   const [userRole, setUserRole] = useState<string>('user');
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  // Cheapest first by default.
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   
   // Check screen size for responsive behavior
   useEffect(() => {
@@ -340,27 +375,65 @@ export default function Page() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // Get user role from API
+  // Get user role from API. Until it answers, the admin buttons are rendered
+  // but shown only if the last visit was an admin's (html[data-role], set in
+  // layout.tsx before first paint), so they don't pop in on every refresh.
+  // It only affects which buttons show — admin actions are checked server-side.
+  const [roleKnown, setRoleKnown] = useState(false);
+  const showAdminButtons = userRole === 'admin' || !roleKnown;
+
   useEffect(() => {
     const checkUserRole = async () => {
       try {
         const response = await fetch('/api/auth/me');
         if (response.ok) {
           const userData = await response.json();
-          setUserRole(userData.role || 'user');
+          const role = userData.role || 'user';
+          setUserRole(role);
+          try { window.localStorage.setItem(ROLE_CACHE_KEY, role); } catch {}
+          if (role === 'admin') document.documentElement.dataset.role = 'admin';
+          else delete document.documentElement.dataset.role;
         }
       } catch (error) {
         console.error('Failed to get user role:', error);
+      } finally {
+        setRoleKnown(true);
       }
     };
     
     checkUserRole();
   }, []);
 
-  // Function to fetch data based on table type
+  // One request per table, shared: the initial load and tab switches await
+  // the same promise instead of fetching the same rows twice.
+  const inflight = useRef<Partial<Record<TableType, Promise<DataItem[]>>>>({});
+  // Tables whose request has finished (loaded or failed).
+  const [settled, setSettled] = useState<Partial<Record<TableType, boolean>>>({});
+  const loadTable = useCallback((tableType: TableType) => {
+    if (!inflight.current[tableType]) {
+      const endpoint = TABLE_ENDPOINTS[tableType];
+      inflight.current[tableType] = fetch(endpoint)
+        .then(async (res) => {
+          const body: unknown = await res.json();
+          // A failed request returns an error object, not rows; never put
+          // that into the table (it would crash the page).
+          if (!res.ok || !Array.isArray(body)) throw new Error(`${endpoint} returned ${res.status}`);
+          const rows = body as DataItem[];
+          setAllData((prev) => ({ ...prev, [tableType]: rows }));
+          return rows;
+        })
+        .catch((error) => {
+          delete inflight.current[tableType]; // allow a retry on the next switch
+          throw error;
+        })
+        .finally(() => setSettled((prev) => (prev[tableType] ? prev : { ...prev, [tableType]: true })));
+    }
+    return inflight.current[tableType]!;
+  }, []);
+
+  // Show a table: instantly from cache, otherwise once its request lands —
+  // but only if the user is still on that table.
   const fetchData = async (tableType: TableType) => {
-    // Already loaded once this session — show it immediately instead of
-    // refetching, which is what made switching tabs stutter.
     const cached = allData[tableType];
     if (cached && cached.length > 0) {
       setData(cached);
@@ -370,34 +443,8 @@ export default function Page() {
 
     setLoading(true);
     try {
-      let endpoint: string;
-      switch (tableType) {
-        case 'publication':
-          endpoint = '/api/data';
-          break;
-        case 'listicles':
-          endpoint = '/api/listicles';
-          break;
-        case 'television':
-          endpoint = '/api/television';
-          break;
-        case 'broadcast_television':
-          endpoint = '/api/broadcast_television';
-          break;
-        default:
-          endpoint = '/api/data';
-      }
-      
-      const res = await fetch(endpoint);
-      const fetchedData: DataItem[] = await res.json();
-      
-      // Always cache the response, but only show it if the user is still on
-      // that table — a slow response must not overwrite a newer switch.
-      setAllData(prev => ({
-        ...prev,
-        [tableType]: fetchedData
-      }));
-      if (activeTableRef.current === tableType) setData(fetchedData);
+      const rows = await loadTable(tableType);
+      if (activeTableRef.current === tableType) setData(rows);
     } catch (error) {
       console.error('Error fetching data:', error);
       if (activeTableRef.current === tableType) setData([]);
@@ -406,10 +453,17 @@ export default function Page() {
     }
   };
 
+  // Load every table at once on arrival; the hero only waits for the two it
+  // shows (publications and listicles), so a slow TV feed can't hold it up.
+  useEffect(() => {
+    for (const t of ALL_TABLES) loadTable(t).catch(() => {});
+  }, [loadTable]);
+  const heroReady = Boolean(settled.publication && settled.listicles);
+
   useEffect(() => {
     fetchData(activeTable);
     // Reset sort when changing tables
-    setSortDirection(null);
+    setSortDirection('asc');
   }, [activeTable]);
 
   // Memoize filtered and sorted data to prevent unnecessary recalculations
@@ -444,15 +498,20 @@ export default function Page() {
       } else if (activeTable === 'broadcast_television') {
         const bcFilters = deferredFilters[activeTable] as Filters['broadcast_television'];
         return item.CallSign?.toLowerCase().includes((bcFilters.callSign || '').toLowerCase());
+      } else if (activeTable === 'podcasts') {
+        const q = (deferredFilters.podcasts.search || '').trim().toLowerCase();
+        if (!q) return true;
+        const pod = item as unknown as Record<string, unknown>;
+        return [pod.name, pod.category, pod.companion_article].some((v) => String(v ?? '').toLowerCase().includes(q));
       }
       return true;
     });
 
-    // Apply sorting to filtered data (skip for listicles)
-    return [...filtered].sort((a, b) => {
-      if (sortDirection === null || activeTable === 'listicles') return 0;
+    // Apply sorting to filtered data (listicles sort by their cheapest tier)
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortDirection === null) return 0;
       
-      const priceField = activeTable === 'publication' ? 'price' : 'rate';
+      const priceField = activeTable === 'television' || activeTable === 'broadcast_television' ? 'rate' : 'price';
       const aValue = a[priceField as keyof DataItem] as number || 0;
       const bValue = b[priceField as keyof DataItem] as number || 0;
       
@@ -462,6 +521,18 @@ export default function Page() {
         return bValue - aValue;
       }
     });
+
+    // Our own PR Blast package always leads the publication list.
+    if (activeTable === 'publication') {
+      const pinned = sorted.findIndex((item) => (item as { id?: string }).id === PINNED_PUBLICATION);
+      if (pinned > 0) sorted.unshift(...sorted.splice(pinned, 1));
+    }
+    // Hot-selling listicles lead the listicles list.
+    if (activeTable === 'listicles') {
+      const hot = sorted.filter((item) => (item as { hot?: boolean }).hot === true);
+      if (hot.length) return [...hot, ...sorted.filter((item) => (item as { hot?: boolean }).hot !== true)];
+    }
+    return sorted;
   }, [data, deferredFilters, activeTable, sortDirection]);
 
   // Find and separate the featured PR Blast publication
@@ -475,10 +546,34 @@ export default function Page() {
   }, [filteredAndSortedData, activeTable]);
 
   // Remove featured publication from regular data display
-  const regularData = useMemo(() => {
-    if (!featuredPublication) return filteredAndSortedData;
-    return filteredAndSortedData.filter(item => item !== featuredPublication);
-  }, [filteredAndSortedData, featuredPublication]);
+  const heroFeatured = useMemo(
+    () =>
+      allData.publication.find((item) => {
+        const n = item.name?.toLowerCase() ?? '';
+        return n.includes('pr blast') && n.includes('200') && n.includes('affiliate');
+      }),
+    [allData.publication]
+  );
+
+  // PR Blast is featured in the hero but stays searchable in the table too.
+  const regularData = filteredAndSortedData;
+
+  // Columns per table. Publication columns that are empty across the whole
+  // catalogue (e.g. monthly visits before a data import) are left out.
+  const tableColumns = useMemo(() => {
+    switch (activeTable) {
+      case 'publication':
+        return publicationColumns((allData.publication.length ? allData.publication : data) as unknown as Row[]);
+      case 'listicles':
+        return listicleColumns();
+      case 'television':
+        return televisionColumns();
+      case 'broadcast_television':
+        return broadcastColumns();
+      case 'podcasts':
+        return podcastColumns();
+    }
+  }, [activeTable, allData.publication, data]);
 
   // Memoize visible columns - Updated to use auto width instead of fixed
   const visibleColumns = useMemo(() => {
@@ -559,87 +654,14 @@ export default function Page() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // A new table (or filter) starts from the top with no stale measurements.
-  useEffect(() => {
-    rowHeights.current.clear();
-    setScrollTop(0);
-    setMeasureTick((t) => t + 1);
-    if (scrollBoxRef.current) scrollBoxRef.current.scrollTop = 0;
-  }, [activeTable, filteredAndSortedData]);
 
-  // Track how tall the scroll box is so the window covers it.
+  // A new table starts at the top of the list.
   useEffect(() => {
-    const box = scrollBoxRef.current;
-    if (!box) return;
-    const update = () => setViewportHeight(box.clientHeight || VIEWPORT_FALLBACK);
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(box);
-    return () => ro.disconnect();
+    const table = document.getElementById('catalog-table');
+    if (table && table.getBoundingClientRect().top < 0) {
+      window.scrollTo({ top: window.scrollY + table.getBoundingClientRect().top - 140 });
+    }
   }, [activeTable]);
-
-  // Which slice of rows to actually render, plus the spacer heights that keep
-  // the scrollbar honest. Heights start as an estimate and are replaced with
-  // real measurements as rows are rendered.
-  const virtualWindow = useMemo(() => {
-    const total = regularData.length;
-    const heightAt = (i: number) => rowHeights.current.get(i) ?? EST_ROW_HEIGHT;
-
-    const top = Math.max(0, scrollTop - OVERSCAN_PX);
-    let start = 0;
-    let padTop = 0;
-    while (start < total && padTop + heightAt(start) <= top) {
-      padTop += heightAt(start);
-      start++;
-    }
-
-    const budget = viewportHeight + OVERSCAN_PX * 2;
-    let end = start;
-    let used = 0;
-    while (end < total && used < budget) {
-      used += heightAt(end);
-      end++;
-    }
-
-    let padBottom = 0;
-    for (let i = end; i < total; i++) padBottom += heightAt(i);
-
-    return { start, end, padTop, padBottom };
-    // measureTick forces a recompute once real heights are known.
-  }, [regularData, scrollTop, viewportHeight, measureTick]);
-
-  // Measure each row once, the first time it is rendered. Re-measuring on every
-  // render made scrolling ping-pong between renders and cost ~150ms a frame.
-  useLayoutEffect(() => {
-    const box = scrollBoxRef.current;
-    if (!box) return;
-
-    const rows = box.querySelectorAll<HTMLTableRowElement>('tr[data-row-index]');
-    let drift = 0;
-    rows.forEach((tr) => {
-      const index = Number(tr.dataset.rowIndex);
-      if (rowHeights.current.has(index)) return; // already known
-      const measured = tr.offsetHeight;
-      if (measured > 0) {
-        rowHeights.current.set(index, measured);
-        drift += Math.abs(measured - EST_ROW_HEIGHT);
-      }
-    });
-
-    // Only recompute when the estimates were off by enough to shift the layout.
-    if (drift > 24) setMeasureTick((t) => t + 1);
-  });
-
-  // Coalesce scroll events into one state update per frame.
-  const scrollFrame = useRef<number | null>(null);
-  const handleTableScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const next = e.currentTarget.scrollTop;
-    if (scrollFrame.current !== null) return;
-    scrollFrame.current = requestAnimationFrame(() => {
-      scrollFrame.current = null;
-      setScrollTop(next);
-    });
-  }, []);
 
   // Optimize table switch with useCallback
   const handleTableSwitch = useCallback((tableType: TableType) => {
@@ -647,18 +669,21 @@ export default function Page() {
     startSwitching(() => setActiveTable(tableType));
   }, []);
 
+  // Hero shortcuts: jump down to the catalogue, optionally searching for an outlet.
+  const catalogRef = useRef<HTMLElement | null>(null);
+  const scrollToCatalog = useCallback(() => {
+    catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+  const pickPublication = useCallback((name: string) => {
+    setFilters((prev) => ({ ...prev, publication: { ...prev.publication, search: name } }));
+    handleTableSwitch('publication');
+    scrollToCatalog();
+  }, [handleTableSwitch, scrollToCatalog]);
+
   // Optimize sort handling with useCallback
   const handleSort = useCallback(() => {
-    if (activeTable === 'listicles') return; // No sorting for listicles
-    
-    if (sortDirection === null) {
-      setSortDirection('asc');
-    } else if (sortDirection === 'asc') {
-      setSortDirection('desc');
-    } else {
-      setSortDirection(null);
-    }
-  }, [activeTable, sortDirection]);
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  }, [sortDirection]);
 
   // Get sort icon
   const getSortIcon = () => {
@@ -669,12 +694,10 @@ export default function Page() {
 
   // Get sort label
   const getSortLabel = () => {
-    const priceField = activeTable === 'publication' ? 'price' : 'rate';
+    const priceField = activeTable === 'television' || activeTable === 'broadcast_television' ? 'rate' : 'price';
     const fieldName = priceField === 'price' ? 'Price' : 'Rate';
     
-    if (sortDirection === 'asc') return `${fieldName} (Low to High)`;
-    if (sortDirection === 'desc') return `${fieldName} (High to Low)`;
-    return `Sort by ${fieldName}`;
+    return sortDirection === 'desc' ? `${fieldName}: high → low` : `${fieldName}: low → high`;
   };
 
   // Get current filters based on active table
@@ -702,6 +725,7 @@ export default function Page() {
       case 'listicles': return <List size={18} />;
       case 'television': return <Tv size={18} />;
       case 'broadcast_television': return <Radio size={18} />;
+      case 'podcasts': return <Mic size={18} />;
       default: return <Database size={18} />;
     }
   };
@@ -712,6 +736,7 @@ export default function Page() {
       case 'listicles': return 'Listicles';
       case 'television': return 'Television';
       case 'broadcast_television': return 'Broadcast TV';
+      case 'podcasts': return 'Podcasts';
       default: return 'Publications';
     }
   };
@@ -720,13 +745,13 @@ export default function Page() {
     <div className="min-h-screen bg-black text-white font-sans">
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         @keyframes pulse {
@@ -740,11 +765,11 @@ export default function Page() {
         }
         
         .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .animate-slideDown {
-          animation: slideDown 0.5s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .animate-pulse-custom {
@@ -798,48 +823,53 @@ export default function Page() {
       `}</style>
 
       {/* Header */}
-      <header className="border-b border-gray-800 lime-gradient sticky top-0 z-50 animate-slideDown shimmer-effect">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="border-b border-gray-800 lime-gradient relative z-50">
+        <div className="portal-wrap">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3 animate-slideInLeft">
-              <div className="w-24 h-16 rounded-lg flex items-center justify-center shadow-md shadow-indigo-500/10">
+            <div className="flex items-center space-x-3">
+              <div className="w-14 h-9 flex items-center justify-center">
                 <img 
                   src="/logo-money.png" 
                   alt="Digital Networking Agency Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div>
-                <h1 className="text-xl font-bold text-black">Digital Networking Agency</h1>
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold text-black leading-tight">Digital Networking Agency</h1>
                 <p className="text-xs text-black/70">Publication Dashboard</p>
               </div>
             </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="hidden sm:flex items-center space-x-6">
-                <div className="text-sm">
-                  <span className="text-black/70">Results:</span>
-                  <span className="ml-1 text-black font-bold">{filteredAndSortedData.length}</span>
-                </div>
-              </div>
+            <div className="header-actions flex items-center space-x-4">
               {/* Admin Only - Pricing Factors Button */}
-              {userRole === 'admin' && (
+              {showAdminButtons && (
                 <button 
                   onClick={() => window.location.href = '/pricing-factors'}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
+                  className="admin-only flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
                 >
                   <DollarSign size={16} className="text-black" />
                   <span className="hidden sm:inline text-sm text-black font-medium">Pricing</span>
                 </button>
               )}
               
+              {/* Admin Only - Base prices */}
+              {showAdminButtons && (
+                <button 
+                  onClick={() => window.location.href = '/catalog'}
+                  className="admin-only flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
+                >
+                  <Tag size={16} className="text-black" />
+                  <span className="hidden sm:inline text-sm text-black font-medium">Base prices</span>
+                </button>
+              )}
+
               {/* Admin Only - Settings Button */}
-              {userRole === 'admin' && (
+              {showAdminButtons && (
                 <button 
                   onClick={() => window.location.href = '/users'}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
+                  className="admin-only flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
                 >
                   <Settings size={16} className="text-black" />
                   <span className="hidden sm:inline text-sm text-black font-medium">Settings</span>
@@ -847,10 +877,10 @@ export default function Page() {
               )}
               
               {/* Admin Only - Create User Button */}
-              {userRole === 'admin' && (
+              {showAdminButtons && (
                 <button 
                   onClick={() => setCreateUserModalOpen(true)}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
+                  className="admin-only flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
                 >
                   <KeyRound size={16} className="text-black" />
                   <span className="hidden sm:inline text-sm text-black font-medium">Create User</span>
@@ -858,10 +888,10 @@ export default function Page() {
               )}
 
               {/* Admin Only - Send Invitation Button */}
-              {userRole === 'admin' && (
+              {showAdminButtons && (
                 <button 
                   onClick={() => setInvitationModalOpen(true)}
-                  className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
+                  className="admin-only flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
                 >
                   <UserPlus size={16} className="text-black" />
                   <span className="hidden sm:inline text-sm text-black font-medium">Invite User</span>
@@ -871,6 +901,7 @@ export default function Page() {
               <button 
                 onClick={async () => {
                   try {
+                    try { window.localStorage.removeItem(ROLE_CACHE_KEY); } catch {}
                     await fetch('/api/auth/logout', { method: 'POST' });
                     window.location.href = '/login';
                   } catch (error) {
@@ -888,97 +919,46 @@ export default function Page() {
         </div>
       </header>
 
-      {/* Information Section */}
-      <div className="bg-gray-900/90 backdrop-blur-sm border-b border-gray-800 animate-fadeIn">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-6 hover-glow">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-              <div className="flex-1">
-                <div className="space-y-3">
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    <span className="text-[#34d399] font-medium">Important Notice:</span> Once we have published the article for you, any further edits may include an extra charge.
-                  </p>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Digital Networking Agency will use reasonable good faith efforts to ensure that such article will remain publicly available in the applicable publication for at least 12 months.
-                  </p>
-                  
-                  {/* Enhanced Contact Section */}
-                  <div className="bg-gradient-to-r from-gray-800/80 to-gray-900/80 rounded-xl border border-[#34d399]/30 p-4 mt-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#34d399] to-[#10b981] rounded-full flex items-center justify-center shadow-lg">
-                        <Mail size={18} className="text-black" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-[#34d399] text-sm font-medium">For orders please contact:</p>
-                        <a 
-                          className="text-white hover:text-[#34d399] font-bold text-lg transition-colors duration-300 hover:underline"
-                        >
-                          sam@digitalnetworkingagency.com
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 lg:ml-8">
-                <button
-                  onClick={() => window.open('https://docs.google.com/document/d/1hFgAovf6BFj71lvEWBuj-q3I3UFxGSoWjU6KkzvUwW4/edit?usp=sharing', '_blank')}
-                  className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-black font-medium rounded-lg transition-all hover-lift"
-                >
-                  <Download size={16} />
-                  <span>Download PR Questionnaire</span>
-                </button>
-                
-                <button
-                  onClick={() => window.open('https://docs.google.com/document/d/1VKongYU8yeVJQq8JgAmc80c8BWp2Ditj4CrQPdR77r8/edit?addon_store&tab=t.0', '_blank')}
-                  className="flex items-center justify-center space-x-2 px-4 py-2.5 border border-[#34d399] text-[#34d399] hover:bg-[#34d399] hover:text-black font-medium rounded-lg transition-all hover-lift"
-                >
-                  <Download size={16} />
-                  <span>Download TV Questionnaire</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Hero: portal intro, publishing terms, resources and the catalogue tabs */}
+      <section className="portal-hero">
+        <PortalHero
+          ready={heroReady}
+          publications={allData.publication as unknown as Record<string, unknown>[]}
+          counts={{ listicles: allData.listicles.length }}
+          onBrowse={scrollToCatalog}
+          onPickPublication={pickPublication}
+        />
+      </section>
 
-      {/* Navigation Tabs */}
-      <div className="border-b border-gray-800 bg-gray-900/80 backdrop-blur-sm animate-fadeIn">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-1 py-4 overflow-x-auto">
-            {(['publication', 'listicles', 'television', 'broadcast_television'] as TableType[]).map((type, index) => (
-              <button
-                key={type}
-                onClick={() => handleTableSwitch(type)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 whitespace-nowrap ${
-                  activeTable === type
-                    ? 'lime-gradient text-black shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-gray-800 border border-gray-700'
-                }`}
-              >
-                {getTableIcon(type)}
-                <span>{getTableLabel(type)}</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                  activeTable === type ? 'bg-black/20 text-black' : 'bg-gray-700 text-gray-300'
-                }`}>
-                  {type === activeTable ? filteredAndSortedData.length : allData[type].length}
+      {/* Main Content — light surface, like a clean sheet under the dark hero */}
+      <section className="portal-light" ref={catalogRef}>
+      <div className="portal-wrap pb-10">
+        {/* Catalogue switcher sits with the catalogue, not in the hero */}
+        <nav className="portal-tabs" aria-label="Catalogue">
+          {ALL_TABLES.map((type) => (
+            <button
+              key={type}
+              type="button"
+              onClick={() => handleTableSwitch(type)}
+              className={`portal-tab${activeTable === type ? ' is-active' : ''}`}
+              aria-current={activeTable === type ? 'page' : undefined}
+            >
+              {getTableIcon(type)}
+              <span>{getTableLabel(type)}</span>
+              {!settled[type] ? (
+                <span className="portal-tab-count skel skel-count" aria-hidden="true" />
+              ) : allData[type].length > 0 && (
+                <span className="portal-tab-count">
+                  {(type === activeTable ? filteredAndSortedData.length : allData[type].length).toLocaleString()}
                 </span>
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
+              )}
+            </button>
+          ))}
+        </nav>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Featured Publication Card - Only show for publications tab */}
-        {activeTable === 'publication' && featuredPublication && (
-          <FeaturedPublicationCard publication={featuredPublication} />
-        )}
-
-        {/* Toolbar: search is always visible; everything else lives in the drawer */}
-        <div className="filter-toolbar mb-4">
+        {/* Toolbar: pinned while scrolling; search is always visible */}
+        <div className="toolbar-sticky" style={{ height: TOOLBAR_STICKY_HEIGHT }}>
+        <div className="filter-toolbar">
           <div className="relative flex-1 min-w-[220px] max-w-md">
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
             <input
@@ -1007,44 +987,44 @@ export default function Page() {
             )}
           </div>
 
-          {activeTable !== 'broadcast_television' && (
+          {activeTable !== 'broadcast_television' && activeTable !== 'podcasts' && (
             <button
               type="button"
               onClick={() => setFiltersOpen(true)}
               className={`toolbar-filters${drawerFilterCount > 0 ? ' has-filters' : ''}`}
             >
               <SlidersHorizontal size={16} />
-              <span>{drawerFilterCount > 0 ? 'Filters' : 'Add filters'}</span>
+              <span>Refine</span>
               {drawerFilterCount > 0 && <span className="toolbar-badge">{drawerFilterCount}</span>}
             </button>
           )}
 
-          {activeTable !== 'listicles' && (
-            <button
-              type="button"
-              onClick={handleSort}
-              className={`toolbar-button${sortDirection ? ' is-active' : ''}`}
-            >
-              {getSortIcon()}
-              <span className="hidden sm:inline">{getSortLabel()}</span>
-              <span className="sm:hidden">Sort</span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleSort}
+            className={`toolbar-button${sortDirection ? ' is-active' : ''}`}
+          >
+            {getSortIcon()}
+            <span className="hidden sm:inline">{getSortLabel()}</span>
+            <span className="sm:hidden">Sort</span>
+          </button>
 
-          {(drawerFilterCount > 0 || currentSearch || sortDirection) && (
+          {(drawerFilterCount > 0 || currentSearch || sortDirection === 'desc') && (
             <button
               type="button"
               onClick={() => {
                 if (activeTable === 'publication') {
-                  updateFilters({ search: '', minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' });
+                  updateFilters({ search: '', ...CLEARED_DRAWER });
                 } else if (activeTable === 'listicles') {
                   updateFilters({ search: '', genre: '' });
                 } else if (activeTable === 'television') {
                   updateFilters({ search: '', affiliate: '', state: '' });
                 } else if (activeTable === 'broadcast_television') {
                   updateFilters({ callSign: '' });
+                } else if (activeTable === 'podcasts') {
+                  updateFilters({ search: '' });
                 }
-                setSortDirection(null);
+                setSortDirection('asc');
               }}
               className="text-sm font-semibold text-gray-400 hover:text-white transition-colors px-1"
             >
@@ -1053,16 +1033,24 @@ export default function Page() {
           )}
         </div>
 
-        <p className="text-sm text-gray-400 mb-4">
-          Showing{' '}
-          <span className="font-semibold text-white tabular-nums">{filteredAndSortedData.length.toLocaleString()}</span>
-          {' '}of{' '}
-          <span className="tabular-nums">{data.length.toLocaleString()}</span>{' '}
-          {RESULT_NOUN[activeTable]}
-          {sortDirection && activeTable !== 'listicles' && (
-            <span className="ml-2 text-[#fcd34d]">
-              · {activeTable === 'publication' ? 'Price' : 'Rate'} {sortDirection === 'asc' ? 'low to high' : 'high to low'}
-            </span>
+        </div>
+
+        <p className="results-count">
+          {loading ? (
+            <>Loading {RESULT_NOUN[activeTable]}…</>
+          ) : (
+            <>
+              Showing{' '}
+              <span className="font-bold tabular-nums">{filteredAndSortedData.length.toLocaleString()}</span>
+              {' '}of{' '}
+              <span className="tabular-nums">{data.length.toLocaleString()}</span>{' '}
+              {RESULT_NOUN[activeTable]}
+              {sortDirection === 'desc' && (
+                <span className="ml-2 text-[#fcd34d]">
+                  · {activeTable === 'television' || activeTable === 'broadcast_television' ? 'Rate' : 'Price'} high to low
+                </span>
+              )}
+            </>
           )}
         </p>
 
@@ -1125,154 +1113,46 @@ export default function Page() {
           )}
         </FilterDrawer>
 
-        {/* Table */}
-        <div key={activeTable} className={`bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-800 overflow-hidden shadow-2xl table-swap${isSwitching ? ' is-switching' : ''}`}>
+        {/* Table — scrolls with the page; only rows near the viewport are rendered */}
+        <div id="catalog-table" key={activeTable} className={`table-swap${isSwitching ? ' is-switching' : ''}`}>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="flex items-center space-x-3">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#34d399]"></div>
-                <span className="text-gray-400">Loading data...</span>
-              </div>
+            // Placeholder rows the size of real ones, so nothing jumps when data lands.
+            <div className="catalog-skeleton" role="status" aria-label={`Loading ${RESULT_NOUN[activeTable]}`}>
+              {Array.from({ length: 10 }, (_, i) => (
+                <div key={i} className="catalog-skeleton-row">
+                  <span className="skel skel-logo" />
+                  <span className="skel skel-name" />
+                  <span className="skel skel-cell" />
+                  <span className="skel skel-cell" />
+                  <span className="skel skel-cell skel-wide" />
+                  <span className="skel skel-cell" />
+                </div>
+              ))}
             </div>
           ) : (
-            <div
-              ref={scrollBoxRef}
-              onScroll={handleTableScroll}
-              className="overflow-auto table-scroll"
-              style={{ maxHeight: 'min(72vh, 820px)' }}
-            >
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-800 lime-gradient">
-                    {visibleColumns.map((header) => (
-                      <th 
-                        key={header} 
-                        className="px-4 sm:px-6 py-4 text-left text-xs font-bold text-black uppercase tracking-wider"
-                      >
-                        {formatHeader(header)}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-800">
-                  {virtualWindow.padTop > 0 && (
-                    <tr aria-hidden="true" style={{ height: virtualWindow.padTop }}>
-                      <td colSpan={visibleColumns.length} className="p-0 border-0" />
-                    </tr>
-                  )}
-                  {regularData.length > 0 ? (
-                    regularData.slice(virtualWindow.start, virtualWindow.end).map((row, offset) => {
-                      const idx = virtualWindow.start + offset;
-                      return (
-                      <tr 
-                        key={idx}
-                        data-row-index={idx}
-                        className="hover:bg-gray-800/50 transition-colors duration-150"
-                      >
-                        {visibleColumns.map((key) => {
-                          const cellValue = row[key as keyof DataItem];
-                          return (
-                            <td key={key} className="px-4 sm:px-6 py-4 text-sm">
-                              {key === 'genres' ? (
-                                <GenreBoxes genres={cellValue as string} />
-                              ) : key === 'example' && row.example ? (
-                                <a
-                                  href={activeTable === 'television' ? row.example : `https://cdn.sanity.io/images/8n90kyzz/production/${row.example}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-block transition-all duration-300 hover:scale-110"
-                                >
-                                  <div className="w-10 h-10 bg-gradient-to-br from-[#34d399] to-[#10b981] rounded-lg flex items-center justify-center shadow-lg hover:shadow-xl">
-                                    <span className="text-black text-lg">🖼️</span>
-                                  </div>
-                                </a>
-                              ) : key === 'name' || key === 'programName' ? (
-                                <div className="flex items-start space-x-3">
-                                  {row.logo && (
-                                    <img
-                                      src={`https://cdn.sanity.io/images/8n90kyzz/production/${row.logo}`}
-                                      alt="logo"
-                                      className="w-8 h-8 rounded-lg object-cover border border-gray-700 hover:scale-110 transition-transform duration-300 flex-shrink-0 mt-1"
-                                    />
-                                  )}
-                                  <div className="min-w-0">
-                                    {row.url ? (
-                                      <a 
-                                        href={row.url} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="text-[#34d399] hover:text-[#10b981] font-medium transition-colors block break-words leading-5"
-                                      >
-                                        {cellValue}
-                                      </a>
-                                    ) : (
-                                      <span className="text-gray-300 font-medium block break-words leading-5">{cellValue}</span>
-                                    )}
-                                  </div>
-                                </div>
-                              ) : key === 'price' ? (
-                                activeTable === 'listicles' ? (
-                                  <PricingTiers priceText={cellValue as string | number} />
-                                ) : (
-                                  <span className="text-[#fbbf24] font-semibold">
-                                    ${(cellValue as number)?.toLocaleString()}
-                                  </span>
-                                )
-                              ) : key === 'rate' ? (
-                                <span className="text-[#fbbf24] font-semibold">
-                                  ${(cellValue as number)?.toLocaleString()}
-                                </span>
-                              ) : key === 'affiliate' ? (
-                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                  cellValue === 'CBS' ? 'bg-blue-900 text-blue-200' :
-                                  cellValue === 'NBC' ? 'bg-purple-900 text-purple-200' :
-                                  cellValue === 'ABC' ? 'bg-red-900 text-red-200' :
-                                  cellValue === 'Fox' ? 'bg-orange-900 text-orange-200' :
-                                  cellValue === 'CW' ? 'bg-green-900 text-green-200' :
-                                  cellValue === 'INDIE' ? 'bg-gray-900 text-gray-200' :
-                                  'bg-gray-800 text-gray-300'
-                                }`}>
-                                  {cellValue}
-                                </span>
-                              ) : key === 'regions' || key === 'calls' || key === 'market' || key === 'location' || key === 'state' ? (
-                                <div className="text-gray-300 break-words leading-5 max-w-xs">
-                                  {cellValue}
-                                </div>
-                              ) : (
-                                <span className="text-gray-300 break-words block leading-5">{cellValue}</span>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan={visibleColumns.length} className="px-6 py-12 text-center">
-                        <div className="flex flex-col items-center space-y-3 animate-fadeIn">
-                          <Database size={48} className="text-gray-600" />
-                          <h3 className="text-lg font-medium text-gray-300">No results found</h3>
-                          <p className="text-gray-500">Try adjusting your filters to see more data</p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                  {virtualWindow.padBottom > 0 && (
-                    <tr aria-hidden="true" style={{ height: virtualWindow.padBottom }}>
-                      <td colSpan={visibleColumns.length} className="p-0 border-0" />
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <CatalogTable
+              rows={regularData as unknown as Row[]}
+              columns={tableColumns}
+              rowKey={(row, i) => String(row.id ?? i)}
+              stickyTop={TOOLBAR_STICKY_HEIGHT}
+              empty={
+                <div className="flex flex-col items-center gap-2 py-10">
+                  <Database size={40} className="text-gray-600" />
+                  <div className="text-base font-semibold text-gray-200">No results found</div>
+                  <div className="text-sm text-gray-500">Try a different search or clear your filters.</div>
+                </div>
+              }
+            />
           )}
         </div>
       </div>
+      </section>
+
+      <ScrollButtons />
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 lime-gradient mt-12 animate-fadeIn">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <footer className="border-t border-gray-800 lime-gradient mt-12">
+        <div className="portal-wrap py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
             <p className="text-sm text-black/80 font-medium">© 2025 Digital Networking Agency. All rights reserved.</p>
             <div className="flex items-center space-x-6">

@@ -63,13 +63,13 @@ export default function LoginPage() {
     <div className="min-h-screen bg-black text-white font-sans flex items-center justify-center p-4">
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         @keyframes slideUp {
-          from { opacity: 0; transform: translateY(40px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         @keyframes shimmer {
@@ -88,11 +88,11 @@ export default function LoginPage() {
         }
         
         .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .animate-slideUp {
-          animation: slideUp 0.8s ease-out;
+          animation: fadeIn 0.3s ease-out;
         }
         
         .animate-glow {

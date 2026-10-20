@@ -11,6 +11,14 @@ export interface PublicationFilterState {
   genres: string[];
   regions: string[];
   maxTatDays: string; // '' = any
+  minVisits: string; // '' = any
+  badges: string[];
+  sponsored: string[];
+  doFollow: string[];
+  indexed: string[];
+  llm: string[];
+  niches: string[]; // a site must accept every picked niche
+  listiclesOnly: boolean;
 }
 
 export const EMPTY_PUBLICATION_FILTERS: PublicationFilterState = {
@@ -20,6 +28,31 @@ export const EMPTY_PUBLICATION_FILTERS: PublicationFilterState = {
   genres: [],
   regions: [],
   maxTatDays: '',
+  minVisits: '',
+  badges: [],
+  sponsored: [],
+  doFollow: [],
+  indexed: [],
+  llm: [],
+  niches: [],
+  listiclesOnly: false,
+};
+
+// Everything the drawer controls (search lives in the toolbar).
+export const CLEARED_DRAWER: Omit<PublicationFilterState, 'search'> = {
+  minPrice: '',
+  maxPrice: '',
+  genres: [],
+  regions: [],
+  maxTatDays: '',
+  minVisits: '',
+  badges: [],
+  sponsored: [],
+  doFollow: [],
+  indexed: [],
+  llm: [],
+  niches: [],
+  listiclesOnly: false,
 };
 
 // The fields of a publication row the filters read.
@@ -30,7 +63,27 @@ export interface PublicationLike {
   genres?: unknown;
   regions?: unknown;
   estimated_time?: unknown;
+  monthly_visits?: unknown;
+  badges?: unknown;
+  sponsored?: unknown;
+  do_follow?: unknown;
+  indexed?: unknown;
+  llm_aeo?: unknown;
+  niches?: unknown;
+  listicles?: unknown;
 }
+
+// Monthly-visit floor stops; the first means any.
+export const VISIT_STOPS: { min: number | null; label: string }[] = [
+  { min: null, label: 'Any' },
+  { min: 1_000, label: '1k+' },
+  { min: 10_000, label: '10k+' },
+  { min: 50_000, label: '50k+' },
+  { min: 100_000, label: '100k+' },
+  { min: 500_000, label: '500k+' },
+  { min: 1_000_000, label: '1M+' },
+  { min: 5_000_000, label: '5M+' },
+];
 
 // Turnaround slider stops, measured by the longest time a quoted range can
 // take; the last stop means no limit.
@@ -102,19 +155,57 @@ const matchTat = (item: PublicationLike, f: PublicationFilterState) => {
   return days !== null && days <= Number(f.maxTatDays);
 };
 
+const lower = (v: unknown) => String(v ?? '').trim().toLowerCase();
+const asList = (v: unknown) => (Array.isArray(v) ? v.map(lower) : splitList(v));
+
+// Within one group, picking several values means "any of these".
+const anyOf = (picked: string[], value: unknown) => picked.length === 0 || picked.includes(lower(value));
+
+const matchVisits = (item: PublicationLike, f: PublicationFilterState) =>
+  f.minVisits === '' || (typeof item.monthly_visits === 'number' && item.monthly_visits >= Number(f.minVisits));
+
+const matchFlags = (item: PublicationLike, f: PublicationFilterState) =>
+  anyOf(f.sponsored, item.sponsored) &&
+  anyOf(f.doFollow, item.do_follow) &&
+  anyOf(f.indexed, item.indexed) &&
+  anyOf(f.llm, item.llm_aeo);
+
+const matchBadges = (item: PublicationLike, f: PublicationFilterState) =>
+  f.badges.length === 0 || f.badges.some((b) => asList(item.badges).includes(b.toLowerCase()));
+
+// Niches are different: a site has to accept every niche the article touches.
+const matchNiches = (item: PublicationLike, f: PublicationFilterState) =>
+  f.niches.length === 0 || f.niches.every((n) => asList(item.niches).includes(n));
+
+const matchListicles = (item: PublicationLike, f: PublicationFilterState) =>
+  !f.listiclesOnly || (Array.isArray(item.listicles) && item.listicles.length > 0);
+
 export const matchesPublication = (item: PublicationLike, f: PublicationFilterState) =>
   matchSearch(item, f) &&
   matchPrice(item, f) &&
   matchGenres(item, f) &&
   matchRegions(item, f) &&
-  matchTat(item, f);
+  matchTat(item, f) &&
+  matchVisits(item, f) &&
+  matchFlags(item, f) &&
+  matchBadges(item, f) &&
+  matchNiches(item, f) &&
+  matchListicles(item, f);
 
 // Filters set inside the drawer (search lives in the toolbar, so it's excluded).
 export const countDrawerFilters = (f: PublicationFilterState) =>
   (f.minPrice !== '' || f.maxPrice !== '' ? 1 : 0) +
   (f.maxTatDays !== '' ? 1 : 0) +
+  (f.minVisits !== '' ? 1 : 0) +
   f.genres.length +
-  f.regions.length;
+  f.regions.length +
+  f.badges.length +
+  f.sponsored.length +
+  f.doFollow.length +
+  f.indexed.length +
+  f.llm.length +
+  f.niches.length +
+  (f.listiclesOnly ? 1 : 0);
 
 const SCALE = 1000;
 
@@ -203,12 +294,13 @@ export default function PublicationFilters({
       ? TAT_STOPS.length - 1
       : Math.max(0, TAT_STOPS.findIndex((s) => s.days !== null && s.days >= Number(draft.maxTatDays)));
 
-  const toggle = (key: 'genres' | 'regions', value: string) =>
-    patch({
-      [key]: draft[key].includes(value)
-        ? draft[key].filter((v) => v !== value)
-        : [...draft[key], value],
-    } as Partial<PublicationFilterState>);
+  type ListKey = 'genres' | 'regions' | 'badges' | 'sponsored' | 'doFollow' | 'indexed' | 'llm' | 'niches';
+  // Reads the latest draft, so quick successive clicks never drop a value.
+  const toggle = (key: ListKey, value: string) =>
+    setDraft((d) => ({
+      ...d,
+      [key]: d[key].includes(value) ? d[key].filter((v) => v !== value) : [...d[key], value],
+    }));
 
   const shownRegions = useMemo(() => {
     const q = regionQuery.trim().toLowerCase();
@@ -217,17 +309,37 @@ export default function PublicationFilters({
 
   const drawerFilters = countDrawerFilters(draft);
 
+  // Only offer values that actually occur, most common first for badges.
+  const badgeOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const i of items) for (const b of Array.isArray(i.badges) ? i.badges : []) counts.set(String(b), (counts.get(String(b)) ?? 0) + 1);
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([b]) => b);
+  }, [items]);
+
+  const present = useMemo(() => {
+    const seen = (field: keyof PublicationLike) => new Set(items.map((i) => String(i[field] ?? '').toLowerCase()));
+    return { sponsored: seen('sponsored'), do_follow: seen('do_follow'), indexed: seen('indexed'), llm_aeo: seen('llm_aeo') };
+  }, [items]);
+
+  const visitIndex = draft.minVisits === ''
+    ? 0
+    : Math.max(0, VISIT_STOPS.findIndex((s) => s.min !== null && s.min >= Number(draft.minVisits)));
+  const visitCount = useMemo(
+    () => items.filter((i) => draft.minVisits === '' || (typeof i.monthly_visits === 'number' && i.monthly_visits >= Number(draft.minVisits))).length,
+    [items, draft.minVisits]
+  );
+
   return (
     <FilterDrawer
       open={open}
       onClose={close}
-      onReset={() => patch({ minPrice: '', maxPrice: '', genres: [], regions: [], maxTatDays: '' })}
+      onReset={() => patch(CLEARED_DRAWER)}
       resetDisabled={drawerFilters === 0}
-      footerLabel={`Show ${matchCount.toLocaleString()} publication${matchCount === 1 ? '' : 's'}`}
+      footerLabel={`See ${matchCount.toLocaleString()} publication${matchCount === 1 ? '' : 's'}`}
     >
       {/* Price range */}
       <section className="filter-section">
-        <h3 className="filter-label">Price range</h3>
+        <h3 className="filter-label">Budget</h3>
 
         <div className="dual-range">
           <div className="dual-range-track" />
@@ -284,19 +396,57 @@ export default function PublicationFilters({
           />
         </div>
         <p className="mt-2 text-sm text-gray-400">
-          <span className="font-semibold text-white tabular-nums">{priceCount.toLocaleString()}</span> of{' '}
-          {total.toLocaleString()} publications in this range
+          <span className="font-semibold text-white tabular-nums">{priceCount.toLocaleString()}</span>{' '}
+          publications fit this budget
+        </p>
+      </section>
+
+      {/* Monthly visits */}
+      <section className="filter-section">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 className="filter-label">Monthly visits</h3>
+          <span className="text-sm text-gray-400">
+            <span className="font-semibold text-white">{VISIT_STOPS[visitIndex].label}</span>
+            {' · '}
+            {visitCount.toLocaleString()} match
+          </span>
+        </div>
+        <div className="dual-range">
+          <div className="dual-range-track" />
+          <div
+            className="dual-range-fill"
+            style={{ left: `calc(10px + (100% - 20px) * ${visitIndex / (VISIT_STOPS.length - 1)})`, right: '10px' }}
+          />
+          <input
+            type="range"
+            min={0}
+            max={VISIT_STOPS.length - 1}
+            step={1}
+            value={visitIndex}
+            aria-label="Minimum monthly visits"
+            onChange={(e) => {
+              const stop = VISIT_STOPS[Number(e.target.value)];
+              patch({ minVisits: stop.min === null ? '' : String(stop.min) });
+            }}
+          />
+        </div>
+        <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <span>Any</span>
+          <span>5M+</span>
+        </div>
+        <p className="mt-2 text-sm text-gray-500">
+          Estimated visits a month across all sources. Sites without a figure drop out once you set a floor.
         </p>
       </section>
 
       {/* Turnaround */}
       <section className="filter-section">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="filter-label">Turnaround</h3>
+          <h3 className="filter-label">Delivery time</h3>
           <span className="text-sm text-gray-400">
             <span className="font-semibold text-white">{TAT_STOPS[tatIndex].label}</span>
             {' · '}
-            {tatCount.toLocaleString()} publications
+            {tatCount.toLocaleString()} match
           </span>
         </div>
 
@@ -327,13 +477,13 @@ export default function PublicationFilters({
           <span>Any</span>
         </div>
         <p className="mt-2 text-sm text-gray-500">
-          Counts a range by its longest time: 3-5 Days is within a week.
+          Ranges count by their slowest day, so “3-5 days” fits inside a week.
         </p>
       </section>
 
       {/* Regions */}
       <section className="filter-section">
-        <h3 className="filter-label">Select regions</h3>
+        <h3 className="filter-label">Regions</h3>
 
         <button
           type="button"
@@ -343,7 +493,7 @@ export default function PublicationFilters({
         >
           <span className="flex flex-wrap gap-1.5 min-w-0 flex-1 text-left">
             {draft.regions.length === 0 ? (
-              <span className="text-gray-500">Select regions</span>
+              <span className="text-gray-500">Any region</span>
             ) : (
               draft.regions.map((r) => (
                 <span key={r} className="filter-token">
@@ -415,7 +565,7 @@ export default function PublicationFilters({
 
       {/* Genres */}
       <section className="filter-section">
-        <h3 className="filter-label">Select genres</h3>
+        <h3 className="filter-label">Genres</h3>
         <div className="flex flex-wrap gap-2">
           {genres.map((g) => {
             const active = draft.genres.includes(g);
@@ -432,6 +582,143 @@ export default function PublicationFilters({
             );
           })}
         </div>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Listing type</h3>
+        <div className="flex flex-wrap gap-2">
+          {badgeOptions.map((b) => [b, b] as [string, string]).map(([value, label]) => {
+            const active = draft.badges.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggle('badges', value)}
+                aria-pressed={active}
+                className={`filter-chip${active ? ' is-active' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Sponsored tag</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['yes', 'no', 'maybe', 'discrete'] as const).filter((v) => present.sponsored.has(v)).map((v) => [v, v.charAt(0).toUpperCase() + v.slice(1)] as [string, string]).map(([value, label]) => {
+            const active = draft.sponsored.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggle('sponsored', value)}
+                aria-pressed={active}
+                className={`filter-chip${active ? ' is-active' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-2 text-sm text-gray-500">Discrete means the sponsorship is marked lightly, not with a big banner.</p>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Do-follow link</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['yes', 'no', 'maybe', 'discrete'] as const).filter((v) => present.do_follow.has(v)).map((v) => [v, v.charAt(0).toUpperCase() + v.slice(1)] as [string, string]).map(([value, label]) => {
+            const active = draft.doFollow.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggle('doFollow', value)}
+                aria-pressed={active}
+                className={`filter-chip${active ? ' is-active' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Indexed on Google</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['yes', 'no', 'maybe', 'discrete'] as const).filter((v) => present.indexed.has(v)).map((v) => [v, v.charAt(0).toUpperCase() + v.slice(1)] as [string, string]).map(([value, label]) => {
+            const active = draft.indexed.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggle('indexed', value)}
+                aria-pressed={active}
+                className={`filter-chip${active ? ' is-active' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Shows in AI answers (LLM/AEO)</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['yes', 'no', 'maybe', 'discrete'] as const).filter((v) => present.llm_aeo.has(v)).map((v) => [v, v.charAt(0).toUpperCase() + v.slice(1)] as [string, string]).map(([value, label]) => {
+            const active = draft.llm.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggle('llm', value)}
+                aria-pressed={active}
+                className={`filter-chip${active ? ' is-active' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Niches they accept</h3>
+        <div className="flex flex-wrap gap-2">
+          {([['erotic', 'Adult (18+)'], ['health', 'Health'], ['crypto', 'Crypto'], ['cbd', 'CBD'], ['gambling', 'Gambling']] as [string, string][]).map(([value, label]) => {
+            const active = draft.niches.includes(value);
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => toggle('niches', value)}
+                aria-pressed={active}
+                className={`filter-chip${active ? ' is-active' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-2 text-sm text-gray-500">Pick several to find sites that accept all of them.</p>
+      </section>
+
+      <section className="filter-section">
+        <h3 className="filter-label">Listicles</h3>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => patch({ listiclesOnly: !draft.listiclesOnly })}
+            aria-pressed={draft.listiclesOnly}
+            className={`filter-chip${draft.listiclesOnly ? ' is-active' : ''}`}
+          >
+            Sells listicle slots
+          </button>
+        </div>
+        <p className="mt-2 text-sm text-gray-500">Only sites with Top 5 / Top 10 listicle placements.</p>
       </section>
     </FilterDrawer>
   );

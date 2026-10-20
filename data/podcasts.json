@@ -1,0 +1,91 @@
+{
+  "source": "https://gritdaily.com/media-db/ (Podcasts table)",
+  "sourcedAt": "2026-10-20",
+  "note": "defaultPrice is the Grit Daily rate, i.e. our cost",
+  "result": [
+    {
+      "_id": "podcast-startup-show",
+      "name": "Startup Show",
+      "show_url": "https://open.spotify.com/show/64JCNh5iiIkrefMAJRoIWj?si=7cb1ccf7aca94000",
+      "defaultPrice": [
+        500
+      ],
+      "views": 10000,
+      "views_label": "10k",
+      "episode_example": "https://youtu.be/Blh51UloB-k",
+      "category": "Any",
+      "companion_article": "Grit Daily/Apple News",
+      "article_example": "https://gritdaily.com/jonathan-lowenhar-and-the-art-of-building-great-ceos/"
+    },
+    {
+      "_id": "podcast-beyond-the-bank",
+      "name": "Beyond the Bank",
+      "show_url": "https://open.spotify.com/show/6fIbZTwRpFIGzvetBhajB7?si=c583bd7f86df4258",
+      "defaultPrice": [
+        250
+      ],
+      "views": 2000,
+      "views_label": "2k",
+      "episode_example": "https://youtu.be/0hePul31Rco",
+      "category": "Finance",
+      "companion_article": "Financial Tech Times",
+      "article_example": "https://financialtechtimes.com/tansley-stearns-cfcu-people-first-banking/"
+    },
+    {
+      "_id": "podcast-innovation-saves-lives",
+      "name": "Innovation Saves Lives",
+      "show_url": "https://open.spotify.com/show/2DQcGvMrQgoCtf9eK89yxl?si=7a370cccaa4347c2",
+      "defaultPrice": [
+        250
+      ],
+      "views": 1000,
+      "views_label": "1k",
+      "episode_example": "",
+      "category": "Healthcare",
+      "companion_article": "Meditech Today",
+      "article_example": "https://meditechtoday.com/ingenu-cro-slashing-cost-time-clinical-trials/"
+    },
+    {
+      "_id": "podcast-cryptocurrents",
+      "name": "CryptoCurrents",
+      "show_url": "https://open.spotify.com/show/5aqD9vSXZujoTazfb4TIQw?si=1e710669092c4ec7",
+      "defaultPrice": [
+        250
+      ],
+      "views": 1500,
+      "views_label": "1.5k",
+      "episode_example": "https://youtu.be/-4BW27XpAQ8",
+      "category": "Blockchain",
+      "companion_article": "BlockTelegraph",
+      "article_example": "https://blocktelegraph.io/pokt-network-building-the-unstoppable-internet/"
+    },
+    {
+      "_id": "podcast-plugged-in",
+      "name": "Plugged In",
+      "show_url": "https://open.spotify.com/show/5c2DyLv656UL1plGe0TBRF?si=36ffbf4c22a6429a",
+      "defaultPrice": [
+        300
+      ],
+      "views": 7000,
+      "views_label": "7k",
+      "episode_example": "https://youtu.be/jn5kIJGR8UA",
+      "category": "Technology",
+      "companion_article": "Smartech Daily",
+      "article_example": "https://smartechdaily.com/ververicas-igor-kersic-real-time-ai/"
+    },
+    {
+      "_id": "podcast-from-the-ground-up",
+      "name": "From the Ground Up",
+      "show_url": "https://youtube.com/playlist?list=PLNdPqBAvxyh6LZ8fB08Ycu24J_4bawnMh&si=U_5G5ZSCNpewRFQa",
+      "defaultPrice": [
+        250
+      ],
+      "views": 5000,
+      "views_label": "5k",
+      "episode_example": "https://youtu.be/sks4VfIF_gE",
+      "category": "Business",
+      "companion_article": "CEO Official",
+      "article_example": "https://ceofficialmag.com/cris-beswick-on-why-innovation-fails/"
+    }
+  ]
+}

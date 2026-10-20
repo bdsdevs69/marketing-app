@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowLeft, Plus, Edit, Trash2, DollarSign, Users, Settings, Percent } from 'lucide-react';
+import PageSkeleton from '@/components/PageSkeleton';
 
 interface PricingFactorRule {
   min_price: number;
@@ -176,23 +177,19 @@ export default function PricingFactorsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#34d399]"></div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .lime-gradient {

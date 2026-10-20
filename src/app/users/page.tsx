@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowLeft, Users, Shield, ShieldOff, Mail, Calendar, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import PageSkeleton from '@/components/PageSkeleton';
 
 interface User {
   id: number;
@@ -115,35 +116,28 @@ export default function UserManagementPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="flex items-center space-x-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#34d399]"></div>
-          <span className="text-gray-400">Loading users...</span>
-        </div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .animate-slideDown {
-          animation: slideDown 0.5s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .lime-gradient {

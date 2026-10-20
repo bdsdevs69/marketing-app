@@ -1,55 +1,46 @@
 // src/pages/api/listicles.ts
-import fs from 'fs';
-import path from 'path';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { displayPrice } from '@/lib/pricing-math';
+import { getRulesForPagesRequest } from '@/lib/catalog';
+import { readCatalogFile } from '@/lib/catalog-files';
 
-interface Genre {
-  name: string;
-}
-
-interface Region {
-  name: string;
-}
-
-interface Asset {
-  _ref: string;
-}
-
-interface ArticlePreview {
-  asset?: Asset;
-}
-
-interface Logo {
-  asset?: Asset;
+interface Named {
+  name?: string;
 }
 
 interface ListicleOption {
-  _key?: string;
+  name: string;
+  price: number | string;
+}
+
+interface CatalogRecord {
+  _id: string;
+  name?: string;
+  url?: string;
+  do_follow?: string | boolean | null;
+  estimated_time?: string | null;
+  genres?: Named[] | null;
+  regions?: Named[] | null;
+  logo?: { asset?: { _ref?: string } } | null;
+  listicles?: ListicleOption[] | null;
+  listicle_example_url?: string | null;
+  hot_seller?: boolean | null;
+}
+
+export interface ListicleTier {
   name: string;
   price: number;
 }
 
-interface DataItem {
-  name?: string;
-  defaultPrice?: string[];
-  do_follow?: boolean;
-  estimated_time?: string;
-  genres?: Genre[];
-  regions?: Region[];
-  url?: string;
-  articlePreview?: ArticlePreview;
-  logo?: Logo;
-  listicles?: ListicleOption[];
-}
-
-interface JsonData {
-  result: DataItem[];
-}
-
-interface TransformedListicle {
+export interface ListicleRow {
+  id: string;
   name: string;
-  price: string; // Will be formatted like "Top 5: $3,000, Top 10: $6,000"
-  do_follow: boolean | string;
+  // Cheapest tier, used for sorting.
+  price: number;
+  tiers: ListicleTier[];
+  example: string;
+  hot: boolean;
+  do_follow: string;
   estimated_time: string;
   genres: string;
   regions: string;
@@ -57,65 +48,45 @@ interface TransformedListicle {
   logo: string;
 }
 
+const names = (list?: Named[] | null) =>
+  (list ?? []).map((n) => n.name).filter(Boolean).join(', ');
+
 export default async function handler(
-  req: NextApiRequest, 
-  res: NextApiResponse<TransformedListicle[] | { error: string }>
+  req: NextApiRequest,
+  res: NextApiResponse<ListicleRow[] | { error: string }>
 ) {
   try {
-    console.log('\n🚀 === API /listicles called ===');
+    const rules = await getRulesForPagesRequest(req);
 
-    // Read the JSON file
-    const filePath = path.resolve('data', 'data.json');
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const json: JsonData = JSON.parse(fileContent);
+    const rows: ListicleRow[] = [];
+    for (const item of readCatalogFile<CatalogRecord>('data.json')) {
+      // Each tier's file price is our cost; partners see it through their
+      // pricing factor exactly like a normal article.
+      const tiers = (item.listicles ?? [])
+        .map((t) => ({ name: String(t.name ?? '').trim(), cost: Number(t.price) }))
+        .filter((t) => t.name && Number.isFinite(t.cost) && t.cost > 0)
+        .map((t) => ({ name: t.name, price: displayPrice(t.cost, rules) }));
+      if (!tiers.length) continue;
 
-    if (!Array.isArray(json.result)) {
-      return res.status(400).json({ error: "Invalid data format: 'result' not found." });
+      rows.push({
+        id: item._id,
+        name: (item.name ?? '').trim(),
+        price: Math.min(...tiers.map((t) => t.price)),
+        tiers,
+        example: item.listicle_example_url ?? '',
+        hot: item.hot_seller === true,
+        do_follow: typeof item.do_follow === 'boolean' ? (item.do_follow ? 'yes' : 'no') : String(item.do_follow ?? ''),
+        estimated_time: item.estimated_time ?? '',
+        genres: names(item.genres),
+        regions: names(item.regions),
+        url: item.url ?? '',
+        logo: item.logo?.asset?._ref ?? '',
+      });
     }
 
-    // Filter items that have listicles
-    const itemsWithListicles = json.result.filter((item: DataItem) => 
-      item.listicles && Array.isArray(item.listicles) && item.listicles.length > 0
-    );
-
-    console.log(`📊 Processing ${itemsWithListicles.length} items with listicles out of ${json.result.length} total items`);
-
-    const transformed: TransformedListicle[] = itemsWithListicles.map((item: DataItem) => {
-      // Format listicle prices
-      let formattedPrice = '';
-      if (item.listicles && Array.isArray(item.listicles)) {
-        const priceOptions = item.listicles
-          .map((listicle: ListicleOption) => {
-            const formattedAmount = listicle.price.toLocaleString();
-            return `${listicle.name}: ${formattedAmount}`;
-          })
-          .join(', ');
-        formattedPrice = priceOptions;
-      }
-
-      // Debug logging for specific items if needed
-      if (item.name?.toLowerCase().includes('elite daily')) {
-        console.log(`\n🔍 LISTICLE DEBUG for "${item.name}"`);
-        console.log(`📊 Raw listicles:`, item.listicles);
-        console.log(`📊 Formatted price: ${formattedPrice}`);
-      }
-
-      return {
-        name: item.name || '',
-        price: formattedPrice,
-        do_follow: item.do_follow ?? '',
-        estimated_time: item.estimated_time ?? '',
-        genres: item.genres?.map(g => g.name).join(', ') ?? '',
-        regions: item.regions?.map(r => r.name).join(', ') ?? '',
-        url: item.url || '',
-        logo: item.logo?.asset?._ref || ''
-      };
-    });
-
-    console.log('✅ === Listicles API processing complete ===\n');
-    res.status(200).json(transformed);
+    res.status(200).json(rows);
   } catch (error) {
-    console.error('❌ Error processing listicles:', error);
-    res.status(500).json({ error: 'Failed to read and process JSON file' });
+    console.error('Error processing listicles:', error);
+    res.status(500).json({ error: 'Failed to load listicles' });
   }
 }

@@ -84,7 +84,7 @@ export default function FilterDrawer({
         className="filter-drawer-panel"
       >
         <header className="filter-drawer-head">
-          <h2 className="text-lg font-bold text-white">Filters</h2>
+          <h2 className="text-lg font-bold text-white">Refine the list</h2>
           <div className="flex items-center gap-4">
             {onReset && (
               <button
@@ -93,7 +93,7 @@ export default function FilterDrawer({
                 disabled={resetDisabled}
                 className="text-sm font-semibold text-gray-400 hover:text-white disabled:opacity-40 disabled:hover:text-gray-400 transition-colors"
               >
-                Reset all
+                Clear
               </button>
             )}
             <button

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Syne } from "next/font/google";
+import { Bricolage_Grotesque, Manrope, Syne } from "next/font/google";
 import MoneyBackdrop from "@/components/MoneyBackdrop";
 import "./globals.css";
 
@@ -18,6 +18,17 @@ const syne = Syne({
   display: "swap",
 });
 
+// Display face for the portal headline and hero figures.
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Must match ROLE_CACHE_KEY in app/page.tsx.
+const ROLE_SCRIPT =
+  "try{if(localStorage.getItem('dna-pricing-role')==='admin')document.documentElement.dataset.role='admin'}catch(e){}";
+
 export const metadata: Metadata = {
   title: "DNA Pricing",
   description: "Publication pricing dashboard — Digital Networking Agency",
@@ -29,8 +40,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${manrope.variable} ${syne.variable} antialiased`}>
+    // data-role is set before first paint (see the script) so the admin
+    // buttons don't pop in on every refresh.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: ROLE_SCRIPT }} />
+      </head>
+      <body className={`${manrope.variable} ${syne.variable} ${display.variable} antialiased`}>
         {/* One wrapper keeps React managing a single child of <body>; rendering
             siblings directly into the root container trips up removeChild. */}
         <div className="app-shell">

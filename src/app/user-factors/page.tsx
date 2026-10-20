@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowLeft, Users, DollarSign, UserCheck, UserX, Settings } from 'lucide-react';
+import PageSkeleton from '@/components/PageSkeleton';
 
 interface User {
   id: number;
@@ -90,23 +91,19 @@ export default function UserFactorsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#34d399]"></div>
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out;
+          animation: fadeIn 0.25s ease-out;
         }
         
         .lime-gradient {
@@ -208,7 +205,7 @@ export default function UserFactorsPage() {
                   <tr 
                     key={user.id}
                     style={{ animationDelay: `${index * 0.1}s` }}
-                    className="hover:bg-gray-800/50 transition-all duration-300 animate-fadeIn"
+                    className="hover:bg-gray-800/50 transition-colors duration-150"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-3">

@@ -21,7 +21,9 @@ class Database {
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
       max: 20,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
+      // Neon can take a few seconds to wake from idle; 2s made every request
+      // that arrived during a cold start fail.
+      connectionTimeoutMillis: 10000,
     });
   }
 
