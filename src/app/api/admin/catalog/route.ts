@@ -10,30 +10,9 @@ import {
   getOverrideDetails,
   setOverride,
 } from '@/lib/catalog';
-import { readCatalogFile } from '@/lib/catalog-files';
-
-interface FileItem {
-  _id: string;
-  name?: string;
-  url?: string;
-  show_url?: string;
-  defaultPrice?: Array<number | string>;
-}
-
-const FILES: Record<CatalogKind, string> = {
-  publication: 'data.json',
-  podcast: 'podcasts.json',
-};
+import { parseCatalogKind as parseKind, readCatalogItems as fileItems } from '@/lib/catalog-files';
 
 const MAX_BASE = 1_000_000;
-
-function parseKind(value: unknown): CatalogKind | null {
-  return value === 'publication' || value === 'podcast' ? value : null;
-}
-
-function fileItems(kind: CatalogKind) {
-  return readCatalogFile<FileItem>(FILES[kind]);
-}
 
 async function requireAdmin(request: NextRequest) {
   const session = await verifySession(request);
@@ -55,6 +34,7 @@ export async function GET(request: NextRequest) {
       return {
         id: item._id,
         name: (item.name ?? '').trim(),
+        tier: item.tier ?? null,
         url: item.url ?? item.show_url ?? '',
         fileBase: Number.isFinite(fileBase) ? fileBase : null,
         base: override?.base ?? (Number.isFinite(fileBase) ? fileBase : null),

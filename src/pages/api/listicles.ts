@@ -1,8 +1,8 @@
 // src/pages/api/listicles.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { displayPrice } from '@/lib/pricing-math';
-import { getRulesForPagesRequest } from '@/lib/catalog';
-import { readCatalogFile } from '@/lib/catalog-files';
+import { getOverrides, getPricingForPagesRequest } from '@/lib/catalog';
+import { listicleTierId, readCatalogFile } from '@/lib/catalog-files';
 
 interface Named {
   name?: string;
@@ -56,16 +56,23 @@ export default async function handler(
   res: NextApiResponse<ListicleRow[] | { error: string }>
 ) {
   try {
-    const rules = await getRulesForPagesRequest(req);
+    const [{ rules, userPrices }, overrides] = await Promise.all([
+      getPricingForPagesRequest(req, 'listicle'),
+      getOverrides('listicle'),
+    ]);
 
     const rows: ListicleRow[] = [];
     for (const item of readCatalogFile<CatalogRecord>('data.json')) {
-      // Each tier's file price is our cost; partners see it through their
-      // pricing factor exactly like a normal article.
+      // Each tier's file price is our cost (or an admin-set base); partners see
+      // it through their pricing factor like a normal article, unless an exact
+      // price was set for them.
       const tiers = (item.listicles ?? [])
         .map((t) => ({ name: String(t.name ?? '').trim(), cost: Number(t.price) }))
         .filter((t) => t.name && Number.isFinite(t.cost) && t.cost > 0)
-        .map((t) => ({ name: t.name, price: displayPrice(t.cost, rules) }));
+        .map((t) => {
+          const id = listicleTierId(item._id, t.name);
+          return { name: t.name, price: userPrices.get(id) ?? displayPrice(overrides.get(id) ?? t.cost, rules) };
+        });
       if (!tiers.length) continue;
 
       rows.push({

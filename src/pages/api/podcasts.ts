@@ -1,7 +1,7 @@
 // src/pages/api/podcasts.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { displayPrice } from '@/lib/pricing-math';
-import { getOverrides, getRulesForPagesRequest } from '@/lib/catalog';
+import { getOverrides, getPricingForPagesRequest } from '@/lib/catalog';
 import { readCatalogFile } from '@/lib/catalog-files';
 
 interface PodcastRecord {
@@ -34,8 +34,8 @@ export default async function handler(
   res: NextApiResponse<PodcastRow[] | { error: string }>
 ) {
   try {
-    const [rules, overrides] = await Promise.all([
-      getRulesForPagesRequest(req),
+    const [{ rules, userPrices }, overrides] = await Promise.all([
+      getPricingForPagesRequest(req, 'podcast'),
       getOverrides('podcast'),
     ]);
 
@@ -44,7 +44,7 @@ export default async function handler(
       return {
         id: item._id,
         name: item.name,
-        price: Number.isFinite(base) ? displayPrice(base, rules) : ('' as const),
+        price: userPrices.get(item._id) ?? (Number.isFinite(base) ? displayPrice(base, rules) : ('' as const)),
         views: item.views,
         category: item.category,
         companion_article: item.companion_article,

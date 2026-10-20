@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserModel } from '@/lib/models';
 import { createSession, logActivity } from '@/lib/auth';
+import { storePasswordCopy } from '@/lib/password-vault';
 
 export async function POST(request: NextRequest) {
   try {
@@ -66,6 +67,10 @@ export async function POST(request: NextRequest) {
 
     // Update user's last login
     await UserModel.updateLastLogin(user.id);
+
+    // Accounts created before viewable copies existed get one on their next
+    // sign-in — the only moment the real password is available.
+    await storePasswordCopy(user.id, password, true);
 
     // Log successful login
     await logActivity(

@@ -25,9 +25,13 @@ const display = Bricolage_Grotesque({
   display: "swap",
 });
 
-// Must match ROLE_CACHE_KEY in app/page.tsx.
-const ROLE_SCRIPT =
-  "try{if(localStorage.getItem('dna-pricing-role')==='admin')document.documentElement.dataset.role='admin'}catch(e){}";
+// Runs before first paint: the saved light/dark choice (ThemeToggle) and
+// whether the last visit was an admin's (ROLE_CACHE_KEY in app/page.tsx), so
+// neither flashes in after load.
+const BOOT_SCRIPT =
+  "try{var d=document.documentElement,s=localStorage;" +
+  "if(s.getItem('dna-pricing-theme')==='dark')d.dataset.theme='dark';" +
+  "if(s.getItem('dna-pricing-role')==='admin')d.dataset.role='admin'}catch(e){}";
 
 export const metadata: Metadata = {
   title: "DNA Pricing",
@@ -40,11 +44,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // data-role is set before first paint (see the script) so the admin
-    // buttons don't pop in on every refresh.
+    // data-theme / data-role are set before first paint (see BOOT_SCRIPT).
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: ROLE_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
       </head>
       <body className={`${manrope.variable} ${syne.variable} ${display.variable} antialiased`}>
         {/* One wrapper keeps React managing a single child of <body>; rendering

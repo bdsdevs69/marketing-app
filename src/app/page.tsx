@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useDeferredValue } from 'react';
-import { Filter, Search, SlidersHorizontal, X, Mic, Database, Tv, Radio, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, Settings, DollarSign, List, Star, Tag } from 'lucide-react';
+import { Filter, Search, SlidersHorizontal, X, Mic, Database, Tv, Radio, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, UsersRound, DollarSign, List, Star, Tag } from 'lucide-react';
 
 // Import the invitation modal
 import InvitationModal from '../components/InvitationModal';
@@ -11,6 +11,7 @@ import FilterDrawer from '../components/FilterDrawer';
 import CatalogTable from '../components/CatalogTable';
 import ScrollButtons from '../components/ScrollButtons';
 import PortalHero from '../components/PortalHero';
+import ThemeToggle from '../components/ThemeToggle';
 import {
   broadcastColumns,
   listicleColumns,
@@ -865,14 +866,14 @@ export default function Page() {
                 </button>
               )}
 
-              {/* Admin Only - Settings Button */}
+              {/* Admin Only - Users Button */}
               {showAdminButtons && (
                 <button 
                   onClick={() => window.location.href = '/users'}
                   className="admin-only flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift hover-scale"
                 >
-                  <Settings size={16} className="text-black" />
-                  <span className="hidden sm:inline text-sm text-black font-medium">Settings</span>
+                  <UsersRound size={16} className="text-black" />
+                  <span className="hidden sm:inline text-sm text-black font-medium">Users</span>
                 </button>
               )}
               
@@ -897,6 +898,8 @@ export default function Page() {
                   <span className="hidden sm:inline text-sm text-black font-medium">Invite User</span>
                 </button>
               )}
+
+              <ThemeToggle className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all" />
               
               <button 
                 onClick={async () => {

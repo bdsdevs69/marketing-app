@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession, logActivity } from '@/lib/auth';
 import bcrypt from 'bcryptjs';
 import db from '@/lib/db';
+import { storePasswordCopy } from '@/lib/password-vault';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 8;
@@ -90,6 +91,8 @@ export async function POST(request: NextRequest) {
 
       return user;
     });
+
+    await storePasswordCopy(created.id, password);
 
     // Audit trail is best effort — never fail a successful creation over it.
     logActivity(admin.id, 'USER_CREATED', `USER:${created.id}`).catch((error) =>

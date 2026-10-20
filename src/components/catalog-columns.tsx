@@ -37,14 +37,9 @@ function hueOf(text: string) {
   return h;
 }
 
-const tintedChip = (text: string): React.CSSProperties => {
-  const h = hueOf(text.toLowerCase());
-  return {
-    color: `hsl(${h} 60% 30%)`,
-    background: `hsl(${h} 85% 95%)`,
-    boxShadow: `inset 0 0 0 1px hsl(${h} 60% 82%)`,
-  };
-};
+// Each genre gets a stable hue; the light and dark shades are in globals.css
+// (.cell-chip.is-tinted) so the chips follow the theme.
+const tintedChip = (text: string) => ({ '--chip-h': hueOf(text.toLowerCase()) }) as React.CSSProperties;
 
 // DA / DR strength: weak, decent, strong.
 const strength = (n: number) => (n >= 60 ? 'is-strong' : n >= 30 ? 'is-mid' : 'is-weak');
@@ -108,7 +103,7 @@ function Chips({ value, tinted = false }: { value: unknown; tinted?: boolean }) 
     <div className="chip-stack" title={items.length > 2 ? items.join(', ') : undefined}>
       {items.slice(0, 2).map((g) => (
         <span key={g} className="chip-line">
-          <span className="cell-chip" style={tinted ? tintedChip(g) : undefined}>{g}</span>
+          <span className={`cell-chip${tinted ? ' is-tinted' : ''}`} style={tinted ? tintedChip(g) : undefined}>{g}</span>
         </span>
       ))}
     </div>

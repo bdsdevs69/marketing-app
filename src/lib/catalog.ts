@@ -1,16 +1,18 @@
 // Server-side catalogue helpers: base-price overrides kept in Postgres, the
-// active pricing factors, and the logged-in user's factor.
+// active pricing factors, the logged-in user's factor, and per-user prices.
 //
 // Catalogue files (data/*.json) hold each item's supplier cost. An admin can
 // override that base in the database; overrides win over the file, so prices
-// change without a code deploy.
+// change without a code deploy. On top of that an admin can fix the exact
+// price one user sees for an item (user_price_overrides), which skips the
+// factor entirely for that user and item.
 
 import type { NextApiRequest } from 'next';
 import db from './db';
 import { verifyToken, hashToken } from './auth';
 import type { PricingRule } from './pricing-math';
 
-export type CatalogKind = 'publication' | 'podcast';
+export type CatalogKind = 'publication' | 'podcast' | 'listicle';
 
 let tableReady: Promise<void> | null = null;
 
@@ -85,6 +87,60 @@ export async function clearOverride(catalog: CatalogKind, itemId: string) {
   await db.query('DELETE FROM catalog_price_overrides WHERE catalog = $1 AND item_id = $2', [catalog, itemId]);
 }
 
+let userPricesReady: Promise<void> | null = null;
+
+export function ensureUserPricesTable(): Promise<void> {
+  if (!userPricesReady) {
+    userPricesReady = db
+      .query(
+        `CREATE TABLE IF NOT EXISTS user_price_overrides (
+           user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+           catalog     TEXT NOT NULL,
+           item_id     TEXT NOT NULL,
+           price       NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+           updated_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+           updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+           PRIMARY KEY (user_id, catalog, item_id)
+         )`
+      )
+      .then(() => undefined)
+      .catch((error) => {
+        userPricesReady = null;
+        throw error;
+      });
+  }
+  return userPricesReady;
+}
+
+// item id -> the exact price this user sees.
+export async function getUserPrices(userId: number, catalog: CatalogKind): Promise<Map<string, number>> {
+  await ensureUserPricesTable();
+  const result = await db.query(
+    'SELECT item_id, price FROM user_price_overrides WHERE user_id = $1 AND catalog = $2',
+    [userId, catalog]
+  );
+  return new Map(result.rows.map((r) => [r.item_id as string, Number(r.price)]));
+}
+
+export async function setUserPrice(userId: number, catalog: CatalogKind, itemId: string, price: number, adminId: number) {
+  await ensureUserPricesTable();
+  await db.query(
+    `INSERT INTO user_price_overrides (user_id, catalog, item_id, price, updated_by, updated_at)
+     VALUES ($1, $2, $3, $4, $5, NOW())
+     ON CONFLICT (user_id, catalog, item_id)
+     DO UPDATE SET price = $4, updated_by = $5, updated_at = NOW()`,
+    [userId, catalog, itemId, price, adminId]
+  );
+}
+
+export async function clearUserPrice(userId: number, catalog: CatalogKind, itemId: string) {
+  await ensureUserPricesTable();
+  await db.query(
+    'DELETE FROM user_price_overrides WHERE user_id = $1 AND catalog = $2 AND item_id = $3',
+    [userId, catalog, itemId]
+  );
+}
+
 export interface FactorWithRules {
   id: number;
   name: string;
@@ -120,17 +176,31 @@ export async function getUserRules(userId: number): Promise<PricingRule[] | null
   return rules.rows.length ? rules.rows : null;
 }
 
-// The pricing rules for whoever made this request (null = no factor / not
-// signed in). The session check and the rules lookup run side by side, and
-// the rules are only used if the session is still valid.
-export async function getRulesForPagesRequest(req: NextApiRequest): Promise<PricingRule[] | null> {
+export interface RequestPricing {
+  // The user's factor rules (null = no factor / not signed in).
+  rules: PricingRule[] | null;
+  // Exact prices set for this user, by item id (empty without a catalog).
+  userPrices: Map<string, number>;
+}
+
+const NO_PRICING: RequestPricing = { rules: null, userPrices: new Map() };
+
+// Pricing for whoever made this request. The session check, the rules and
+// the per-user prices are fetched side by side, and only used if the
+// session is still valid.
+export async function getPricingForPagesRequest(req: NextApiRequest, catalog?: CatalogKind): Promise<RequestPricing> {
   const token = req.cookies['auth-token'];
-  if (!token) return null;
+  if (!token) return NO_PRICING;
   const user = verifyToken(token);
-  if (!user) return null;
-  const [session, rules] = await Promise.all([
+  if (!user) return NO_PRICING;
+  const [session, rules, userPrices] = await Promise.all([
     db.query('SELECT 1 FROM user_sessions WHERE token_hash = $1 AND expires_at > NOW()', [hashToken(token)]),
     getUserRules(user.id),
+    catalog ? getUserPrices(user.id, catalog) : Promise.resolve(new Map<string, number>()),
   ]);
-  return session.rows.length ? rules : null;
+  return session.rows.length ? { rules, userPrices } : NO_PRICING;
+}
+
+export async function getRulesForPagesRequest(req: NextApiRequest): Promise<PricingRule[] | null> {
+  return (await getPricingForPagesRequest(req)).rules;
 }

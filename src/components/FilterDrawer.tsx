@@ -9,6 +9,7 @@ interface FilterDrawerProps {
   onReset?: () => void;
   resetDisabled?: boolean;
   footerLabel: string;
+  title?: string;
   children: React.ReactNode;
 }
 
@@ -20,6 +21,7 @@ export default function FilterDrawer({
   onReset,
   resetDisabled,
   footerLabel,
+  title = 'Refine the list',
   children,
 }: FilterDrawerProps) {
   const [mounted, setMounted] = useState(open);
@@ -80,11 +82,11 @@ export default function FilterDrawer({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label="Filters"
+        aria-label={title}
         className="filter-drawer-panel"
       >
         <header className="filter-drawer-head">
-          <h2 className="text-lg font-bold text-white">Refine the list</h2>
+          <h2 className="text-lg font-bold text-white">{title}</h2>
           <div className="flex items-center gap-4">
             {onReset && (
               <button
@@ -99,7 +101,7 @@ export default function FilterDrawer({
             <button
               type="button"
               onClick={() => onCloseRef.current()}
-              aria-label="Close filters"
+              aria-label="Close"
               className="p-1.5 -mr-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
             >
               <X size={20} />

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UserModel, InvitationModel } from '@/lib/models';
 import { createSession, logActivity } from '@/lib/auth';
 import { sendSignupNotificationEmails } from '@/lib/email';
+import { storePasswordCopy } from '@/lib/password-vault';
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,6 +48,8 @@ export async function POST(request: NextRequest) {
       first_name: firstName,
       last_name: lastName
     });
+
+    await storePasswordCopy(newUser.id, password);
 
     // Mark invitation as used
     await InvitationModel.markAsUsed(invitation.id);

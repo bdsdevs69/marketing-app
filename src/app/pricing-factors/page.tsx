@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Plus, Edit, Trash2, DollarSign, Users, Settings, Percent } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, DollarSign, Settings, Percent } from 'lucide-react';
 import PageSkeleton from '@/components/PageSkeleton';
 
 interface PricingFactorRule {
@@ -208,31 +208,23 @@ export default function PricingFactorsPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => window.location.href = '/users'}
+                onClick={() => window.location.href = '/'}
                 className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift"
               >
                 <ArrowLeft size={16} className="text-black" />
-                <span className="text-sm text-black font-medium">Back</span>
+                <span className="text-sm text-black font-medium">Dashboard</span>
               </button>
               
               <div className="flex items-center space-x-3">
                 <DollarSign size={24} className="text-black" />
                 <div>
                   <h1 className="text-xl font-bold text-black">Pricing Factors</h1>
-                  <p className="text-xs text-black/70">Manage pricing rules and user assignments</p>
+                  <p className="text-xs text-black/70">Manage pricing rules</p>
                 </div>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => window.location.href = '/user-factors'}
-                className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift"
-              >
-                <Users size={16} className="text-black" />
-                <span className="text-sm text-black font-medium">User Assignments</span>
-              </button>
-              
               <button
                 onClick={() => setShowForm(true)}
                 className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all hover-lift"

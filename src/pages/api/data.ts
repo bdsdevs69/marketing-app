@@ -1,7 +1,7 @@
 // src/pages/api/data.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { displayPrice } from '@/lib/pricing-math';
-import { getOverrides, getRulesForPagesRequest } from '@/lib/catalog';
+import { getOverrides, getPricingForPagesRequest } from '@/lib/catalog';
 import { readCatalogFile } from '@/lib/catalog-files';
 
 interface Named {
@@ -76,8 +76,8 @@ export default async function handler(
   res: NextApiResponse<PublicationRow[] | { error: string }>
 ) {
   try {
-    const [rules, overrides] = await Promise.all([
-      getRulesForPagesRequest(req),
+    const [{ rules, userPrices }, overrides] = await Promise.all([
+      getPricingForPagesRequest(req, 'publication'),
       getOverrides('publication'),
     ]);
 
@@ -89,7 +89,8 @@ export default async function handler(
       return {
         id: item._id,
         name: (item.name ?? '').trim(),
-        price: Number.isFinite(base) ? displayPrice(base, rules) : '',
+        // A price set for this user wins; otherwise base through their factor.
+        price: userPrices.get(item._id) ?? (Number.isFinite(base) ? displayPrice(base, rules) : ''),
         estimated_time: item.estimated_time ?? '',
         domain_authority: item.domain_authority ?? null,
         domain_rating: item.domain_rating ?? null,
