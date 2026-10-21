@@ -189,7 +189,11 @@ const NO_PRICING: RequestPricing = { rules: null, userPrices: new Map() };
 // the per-user prices are fetched side by side, and only used if the
 // session is still valid.
 export async function getPricingForPagesRequest(req: NextApiRequest, catalog?: CatalogKind): Promise<RequestPricing> {
-  const token = req.cookies['auth-token'];
+  return getPricingForToken(req.cookies['auth-token'], catalog);
+}
+
+// Same, from the auth cookie's value (for app-router routes).
+export async function getPricingForToken(token: string | undefined, catalog?: CatalogKind): Promise<RequestPricing> {
   if (!token) return NO_PRICING;
   const user = verifyToken(token);
   if (!user) return NO_PRICING;

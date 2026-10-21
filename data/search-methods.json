@@ -1,0 +1,5355 @@
+{
+ "checkedAt": "2026-10-21T18:27:58.656Z",
+ "sites": {
+  "1883magazine.com": {
+   "method": "rest",
+   "base": "https://www.1883magazine.com"
+  },
+  "21oak.com": {
+   "method": "none"
+  },
+  "abc-gcc.net": {
+   "method": "none"
+  },
+  "abcmoney.co.uk": {
+   "method": "rest",
+   "base": "https://abcmoney.co.uk"
+  },
+  "aberdeennews.com": {
+   "method": "none"
+  },
+  "abudhabichronicle.com": {
+   "method": "none"
+  },
+  "accountantsdaily.com.au": {
+   "method": "none"
+  },
+  "accountingtimes.com.au": {
+   "method": "none"
+  },
+  "actionhub.com": {
+   "method": "none"
+  },
+  "adaptpress.com": {
+   "method": "rest",
+   "base": "https://adaptpress.com"
+  },
+  "adweek.com": {
+   "method": "rest",
+   "base": "https://adweek.com"
+  },
+  "africa.billboard.com": {
+   "method": "none"
+  },
+  "africa.businessinsider.com": {
+   "method": "none"
+  },
+  "africa.robbreport.com": {
+   "method": "none"
+  },
+  "africa.time.com": {
+   "method": "rest",
+   "base": "https://africa.time.com"
+  },
+  "agdaily.com": {
+   "method": "none"
+  },
+  "ahwatukee.com": {
+   "method": "none"
+  },
+  "aijourn.com": {
+   "method": "none"
+  },
+  "akronnewsreporter.com": {
+   "method": "none"
+  },
+  "aledotimesrecord.com": {
+   "method": "none"
+  },
+  "allchinareview.com": {
+   "method": "rest",
+   "base": "https://allchinareview.com"
+  },
+  "allhiphop.com": {
+   "method": "rest",
+   "base": "https://allhiphop.com"
+  },
+  "alloaadvertiser.com": {
+   "method": "none"
+  },
+  "alloutdoor.com": {
+   "method": "none"
+  },
+  "allure.com": {
+   "method": "none"
+  },
+  "alvinsun.net": {
+   "method": "none"
+  },
+  "amarillo.com": {
+   "method": "none"
+  },
+  "americanceos.com": {
+   "method": "rest",
+   "base": "https://americanceos.com"
+  },
+  "americasgoneviral.com": {
+   "method": "rest",
+   "base": "https://americasgoneviral.com"
+  },
+  "americaweekly.com": {
+   "method": "rest",
+   "base": "https://americaweekly.com"
+  },
+  "amestrib.com": {
+   "method": "none"
+  },
+  "andoveradvertiser.co.uk": {
+   "method": "none"
+  },
+  "androidpolice.com": {
+   "method": "none"
+  },
+  "anglotopia.net": {
+   "method": "rest",
+   "base": "https://anglotopia.net"
+  },
+  "apac.entrepreneur.com": {
+   "method": "none"
+  },
+  "app.com": {
+   "method": "none"
+  },
+  "apple.com": {
+   "method": "none"
+  },
+  "apps.uk": {
+   "method": "rest",
+   "base": "https://apps.uk"
+  },
+  "arabianbusiness.com": {
+   "method": "rest",
+   "base": "https://arabianbusiness.com"
+  },
+  "arabianstartup.com": {
+   "method": "rest",
+   "base": "https://arabianstartup.com"
+  },
+  "architecturaldigest.com": {
+   "method": "none"
+  },
+  "ardrossanherald.com": {
+   "method": "none"
+  },
+  "areanews.com.au": {
+   "method": "none"
+  },
+  "argonautnews.com": {
+   "method": "none"
+  },
+  "argusleader.com": {
+   "method": "none"
+  },
+  "arizonabulletin.com": {
+   "method": "none"
+  },
+  "armidaleexpress.com.au": {
+   "method": "none"
+  },
+  "arstechnica.com": {
+   "method": "none"
+  },
+  "artdaily.com": {
+   "method": "none"
+  },
+  "artistweekly.com": {
+   "method": "rest",
+   "base": "https://artistweekly.com"
+  },
+  "arvadapress.com": {
+   "method": "none"
+  },
+  "askmen.com": {
+   "method": "none"
+  },
+  "assetdigest.com": {
+   "method": "none"
+  },
+  "atlwire.com": {
+   "method": "rest",
+   "base": "https://atlwire.com"
+  },
+  "attitude.co.uk": {
+   "method": "rest",
+   "base": "https://attitude.co.uk"
+  },
+  "attractioner.com": {
+   "method": "rest",
+   "base": "https://attractioner.com"
+  },
+  "au.investing.com": {
+   "method": "none"
+  },
+  "auburnpub.com": {
+   "method": "none"
+  },
+  "augustachronicle.com": {
+   "method": "none"
+  },
+  "australianaviation.com.au": {
+   "method": "none"
+  },
+  "australiantimes.co.uk": {
+   "method": "rest",
+   "base": "https://australiantimes.co.uk"
+  },
+  "automationes.com": {
+   "method": "rest",
+   "base": "https://automationes.com"
+  },
+  "avclub.com": {
+   "method": "rest",
+   "base": "https://avclub.com"
+  },
+  "ayradvertiser.com": {
+   "method": "none"
+  },
+  "azcentral.com": {
+   "method": "none"
+  },
+  "backyardboss.com": {
+   "method": "none"
+  },
+  "baltimoresun.com": {
+   "method": "rest",
+   "base": "https://baltimoresun.com"
+  },
+  "barchart.com": {
+   "method": "none"
+  },
+  "barkinganddagenhampost.co.uk": {
+   "method": "none"
+  },
+  "barnstablepatriot.com": {
+   "method": "none"
+  },
+  "barrheadnews.com": {
+   "method": "none"
+  },
+  "barryanddistrictnews.co.uk": {
+   "method": "none"
+  },
+  "basingstokegazette.co.uk": {
+   "method": "none"
+  },
+  "batemansbaypost.com.au": {
+   "method": "none"
+  },
+  "battlecreekenquirer.com": {
+   "method": "none"
+  },
+  "beaconjournal.com": {
+   "method": "none"
+  },
+  "beatricedailysun.com": {
+   "method": "none"
+  },
+  "beautikue.com": {
+   "method": "rest",
+   "base": "https://beautikue.com"
+  },
+  "beautyation.com": {
+   "method": "rest",
+   "base": "https://beautyation.com"
+  },
+  "beautysguide.com": {
+   "method": "rest",
+   "base": "https://beautysguide.com"
+  },
+  "becclesandbungayjournal.co.uk": {
+   "method": "none"
+  },
+  "begadistrictnews.com.au": {
+   "method": "none"
+  },
+  "bellinghamherald.com": {
+   "method": "none"
+  },
+  "belmontstar.com": {
+   "method": "rest",
+   "base": "https://belmontstar.com"
+  },
+  "bendigoadvertiser.com.au": {
+   "method": "none"
+  },
+  "benzinga.com": {
+   "method": "none"
+  },
+  "betmentor.com": {
+   "method": "none"
+  },
+  "beverlyweekly.com": {
+   "method": "none"
+  },
+  "bicesteradvertiser.net": {
+   "method": "none"
+  },
+  "bigtimedaily.com": {
+   "method": "rest",
+   "base": "https://bigtimedaily.com"
+  },
+  "billboard-japan.com": {
+   "method": "none"
+  },
+  "billboard.com.br": {
+   "method": "rest",
+   "base": "https://billboard.com.br"
+  },
+  "billboard.it": {
+   "method": "none"
+  },
+  "billingsgazette.com": {
+   "method": "none"
+  },
+  "birdsandblooms.com": {
+   "method": "feed",
+   "base": "https://www.birdsandblooms.com"
+  },
+  "bismarcktribune.com": {
+   "method": "none"
+  },
+  "bitcoin.com": {
+   "method": "none"
+  },
+  "bitrebels.com": {
+   "method": "rest",
+   "base": "https://bitrebels.com"
+  },
+  "bizdispatch.com": {
+   "method": "none"
+  },
+  "bizfortune.com": {
+   "method": "none"
+  },
+  "bizjournals.com": {
+   "method": "none"
+  },
+  "bizsinc.com": {
+   "method": "rest",
+   "base": "https://bizsinc.com"
+  },
+  "blissmark.com": {
+   "method": "none"
+  },
+  "blknews.com": {
+   "method": "rest",
+   "base": "https://blknews.com"
+  },
+  "blockchainmagazine.com": {
+   "method": "rest",
+   "base": "https://blockchainmagazine.com"
+  },
+  "blockchaintribune.com": {
+   "method": "none"
+  },
+  "blocktelegraph.io": {
+   "method": "rest",
+   "base": "https://blocktelegraph.io"
+  },
+  "bluemountainsgazette.com.au": {
+   "method": "none"
+  },
+  "blufftontoday.com": {
+   "method": "none"
+  },
+  "bnd.com": {
+   "method": "none"
+  },
+  "boatguide.com": {
+   "method": "none"
+  },
+  "bonappetit.com": {
+   "method": "none"
+  },
+  "boomset.com": {
+   "method": "rest",
+   "base": "https://boomset.com"
+  },
+  "bordercountiesadvertizer.co.uk": {
+   "method": "none"
+  },
+  "bordermail.com.au": {
+   "method": "none"
+  },
+  "bordertelegraph.com": {
+   "method": "none"
+  },
+  "borehamwoodtimes.co.uk": {
+   "method": "none"
+  },
+  "bosstoday.com": {
+   "method": "rest",
+   "base": "https://bosstoday.com"
+  },
+  "bostonherald.com": {
+   "method": "rest",
+   "base": "https://bostonherald.com"
+  },
+  "bourbonandboots.com": {
+   "method": "rest",
+   "base": "https://bourbonandboots.com"
+  },
+  "bournemouthecho.co.uk": {
+   "method": "none"
+  },
+  "bowiecountynow.com": {
+   "method": "none"
+  },
+  "bracknellnews.co.uk": {
+   "method": "none"
+  },
+  "bradenton.com": {
+   "method": "none"
+  },
+  "braidwoodtimes.com.au": {
+   "method": "none"
+  },
+  "braintreeandwithamtimes.co.uk": {
+   "method": "none"
+  },
+  "brandsjournal.com": {
+   "method": "none"
+  },
+  "breckenridgeamerican.com": {
+   "method": "none"
+  },
+  "bridgwatermercury.co.uk": {
+   "method": "none"
+  },
+  "bridportnews.co.uk": {
+   "method": "none"
+  },
+  "broadwayworld.com": {
+   "method": "none"
+  },
+  "brokeandchic.com": {
+   "method": "rest",
+   "base": "https://brokeandchic.com"
+  },
+  "brokerdaily.au": {
+   "method": "none"
+  },
+  "bromsgroveadvertiser.co.uk": {
+   "method": "none"
+  },
+  "broomfieldenterprise.com": {
+   "method": "none"
+  },
+  "brumweekly.co.uk": {
+   "method": "rest",
+   "base": "https://brumweekly.co.uk"
+  },
+  "bucksfreepress.co.uk": {
+   "method": "none"
+  },
+  "bucyrustelegraphforum.com": {
+   "method": "none"
+  },
+  "buffalonews.com": {
+   "method": "none"
+  },
+  "bugbog.com": {
+   "method": "none"
+  },
+  "bunburymail.com.au": {
+   "method": "none"
+  },
+  "burlington-record.com": {
+   "method": "none"
+  },
+  "burlingtoncountytimes.com": {
+   "method": "none"
+  },
+  "burlingtonfreepress.com": {
+   "method": "none"
+  },
+  "burnetbulletin.com": {
+   "method": "none"
+  },
+  "burytimes.co.uk": {
+   "method": "none"
+  },
+  "business.express": {
+   "method": "none"
+  },
+  "businesshonor.com": {
+   "method": "none"
+  },
+  "businessinsider.com": {
+   "method": "none"
+  },
+  "businessinsight.com": {
+   "method": "rest",
+   "base": "https://businessinsight.com"
+  },
+  "businessisright.com": {
+   "method": "rest",
+   "base": "https://businessisright.com"
+  },
+  "businessoflawdigest.com": {
+   "method": "none"
+  },
+  "businessslash.com": {
+   "method": "rest",
+   "base": "https://businessslash.com"
+  },
+  "businesssweb.com": {
+   "method": "rest",
+   "base": "https://businesssweb.com"
+  },
+  "businesstoday.me": {
+   "method": "rest",
+   "base": "https://businesstoday.me"
+  },
+  "businesstraveller.com": {
+   "method": "none"
+  },
+  "busseltonmail.com.au": {
+   "method": "rest",
+   "base": "https://busseltonmail.com.au"
+  },
+  "bust.com": {
+   "method": "none"
+  },
+  "bustle.com": {
+   "method": "none"
+  },
+  "buttercup.com": {
+   "method": "rest",
+   "base": "https://buttercup.com"
+  },
+  "c-heads.com": {
+   "method": "rest",
+   "base": "https://www.c-heads.com"
+  },
+  "ca.investing.com": {
+   "method": "none"
+  },
+  "calbizjournal.com": {
+   "method": "none"
+  },
+  "calendar.com": {
+   "method": "rest",
+   "base": "https://calendar.com"
+  },
+  "calgaryherald.com": {
+   "method": "rest",
+   "base": "https://calgaryherald.com"
+  },
+  "calgarysun.com": {
+   "method": "rest",
+   "base": "https://calgarysun.com"
+  },
+  "californiaobserver.com": {
+   "method": "rest",
+   "base": "https://californiaobserver.com"
+  },
+  "calipost.com": {
+   "method": "rest",
+   "base": "https://calipost.com"
+  },
+  "caliweekly.com": {
+   "method": "rest",
+   "base": "https://caliweekly.com"
+  },
+  "caller.com": {
+   "method": "none"
+  },
+  "cambstimes.co.uk": {
+   "method": "none"
+  },
+  "camdencourier.com.au": {
+   "method": "none"
+  },
+  "cameronherald.com": {
+   "method": "none"
+  },
+  "campaignme.com": {
+   "method": "rest",
+   "base": "https://campaignme.com"
+  },
+  "canada.com": {
+   "method": "rest",
+   "base": "https://canada.com"
+  },
+  "canadianbusiness.com": {
+   "method": "none"
+  },
+  "canberratimes.com.au": {
+   "method": "none"
+  },
+  "cannabissblog.com": {
+   "method": "none"
+  },
+  "cannonfallsbeacon.com": {
+   "method": "none"
+  },
+  "canoe.com": {
+   "method": "rest",
+   "base": "https://canoe.com"
+  },
+  "canoncitydailyrecord.com": {
+   "method": "none"
+  },
+  "cantondailyledger.com": {
+   "method": "none"
+  },
+  "cantonrep.com": {
+   "method": "none"
+  },
+  "capecodtimes.com": {
+   "method": "none"
+  },
+  "carbuzz.com": {
+   "method": "none"
+  },
+  "carouselbondi.com.au": {
+   "method": "rest",
+   "base": "https://carouselbondi.com.au"
+  },
+  "casinomentor.com": {
+   "method": "none"
+  },
+  "casscountynow.com": {
+   "method": "none"
+  },
+  "castlerocknewspress.net": {
+   "method": "none"
+  },
+  "cbnme.com": {
+   "method": "rest",
+   "base": "https://cbnme.com"
+  },
+  "cbr.com": {
+   "method": "none"
+  },
+  "celebmix.com": {
+   "method": "rest",
+   "base": "https://celebmix.com"
+  },
+  "celebritynews.com": {
+   "method": "rest",
+   "base": "https://celebritynews.com"
+  },
+  "celebtime.com": {
+   "method": "rest",
+   "base": "https://celebtime.com"
+  },
+  "centralfifetimes.com": {
+   "method": "none"
+  },
+  "centralwesterndaily.com.au": {
+   "method": "none"
+  },
+  "centredaily.com": {
+   "method": "none"
+  },
+  "ceo-magazine.com": {
+   "method": "rest",
+   "base": "https://ceo-magazine.com"
+  },
+  "ceo-middleeast.com": {
+   "method": "rest",
+   "base": "https://ceo-middleeast.com"
+  },
+  "ceofeature.com": {
+   "method": "rest",
+   "base": "https://ceofeature.com"
+  },
+  "ceofficialmag.com": {
+   "method": "rest",
+   "base": "https://ceofficialmag.com"
+  },
+  "ceoweekly.com": {
+   "method": "rest",
+   "base": "https://ceoweekly.com"
+  },
+  "ceoworld.biz": {
+   "method": "none"
+  },
+  "cessnockadvertiser.com.au": {
+   "method": "none"
+  },
+  "chaffeecountytimes.com": {
+   "method": "none"
+  },
+  "chainbits.com": {
+   "method": "feed",
+   "base": "https://chainbits.com"
+  },
+  "chandlernews.com": {
+   "method": "none"
+  },
+  "chardandilminsternews.co.uk": {
+   "method": "none"
+  },
+  "charlotteobserver.com": {
+   "method": "none"
+  },
+  "chatelaine.com": {
+   "method": "none"
+  },
+  "cheboygannews.com": {
+   "method": "none"
+  },
+  "chesterstandard.co.uk": {
+   "method": "none"
+  },
+  "chiangraitimes.com": {
+   "method": "rest",
+   "base": "https://chiangraitimes.com"
+  },
+  "chicagotribune.com": {
+   "method": "rest",
+   "base": "https://chicagotribune.com"
+  },
+  "chieftain.com": {
+   "method": "none"
+  },
+  "chillicothegazette.com": {
+   "method": "none"
+  },
+  "chippewa.com": {
+   "method": "none"
+  },
+  "cincinnati.com": {
+   "method": "none"
+  },
+  "cio.com": {
+   "method": "rest",
+   "base": "https://cio.com"
+  },
+  "ciobulletin.com": {
+   "method": "none"
+  },
+  "citizen-times.com": {
+   "method": "none"
+  },
+  "citizensvoice.com": {
+   "method": "rest",
+   "base": "https://citizensvoice.com"
+  },
+  "citysuntimes.com": {
+   "method": "none"
+  },
+  "cjonline.com": {
+   "method": "none"
+  },
+  "clactonandfrintongazette.co.uk": {
+   "method": "none"
+  },
+  "clarionledger.com": {
+   "method": "none"
+  },
+  "clashmusic.com": {
+   "method": "none"
+  },
+  "clubhitech.com": {
+   "method": "rest",
+   "base": "https://clubhitech.com"
+  },
+  "clydebankpost.co.uk": {
+   "method": "none"
+  },
+  "cn.investing.com": {
+   "method": "none"
+  },
+  "cnbce.com": {
+   "method": "none"
+  },
+  "cntraveler.com": {
+   "method": "none"
+  },
+  "coastalrealestateguide.com": {
+   "method": "rest",
+   "base": "https://coastalrealestateguide.com"
+  },
+  "coincodex.com": {
+   "method": "none"
+  },
+  "coindesk.com": {
+   "method": "none"
+  },
+  "coinedition.com": {
+   "method": "rest",
+   "base": "https://coinedition.com"
+  },
+  "coingape.com": {
+   "method": "none"
+  },
+  "coinpedia.org": {
+   "method": "feed",
+   "base": "https://coinpedia.org"
+  },
+  "coinreviewnews.com": {
+   "method": "rest",
+   "base": "https://coinreviewnews.com"
+  },
+  "colchestersun.com": {
+   "method": "none"
+  },
+  "collider.com": {
+   "method": "none"
+  },
+  "coloradoan.com": {
+   "method": "none"
+  },
+  "coloradobiz.com": {
+   "method": "none"
+  },
+  "coloradocommunitymedia.com": {
+   "method": "none"
+  },
+  "coloradohometownweekly.com": {
+   "method": "none"
+  },
+  "columbiadailyherald.com": {
+   "method": "none"
+  },
+  "columbiatribune.com": {
+   "method": "none"
+  },
+  "columbusceo.com": {
+   "method": "none"
+  },
+  "columbusmonthly.com": {
+   "method": "none"
+  },
+  "columbustelegram.com": {
+   "method": "none"
+  },
+  "colypointobserver.com.au": {
+   "method": "none"
+  },
+  "commercialappeal.com": {
+   "method": "none"
+  },
+  "commercialarchitecturemagazine.com": {
+   "method": "none"
+  },
+  "companiesdigest.com": {
+   "method": "none"
+  },
+  "complex.com": {
+   "method": "none"
+  },
+  "complex.me": {
+   "method": "rest",
+   "base": "https://complex.me"
+  },
+  "computertechreviews.com": {
+   "method": "rest",
+   "base": "https://computertechreviews.com"
+  },
+  "computerworld.com": {
+   "method": "rest",
+   "base": "https://computerworld.com"
+  },
+  "congress.net": {
+   "method": "rest",
+   "base": "https://congress.net"
+  },
+  "considerable.com": {
+   "method": "rest",
+   "base": "https://considerable.com"
+  },
+  "cookinginstilettos.com": {
+   "method": "rest",
+   "base": "https://cookinginstilettos.com"
+  },
+  "cootamundraherald.com.au": {
+   "method": "none"
+  },
+  "corporatemarketingguide.com": {
+   "method": "rest",
+   "base": "https://corporatemarketingguide.com"
+  },
+  "coruzant.com": {
+   "method": "rest",
+   "base": "https://coruzant.com"
+  },
+  "coshoctontribune.com": {
+   "method": "none"
+  },
+  "cosmopolitanme.com": {
+   "method": "none"
+  },
+  "cotswoldjournal.co.uk": {
+   "method": "none"
+  },
+  "countryworldnews.com": {
+   "method": "none"
+  },
+  "countypress.co.uk": {
+   "method": "none"
+  },
+  "countytimes.co.uk": {
+   "method": "none"
+  },
+  "courant.com": {
+   "method": "rest",
+   "base": "https://courant.com"
+  },
+  "courier-journal.com": {
+   "method": "none"
+  },
+  "courierpostonline.com": {
+   "method": "none"
+  },
+  "courierpress.com": {
+   "method": "none"
+  },
+  "cpbj.com": {
+   "method": "none"
+  },
+  "cravemag.co.uk": {
+   "method": "rest",
+   "base": "https://cravemag.co.uk"
+  },
+  "cravenherald.co.uk": {
+   "method": "none"
+  },
+  "crewlogout.org": {
+   "method": "none"
+  },
+  "critterculture.com": {
+   "method": "none"
+  },
+  "crookwellgazette.com.au": {
+   "method": "none"
+  },
+  "cryptodaily.co.uk": {
+   "method": "none"
+  },
+  "cryptonexa.com": {
+   "method": "rest",
+   "base": "https://cryptonexa.com"
+  },
+  "cryptonomist.ch": {
+   "method": "none"
+  },
+  "cryptopolitan.com": {
+   "method": "none"
+  },
+  "cryptopotato.com": {
+   "method": "none"
+  },
+  "cryptoslate.com": {
+   "method": "none"
+  },
+  "csoonline.com": {
+   "method": "rest",
+   "base": "https://csoonline.com"
+  },
+  "cultmtl.com": {
+   "method": "rest",
+   "base": "https://cultmtl.com"
+  },
+  "cultones.com": {
+   "method": "rest",
+   "base": "https://cultones.com"
+  },
+  "cultr.com": {
+   "method": "none"
+  },
+  "cumberlink.com": {
+   "method": "none"
+  },
+  "cumnockchronicle.com": {
+   "method": "none"
+  },
+  "curiousmindmagazine.com": {
+   "method": "rest",
+   "base": "https://curiousmindmagazine.com"
+  },
+  "cw33.com": {
+   "method": "rest",
+   "base": "https://cw33.com"
+  },
+  "cyberdaily.au": {
+   "method": "none"
+  },
+  "daily-jeff.com": {
+   "method": "none"
+  },
+  "dailyadvertiser.com.au": {
+   "method": "none"
+  },
+  "dailyamerican.com": {
+   "method": "none"
+  },
+  "dailybreeze.com": {
+   "method": "rest",
+   "base": "https://dailybreeze.com"
+  },
+  "dailybulletin.com": {
+   "method": "rest",
+   "base": "https://dailybulletin.com"
+  },
+  "dailycaller.com": {
+   "method": "none"
+  },
+  "dailycamera.com": {
+   "method": "none"
+  },
+  "dailycomet.com": {
+   "method": "none"
+  },
+  "dailycommercial.com": {
+   "method": "none"
+  },
+  "dailyecho.co.uk": {
+   "method": "none"
+  },
+  "dailyfreeman.com": {
+   "method": "rest",
+   "base": "https://dailyfreeman.com"
+  },
+  "dailyhodl.com": {
+   "method": "rest",
+   "base": "https://dailyhodl.com"
+  },
+  "dailyliberal.com.au": {
+   "method": "none"
+  },
+  "dailylocal.com": {
+   "method": "rest",
+   "base": "https://dailylocal.com"
+  },
+  "dailynews.com": {
+   "method": "rest",
+   "base": "https://dailynews.com"
+  },
+  "dailypioneer.com": {
+   "method": "none"
+  },
+  "dailypress.com": {
+   "method": "rest",
+   "base": "https://dailypress.com"
+  },
+  "dailyprogress.com": {
+   "method": "none"
+  },
+  "dailyrecord.com": {
+   "method": "none"
+  },
+  "dailyreporter.com": {
+   "method": "none"
+  },
+  "dailyscanner.com": {
+   "method": "rest",
+   "base": "https://dailyscanner.com"
+  },
+  "dailyworld.com": {
+   "method": "none"
+  },
+  "dallasherald.com": {
+   "method": "rest",
+   "base": "https://dallasherald.com"
+  },
+  "darlingtonandstocktontimes.co.uk": {
+   "method": "none"
+  },
+  "dataconomy.com": {
+   "method": "none"
+  },
+  "dazed.me": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "de.ign.com": {
+   "method": "none"
+  },
+  "deadlinenews.co.uk": {
+   "method": "none"
+  },
+  "dealingsuccess.com": {
+   "method": "rest",
+   "base": "https://dealingsuccess.com"
+  },
+  "dealmagazine.com": {
+   "method": "rest",
+   "base": "https://dealmagazine.com"
+  },
+  "debtdiscipline.com": {
+   "method": "rest",
+   "base": "https://debtdiscipline.com"
+  },
+  "decider.com": {
+   "method": "none"
+  },
+  "decrypt.co": {
+   "method": "none"
+  },
+  "defenceconnect.com.au": {
+   "method": "none"
+  },
+  "delawareonline.com": {
+   "method": "none"
+  },
+  "delcotimes.com": {
+   "method": "rest",
+   "base": "https://delcotimes.com"
+  },
+  "delmarvanow.com": {
+   "method": "none"
+  },
+  "democratandchronicle.com": {
+   "method": "none"
+  },
+  "democratherald.com": {
+   "method": "none"
+  },
+  "denbighshirefreepress.co.uk": {
+   "method": "none"
+  },
+  "denvergazette.com": {
+   "method": "rest",
+   "base": "https://denvergazette.com"
+  },
+  "denvernorthstar.com": {
+   "method": "none"
+  },
+  "denverpost.com": {
+   "method": "rest",
+   "base": "https://denverpost.com"
+  },
+  "derehamtimes.co.uk": {
+   "method": "none"
+  },
+  "desertsun.com": {
+   "method": "none"
+  },
+  "design-middleeast.com": {
+   "method": "rest",
+   "base": "https://design-middleeast.com"
+  },
+  "designbysully.com": {
+   "method": "rest",
+   "base": "https://designbysully.com"
+  },
+  "designerstoday.com": {
+   "method": "none"
+  },
+  "desmoinesregister.com": {
+   "method": "none"
+  },
+  "detechsource.com": {
+   "method": "rest",
+   "base": "https://detechsource.com"
+  },
+  "detroitnews.com": {
+   "method": "none"
+  },
+  "devx.com": {
+   "method": "rest",
+   "base": "https://www.devx.com"
+  },
+  "dewittcountytoday.com": {
+   "method": "none"
+  },
+  "dietoflife.com": {
+   "method": "rest",
+   "base": "https://dietoflife.com"
+  },
+  "digitalfitnessworld.com": {
+   "method": "rest",
+   "base": "https://digitalfitnessworld.com"
+  },
+  "digitaljournal.com": {
+   "method": "rest",
+   "base": "https://digitaljournal.com"
+  },
+  "digitalmusicnews.com": {
+   "method": "rest",
+   "base": "https://digitalmusicnews.com"
+  },
+  "digitaltrends.com": {
+   "method": "none"
+  },
+  "dirtbikes.com": {
+   "method": "none"
+  },
+  "dispatch.com": {
+   "method": "none"
+  },
+  "distractify.com": {
+   "method": "none"
+  },
+  "divineglamtips.com": {
+   "method": "rest",
+   "base": "https://divineglamtips.com"
+  },
+  "djcoregon.com": {
+   "method": "none"
+  },
+  "dlnews.com": {
+   "method": "none"
+  },
+  "dnj.com": {
+   "method": "none"
+  },
+  "dollarthinking.com": {
+   "method": "rest",
+   "base": "https://dollarthinking.com"
+  },
+  "dorsetecho.co.uk": {
+   "method": "none"
+  },
+  "dothaneagle.com": {
+   "method": "none"
+  },
+  "douglascountynewspress.com": {
+   "method": "none"
+  },
+  "doylestownobserver.com": {
+   "method": "none"
+  },
+  "drippingspringsnews.com": {
+   "method": "none"
+  },
+  "dualshockers.com": {
+   "method": "none"
+  },
+  "dubaibusinessjournal.com": {
+   "method": "rest",
+   "base": "https://dubaibusinessjournal.com"
+  },
+  "dudleynews.co.uk": {
+   "method": "none"
+  },
+  "due.com": {
+   "method": "rest",
+   "base": "https://due.com"
+  },
+  "dunfermlinepress.com": {
+   "method": "none"
+  },
+  "dungogchronicle.com.au": {
+   "method": "none"
+  },
+  "dxbweekly.com": {
+   "method": "none"
+  },
+  "eadt.co.uk": {
+   "method": "none"
+  },
+  "earmilk.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "eastbaytimes.com": {
+   "method": "rest",
+   "base": "https://eastbaytimes.com"
+  },
+  "easternriverinachronicle.com.au": {
+   "method": "none"
+  },
+  "eastlothiancourier.com": {
+   "method": "none"
+  },
+  "eastvalleytribune.com": {
+   "method": "none"
+  },
+  "echo-news.co.uk": {
+   "method": "none"
+  },
+  "echo-pilot.com": {
+   "method": "none"
+  },
+  "economicinsider.com": {
+   "method": "rest",
+   "base": "https://economicinsider.com"
+  },
+  "economystandard.com": {
+   "method": "none"
+  },
+  "edenmagnet.com.au": {
+   "method": "none"
+  },
+  "ediblela.com": {
+   "method": "none"
+  },
+  "editorsbeauty.com": {
+   "method": "none"
+  },
+  "edmontonjournal.com": {
+   "method": "rest",
+   "base": "https://edmontonjournal.com"
+  },
+  "edmontonsun.com": {
+   "method": "rest",
+   "base": "https://edmontonsun.com"
+  },
+  "edmsauce.com": {
+   "method": "rest",
+   "base": "https://edmsauce.com"
+  },
+  "edp24.co.uk": {
+   "method": "none"
+  },
+  "eleconomista.com.mx": {
+   "method": "none"
+  },
+  "elitedaily.com": {
+   "method": "none"
+  },
+  "eliteluxurynews.com": {
+   "method": "none"
+  },
+  "elitemusicnews.com": {
+   "method": "none"
+  },
+  "elitepropertynews.com": {
+   "method": "none"
+  },
+  "elkodaily.com": {
+   "method": "none"
+  },
+  "elle.in": {
+   "method": "none"
+  },
+  "elle.ua": {
+   "method": "none"
+  },
+  "ellecanada.com": {
+   "method": "none"
+  },
+  "ellequebec.com": {
+   "method": "none"
+  },
+  "ellwoodcityledger.com": {
+   "method": "none"
+  },
+  "elpasotimes.com": {
+   "method": "none"
+  },
+  "elystandard.co.uk": {
+   "method": "none"
+  },
+  "emirateswoman.com": {
+   "method": "rest",
+   "base": "https://emirateswoman.com"
+  },
+  "emonthlynews.com": {
+   "method": "rest",
+   "base": "https://emonthlynews.com"
+  },
+  "enfieldindependent.co.uk": {
+   "method": "none"
+  },
+  "enterprisenews.com": {
+   "method": "none"
+  },
+  "entertainmentpost.com": {
+   "method": "rest",
+   "base": "https://entertainmentpost.com"
+  },
+  "entrepreneur.com": {
+   "method": "none"
+  },
+  "entrepreneuralarabiya.com": {
+   "method": "rest",
+   "base": "https://entrepreneuralarabiya.com"
+  },
+  "entrepreneurs.ng": {
+   "method": "rest",
+   "base": "https://entrepreneurs.ng"
+  },
+  "entrepreneurtribune.com": {
+   "method": "none"
+  },
+  "epicurious.com": {
+   "method": "none"
+  },
+  "eppingforestguardian.co.uk": {
+   "method": "none"
+  },
+  "eptrail.com": {
+   "method": "none"
+  },
+  "esquire.com.au": {
+   "method": "none"
+  },
+  "esquire.com.tr": {
+   "method": "rest",
+   "base": "https://esquire.com.tr"
+  },
+  "esquireme.com": {
+   "method": "none"
+  },
+  "essexreporter.com": {
+   "method": "none"
+  },
+  "europeanbusinessreview.com": {
+   "method": "rest",
+   "base": "https://europeanbusinessreview.com"
+  },
+  "europeanfinancialreview.com": {
+   "method": "rest",
+   "base": "https://europeanfinancialreview.com"
+  },
+  "eveningnews24.co.uk": {
+   "method": "none"
+  },
+  "eveningsun.com": {
+   "method": "none"
+  },
+  "eveningtribune.com": {
+   "method": "none"
+  },
+  "eveshamjournal.co.uk": {
+   "method": "none"
+  },
+  "examiner-enterprise.com": {
+   "method": "none"
+  },
+  "examiner.com.au": {
+   "method": "none"
+  },
+  "excelsiorcalifornia.com": {
+   "method": "rest",
+   "base": "https://excelsiorcalifornia.com"
+  },
+  "execmag.com": {
+   "method": "rest",
+   "base": "https://execmag.com"
+  },
+  "exmouthjournal.co.uk": {
+   "method": "none"
+  },
+  "eyeofdubai.ae": {
+   "method": "none"
+  },
+  "eyeofriyadh.com": {
+   "method": "none"
+  },
+  "facty.com": {
+   "method": "none"
+  },
+  "fairlessfocus.com": {
+   "method": "none"
+  },
+  "fairmontpost.com": {
+   "method": "rest",
+   "base": "https://fairmontpost.com"
+  },
+  "fakenhamtimes.co.uk": {
+   "method": "none"
+  },
+  "falmouthpacket.co.uk": {
+   "method": "none"
+  },
+  "familyhandyman.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "famoustimes.com": {
+   "method": "rest",
+   "base": "https://famoustimes.com"
+  },
+  "farmonline.com.au": {
+   "method": "none"
+  },
+  "farmweekly.com.au": {
+   "method": "none"
+  },
+  "fashionglee.com": {
+   "method": "rest",
+   "base": "https://fashionglee.com"
+  },
+  "fashionmagazine.com": {
+   "method": "none"
+  },
+  "fashiontimes.com": {
+   "method": "none"
+  },
+  "fashionweekdaily.com": {
+   "method": "rest",
+   "base": "https://fashionweekdaily.com"
+  },
+  "fastcompany.co.za": {
+   "method": "none"
+  },
+  "fastcompany.mx": {
+   "method": "rest",
+   "base": "https://fastcompany.mx"
+  },
+  "fatherly.com": {
+   "method": "none"
+  },
+  "fault-magazine.com": {
+   "method": "rest",
+   "base": "https://fault-magazine.com"
+  },
+  "fayobserver.com": {
+   "method": "none"
+  },
+  "fbherald.com": {
+   "method": "none"
+  },
+  "fcrecorderchronicle.com": {
+   "method": "none"
+  },
+  "fdlreporter.com": {
+   "method": "none"
+  },
+  "femalefirst.co.uk": {
+   "method": "none"
+  },
+  "ffnews.com": {
+   "method": "none"
+  },
+  "fhm.com": {
+   "method": "rest",
+   "base": "https://www.fhm.com"
+  },
+  "finance-commerce.com": {
+   "method": "none"
+  },
+  "finance.yahoo.com": {
+   "method": "none"
+  },
+  "financedigest.com": {
+   "method": "none"
+  },
+  "financefeeds.com": {
+   "method": "rest",
+   "base": "https://financefeeds.com"
+  },
+  "financialpost.com": {
+   "method": "none"
+  },
+  "financialtechtimes.com": {
+   "method": "rest",
+   "base": "https://financialtechtimes.com"
+  },
+  "finehomesandliving.com": {
+   "method": "none"
+  },
+  "fintechherald.com": {
+   "method": "none"
+  },
+  "fitchburgstar.com": {
+   "method": "none"
+  },
+  "fitfulliving.com": {
+   "method": "rest",
+   "base": "https://fitfulliving.com"
+  },
+  "fitnessison.com": {
+   "method": "rest",
+   "base": "https://fitnessison.com"
+  },
+  "flaremagazine.co.uk": {
+   "method": "rest",
+   "base": "https://flaremagazine.co.uk"
+  },
+  "flaunt.com": {
+   "method": "none"
+  },
+  "floridatoday.com": {
+   "method": "none"
+  },
+  "flrepoter.com": {
+   "method": "rest",
+   "base": "https://www.flrepoter.com"
+  },
+  "fluenciaga.com": {
+   "method": "none"
+  },
+  "focusmagazine.nl": {
+   "method": "rest",
+   "base": "https://focusmagazine.nl"
+  },
+  "fontanaheraldnews.com": {
+   "method": "none"
+  },
+  "fontmirror.com": {
+   "method": "none"
+  },
+  "foodandwineespanol.com": {
+   "method": "rest",
+   "base": "https://foodandwineespanol.com"
+  },
+  "footballfancast.com ": {
+   "method": "none"
+  },
+  "footballleagueworld.co.uk": {
+   "method": "none"
+  },
+  "forbes.co": {
+   "method": "none"
+  },
+  "forbes.com.au": {
+   "method": "rest",
+   "base": "https://forbes.com.au"
+  },
+  "forbes.com.mx": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "forbes.com.tr": {
+   "method": "none"
+  },
+  "forbes.ua": {
+   "method": "none"
+  },
+  "foreignaffairsobserver.com": {
+   "method": "none"
+  },
+  "foreignpolicyjournal.com": {
+   "method": "rest",
+   "base": "https://foreignpolicyjournal.com"
+  },
+  "fortbendstar.com": {
+   "method": "none"
+  },
+  "fortmorgantimes.com": {
+   "method": "none"
+  },
+  "fortune.com": {
+   "method": "rest",
+   "base": "https://fortune.com"
+  },
+  "fosters.com": {
+   "method": "none"
+  },
+  "foxinterviewer.com": {
+   "method": "rest",
+   "base": "https://foxinterviewer.com"
+  },
+  "fr.chatelaine.com": {
+   "method": "none"
+  },
+  "franchisewire.com": {
+   "method": "rest",
+   "base": "https://franchisewire.com"
+  },
+  "fredericksburg.com": {
+   "method": "none"
+  },
+  "fredericksburgstandard.com": {
+   "method": "none"
+  },
+  "freep.com": {
+   "method": "none"
+  },
+  "freepressseries.co.uk": {
+   "method": "none"
+  },
+  "fremonttribune.com": {
+   "method": "none"
+  },
+  "fresnobee.com": {
+   "method": "none"
+  },
+  "frontpagedetectives.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "furnituretoday.com": {
+   "method": "none"
+  },
+  "futuristarchitecture.com": {
+   "method": "rest",
+   "base": "https://futuristarchitecture.com"
+  },
+  "fxstreet.com": {
+   "method": "none"
+  },
+  "gadgetsgaadi.com": {
+   "method": "rest",
+   "base": "https://gadgetsgaadi.com"
+  },
+  "gadsdentimes.com": {
+   "method": "none"
+  },
+  "gainesville.com": {
+   "method": "none"
+  },
+  "galesburg.com": {
+   "method": "none"
+  },
+  "galoremag.com": {
+   "method": "none"
+  },
+  "gamenguide.com": {
+   "method": "none"
+  },
+  "gamerant.com": {
+   "method": "none"
+  },
+  "gametechdaily.com": {
+   "method": "rest",
+   "base": "https://gametechdaily.com"
+  },
+  "gastongazette.com": {
+   "method": "none"
+  },
+  "gazette-news.co.uk": {
+   "method": "none"
+  },
+  "gazette.com": {
+   "method": "none"
+  },
+  "gazetteherald.co.uk": {
+   "method": "none"
+  },
+  "gazetteseries.co.uk": {
+   "method": "none"
+  },
+  "gazettetimes.com": {
+   "method": "none"
+  },
+  "geekextreme.com": {
+   "method": "rest",
+   "base": "https://geekextreme.com"
+  },
+  "geekinsider.com": {
+   "method": "rest",
+   "base": "https://geekinsider.com"
+  },
+  "geekwire.com": {
+   "method": "none"
+  },
+  "getworldbeauty.com": {
+   "method": "rest",
+   "base": "https://getworldbeauty.com"
+  },
+  "giftsanddec.com": {
+   "method": "none"
+  },
+  "gigwise.com": {
+   "method": "rest",
+   "base": "https://gigwise.com"
+  },
+  "gilbertsunnews.com": {
+   "method": "none"
+  },
+  "girlcooksworld.com": {
+   "method": "rest",
+   "base": "https://girlcooksworld.com"
+  },
+  "gisuser.com": {
+   "method": "none"
+  },
+  "givemesport.com": {
+   "method": "none"
+  },
+  "glamour.bg": {
+   "method": "none"
+  },
+  "glamour.co.za": {
+   "method": "none"
+  },
+  "glamour.com": {
+   "method": "none"
+  },
+  "glasgowtimes.co.uk": {
+   "method": "none"
+  },
+  "glendalestar.com": {
+   "method": "none"
+  },
+  "gleninnesexaminer.com.au": {
+   "method": "none"
+  },
+  "globalbankingandfinance.com": {
+   "method": "none"
+  },
+  "globalmarketingguide.com": {
+   "method": "rest",
+   "base": "https://globalmarketingguide.com"
+  },
+  "globegazette.com": {
+   "method": "none"
+  },
+  "glossbloomin.com": {
+   "method": "rest",
+   "base": "https://glossbloomin.com"
+  },
+  "gloucesteradvocate.com.au": {
+   "method": "none"
+  },
+  "godanriver.com": {
+   "method": "none"
+  },
+  "goerie.com": {
+   "method": "none"
+  },
+  "golfdigest.com": {
+   "method": "none"
+  },
+  "golfdigestme.com": {
+   "method": "rest",
+   "base": "https://golfdigestme.com"
+  },
+  "goodfruitandvegetables.com.au": {
+   "method": "none"
+  },
+  "goodmenproject.com": {
+   "method": "none"
+  },
+  "gosanangelo.com": {
+   "method": "none"
+  },
+  "goulburnpost.com.au": {
+   "method": "none"
+  },
+  "goupstate.com": {
+   "method": "none"
+  },
+  "gq.co.za": {
+   "method": "none"
+  },
+  "gq.com.tr": {
+   "method": "none"
+  },
+  "grahamleader.com": {
+   "method": "none"
+  },
+  "grazia.hr": {
+   "method": "none"
+  },
+  "graziamagazine.com": {
+   "method": "rest",
+   "base": "https://graziamagazine.com"
+  },
+  "greatfallstribune.com": {
+   "method": "none"
+  },
+  "greatlakesadvocate.com.au": {
+   "method": "none"
+  },
+  "greatyarmouthmercury.co.uk": {
+   "method": "none"
+  },
+  "greenbaypressgazette.com": {
+   "method": "none"
+  },
+  "greenmatters.com": {
+   "method": "none"
+  },
+  "greenocktelegraph.co.uk": {
+   "method": "none"
+  },
+  "greensboro.com": {
+   "method": "none"
+  },
+  "greenvilleonline.com": {
+   "method": "none"
+  },
+  "grimballjewelers.com": {
+   "method": "none"
+  },
+  "gritdaily.com": {
+   "method": "rest",
+   "base": "https://gritdaily.com"
+  },
+  "groesbeckjournal.com": {
+   "method": "none"
+  },
+  "growthnavigate.com": {
+   "method": "none"
+  },
+  "growthscribe.com": {
+   "method": "rest",
+   "base": "https://growthscribe.com"
+  },
+  "guardian-series.co.uk": {
+   "method": "none"
+  },
+  "gulf-times.com": {
+   "method": "none"
+  },
+  "gulfbusiness.com": {
+   "method": "none"
+  },
+  "gulfconstructiononline.com": {
+   "method": "none"
+  },
+  "gulfindustryonline.com": {
+   "method": "none"
+  },
+  "gulfnews.com": {
+   "method": "none"
+  },
+  "hackernoon.com": {
+   "method": "none"
+  },
+  "hackneygazette.co.uk": {
+   "method": "none"
+  },
+  "halesowennews.co.uk": {
+   "method": "none"
+  },
+  "halsteadgazette.co.uk": {
+   "method": "none"
+  },
+  "hamhigh.co.uk": {
+   "method": "none"
+  },
+  "hampshirechronicle.co.uk": {
+   "method": "none"
+  },
+  "hamptonsweekly.com": {
+   "method": "rest",
+   "base": "https://hamptonsweekly.com"
+  },
+  "hangrypants.com": {
+   "method": "none"
+  },
+  "happysprout.com": {
+   "method": "none"
+  },
+  "hardcoregamer.com": {
+   "method": "none"
+  },
+  "hardenexpress.com.au": {
+   "method": "none"
+  },
+  "hardwaresecrets.com": {
+   "method": "rest",
+   "base": "https://hardwaresecrets.com"
+  },
+  "harpersbazaar.com.au": {
+   "method": "none"
+  },
+  "harpersbazaar.com.tr": {
+   "method": "rest",
+   "base": "https://harpersbazaar.com.tr"
+  },
+  "harpersbazaararabia.com": {
+   "method": "none"
+  },
+  "harrowtimes.co.uk": {
+   "method": "none"
+  },
+  "harwichandmanningtreestandard.co.uk": {
+   "method": "none"
+  },
+  "hastingsstargazette.com": {
+   "method": "none"
+  },
+  "hattiesburgamerican.com": {
+   "method": "none"
+  },
+  "hauteliving.com": {
+   "method": "none"
+  },
+  "hautetime.com": {
+   "method": "rest",
+   "base": "https://hautetime.com"
+  },
+  "hawkesburygazette.com.au": {
+   "method": "none"
+  },
+  "healthbloomin.com": {
+   "method": "rest",
+   "base": "https://healthbloomin.com"
+  },
+  "healthcarebusinesstoday.com": {
+   "method": "none"
+  },
+  "healthcaresblog.com": {
+   "method": "rest",
+   "base": "https://healthcaresblog.com"
+  },
+  "healthfitnessin.com": {
+   "method": "rest",
+   "base": "https://healthfitnessin.com"
+  },
+  "healthmagazine.ae": {
+   "method": "rest",
+   "base": "https://healthmagazine.ae"
+  },
+  "healthnutritionhints.com": {
+   "method": "rest",
+   "base": "https://healthnutritionhints.com"
+  },
+  "healthylivinghouse.com": {
+   "method": "rest",
+   "base": "https://healthylivinghouse.com"
+  },
+  "healthymindmagazine.com": {
+   "method": "rest",
+   "base": "https://healthymindmagazine.com"
+  },
+  "helenair.com": {
+   "method": "none"
+  },
+  "helensburghadvertiser.co.uk": {
+   "method": "none"
+  },
+  "hellomagazine.com": {
+   "method": "none"
+  },
+  "hepburnadvocate.com.au": {
+   "method": "none"
+  },
+  "herald-review.com": {
+   "method": "none"
+  },
+  "heraldcourier.com": {
+   "method": "none"
+  },
+  "heraldmailmedia.com": {
+   "method": "none"
+  },
+  "heraldnews.com": {
+   "method": "none"
+  },
+  "heraldonline.com": {
+   "method": "none"
+  },
+  "heraldscotland.com": {
+   "method": "none"
+  },
+  "heraldsun.com": {
+   "method": "none"
+  },
+  "heraldtimesonline.com": {
+   "method": "none"
+  },
+  "heraldtribune.com": {
+   "method": "none"
+  },
+  "herefordtimes.com": {
+   "method": "none"
+  },
+  "hertsad.co.uk": {
+   "method": "none"
+  },
+  "hexham-courant.co.uk": {
+   "method": "none"
+  },
+  "heywise.com": {
+   "method": "none"
+  },
+  "hfndigital.com": {
+   "method": "none"
+  },
+  "hickoryrecord.com": {
+   "method": "none"
+  },
+  "highlandernews.com": {
+   "method": "none"
+  },
+  "highlandsranchherald.com": {
+   "method": "none"
+  },
+  "highnetworthmag.com": {
+   "method": "rest",
+   "base": "https://highnetworthmag.com"
+  },
+  "hillsdale.net": {
+   "method": "none"
+  },
+  "hisandherfipost.com": {
+   "method": "rest",
+   "base": "https://hisandherfipost.com"
+  },
+  "hk.investing.com": {
+   "method": "none"
+  },
+  "hollandsentinel.com": {
+   "method": "none"
+  },
+  "hollyhealthfitness.com": {
+   "method": "rest",
+   "base": "https://hollyhealthfitness.com"
+  },
+  "hollywoodlife.com": {
+   "method": "none"
+  },
+  "hollywoodreporter.com": {
+   "method": "rest",
+   "base": "https://hollywoodreporter.com"
+  },
+  "hollywoodunlocked.com": {
+   "method": "rest",
+   "base": "https://www.hollywoodunlocked.com"
+  },
+  "homeaccentstoday.com": {
+   "method": "none"
+  },
+  "homecreatives.net": {
+   "method": "rest",
+   "base": "https://homecreatives.net"
+  },
+  "homedesignlooks.com": {
+   "method": "rest",
+   "base": "https://homedesignlooks.com"
+  },
+  "hometextilestoday.com": {
+   "method": "none"
+  },
+  "hometownstation.com": {
+   "method": "rest",
+   "base": "https://hometownstation.com"
+  },
+  "hoodcriticmagazine.com": {
+   "method": "feed",
+   "base": "https://hoodcriticmagazine.com"
+  },
+  "hotcars.com": {
+   "method": "none"
+  },
+  "hotelandcatering.com": {
+   "method": "rest",
+   "base": "https://hotelandcatering.com"
+  },
+  "hotelbusiness.com": {
+   "method": "none"
+  },
+  "houmatoday.com": {
+   "method": "none"
+  },
+  "houseandgarden.co.za": {
+   "method": "none"
+  },
+  "housesitworld.com": {
+   "method": "rest",
+   "base": "https://housesitworld.com"
+  },
+  "houstonpress.com": {
+   "method": "rest",
+   "base": "https://houstonpress.com"
+  },
+  "houstontimes.com": {
+   "method": "rest",
+   "base": "https://houstontimes.com"
+  },
+  "howtogeek.com": {
+   "method": "none"
+  },
+  "hrleader.com.au": {
+   "method": "none"
+  },
+  "htrnews.com": {
+   "method": "none"
+  },
+  "hudsonstarobserver.com": {
+   "method": "none"
+  },
+  "hudsonweekly.com": {
+   "method": "rest",
+   "base": "https://hudsonweekly.com"
+  },
+  "huffmag.com": {
+   "method": "rest",
+   "base": "https://huffmag.com"
+  },
+  "huntervalleynews.net.au": {
+   "method": "none"
+  },
+  "huntingdonvalleyview.com": {
+   "method": "none"
+  },
+  "huntspost.co.uk": {
+   "method": "none"
+  },
+  "hutchnews.com": {
+   "method": "none"
+  },
+  "ibtimes.ae": {
+   "method": "none"
+  },
+  "ibtimes.co.in": {
+   "method": "none"
+  },
+  "ibtimes.co.jp": {
+   "method": "none"
+  },
+  "ibtimes.co.uk": {
+   "method": "none"
+  },
+  "ibtimes.com": {
+   "method": "none"
+  },
+  "ibtimes.com.au": {
+   "method": "none"
+  },
+  "ibtimes.sg": {
+   "method": "none"
+  },
+  "idahobusinessreview.com": {
+   "method": "none"
+  },
+  "idahostatesman.com": {
+   "method": "none"
+  },
+  "ignitemag.co.uk": {
+   "method": "rest",
+   "base": "https://ignitemag.co.uk"
+  },
+  "ilfordrecorder.co.uk": {
+   "method": "none"
+  },
+  "ilkleygazette.co.uk": {
+   "method": "none"
+  },
+  "illawarramercury.com.au": {
+   "method": "none"
+  },
+  "ilovesouthafrica.com": {
+   "method": "rest",
+   "base": "https://ilovesouthafrica.com"
+  },
+  "imtechies.com": {
+   "method": "rest",
+   "base": "https://imtechies.com"
+  },
+  "inbusinessmarketing.com": {
+   "method": "rest",
+   "base": "https://www.inbusinessmarketing.com"
+  },
+  "incmarketingplace.com": {
+   "method": "rest",
+   "base": "https://incmarketingplace.com"
+  },
+  "indeonline.com": {
+   "method": "none"
+  },
+  "independent.co.uk": {
+   "method": "none"
+  },
+  "independentmail.com": {
+   "method": "none"
+  },
+  "independenttribune.com": {
+   "method": "none"
+  },
+  "india.entrepreneur.com": {
+   "method": "none"
+  },
+  "indiehackers.com": {
+   "method": "none"
+  },
+  "indystar.com": {
+   "method": "none"
+  },
+  "infinityelse.co.uk": {
+   "method": "rest",
+   "base": "https://infinityelse.co.uk"
+  },
+  "influencejournal.com": {
+   "method": "none"
+  },
+  "influencerdaily.com": {
+   "method": "rest",
+   "base": "https://influencerdaily.com"
+  },
+  "infopool.org.uk": {
+   "method": "rest",
+   "base": "https://infopool.org.uk"
+  },
+  "informationntechnology.com": {
+   "method": "rest",
+   "base": "https://informationntechnology.com"
+  },
+  "infoworld.com": {
+   "method": "rest",
+   "base": "https://infoworld.com"
+  },
+  "inhumanbeing.com": {
+   "method": "rest",
+   "base": "https://inhumanbeing.com"
+  },
+  "inman.com": {
+   "method": "none"
+  },
+  "innereastreview.com.au": {
+   "method": "none"
+  },
+  "innov8tiv.com": {
+   "method": "none"
+  },
+  "insidetucsonbusiness.com": {
+   "method": "none"
+  },
+  "instyle.md": {
+   "method": "rest",
+   "base": "https://instyle.md"
+  },
+  "instyle.mx": {
+   "method": "rest",
+   "base": "https://instyle.mx"
+  },
+  "internationalreleases.com": {
+   "method": "none"
+  },
+  "inventorspot.com": {
+   "method": "rest",
+   "base": "https://inventorspot.com"
+  },
+  "inverelltimes.com.au": {
+   "method": "none"
+  },
+  "inverse.com": {
+   "method": "none"
+  },
+  "investing.com": {
+   "method": "none"
+  },
+  "ipswichstar.co.uk": {
+   "method": "none"
+  },
+  "irrigator.com.au": {
+   "method": "none"
+  },
+  "irvinetimes.com": {
+   "method": "none"
+  },
+  "irvineweekly.com": {
+   "method": "rest",
+   "base": "https://irvineweekly.com"
+  },
+  "islandpacket.com": {
+   "method": "none"
+  },
+  "islingtongazette.co.uk": {
+   "method": "none"
+  },
+  "itgraviti.com": {
+   "method": "rest",
+   "base": "https://itgraviti.com"
+  },
+  "ithacajournal.com": {
+   "method": "none"
+  },
+  "itp.live": {
+   "method": "rest",
+   "base": "https://itp.live"
+  },
+  "itsecurityguru.org": {
+   "method": "none"
+  },
+  "iwantthenews.com": {
+   "method": "none"
+  },
+  "jacksboronewspapers.com": {
+   "method": "none"
+  },
+  "jacksonconews.com": {
+   "method": "none"
+  },
+  "jacksonsun.com": {
+   "method": "none"
+  },
+  "jacksonville.com": {
+   "method": "none"
+  },
+  "jconline.com": {
+   "method": "none"
+  },
+  "jeffcotranscript.com": {
+   "method": "none"
+  },
+  "jezebel.com": {
+   "method": "none"
+  },
+  "jg-tc.com": {
+   "method": "none"
+  },
+  "jimboombatimes.com.au": {
+   "method": "none"
+  },
+  "josepvinaixa.com": {
+   "method": "rest",
+   "base": "https://josepvinaixa.com"
+  },
+  "journalnow.com": {
+   "method": "none"
+  },
+  "journalrecord.com": {
+   "method": "none"
+  },
+  "journalstandard.com": {
+   "method": "none"
+  },
+  "journalstar.com": {
+   "method": "none"
+  },
+  "journaltimes.com": {
+   "method": "none"
+  },
+  "jpost.com": {
+   "method": "none"
+  },
+  "jsonline.com": {
+   "method": "none"
+  },
+  "julesburgadvocate.com": {
+   "method": "none"
+  },
+  "juneesoutherncross.com.au": {
+   "method": "none"
+  },
+  "kaltblut-magazine.com": {
+   "method": "rest",
+   "base": "https://kaltblut-magazine.com"
+  },
+  "kansas.com": {
+   "method": "none"
+  },
+  "kansascity.com": {
+   "method": "none"
+  },
+  "kansaspress.com": {
+   "method": "none"
+  },
+  "katherinetimes.com.au": {
+   "method": "none"
+  },
+  "kearneyhub.com": {
+   "method": "none"
+  },
+  "keighleynews.co.uk": {
+   "method": "none"
+  },
+  "kellysthoughtsonthings.com": {
+   "method": "rest",
+   "base": "https://kellysthoughtsonthings.com"
+  },
+  "kenoshanews.com": {
+   "method": "none"
+  },
+  "kentucky.com": {
+   "method": "none"
+  },
+  "kidderminstershuttle.co.uk": {
+   "method": "none"
+  },
+  "kilburntimes.co.uk": {
+   "method": "none"
+  },
+  "kitsapsun.com": {
+   "method": "none"
+  },
+  "kivodaily.com": {
+   "method": "rest",
+   "base": "https://kivodaily.com"
+  },
+  "knewz.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "knoxnews.com": {
+   "method": "none"
+  },
+  "knutsfordguardian.co.uk": {
+   "method": "none"
+  },
+  "kpopstarz.com": {
+   "method": "none"
+  },
+  "lacollide.com": {
+   "method": "feed",
+   "base": "https://lacollide.com"
+  },
+  "lacrossetribune.com": {
+   "method": "none"
+  },
+  "ladowntownnews.com": {
+   "method": "none"
+  },
+  "ladygunn.com": {
+   "method": "rest",
+   "base": "https://ladygunn.com"
+  },
+  "laentertainmentweekly.com": {
+   "method": "rest",
+   "base": "https://laentertainmentweekly.com"
+  },
+  "laexaminer.com": {
+   "method": "rest",
+   "base": "https://laexaminer.com"
+  },
+  "laguestlist.com": {
+   "method": "none"
+  },
+  "lagunabeachindy.com": {
+   "method": "none"
+  },
+  "lakegenevanews.net": {
+   "method": "none"
+  },
+  "lamag.com": {
+   "method": "none"
+  },
+  "lamarledger.com": {
+   "method": "none"
+  },
+  "lancashiretelegraph.co.uk": {
+   "method": "none"
+  },
+  "lancastereaglegazette.com": {
+   "method": "none"
+  },
+  "langhorneledger.com": {
+   "method": "none"
+  },
+  "lansingstatejournal.com": {
+   "method": "none"
+  },
+  "largsandmillportnews.com": {
+   "method": "none"
+  },
+  "lasvegasoptic.com": {
+   "method": "none"
+  },
+  "latabloid.com": {
+   "method": "feed",
+   "base": "https://latabloid.com"
+  },
+  "latestly.com": {
+   "method": "none"
+  },
+  "latimes.com": {
+   "method": "none"
+  },
+  "latinpost.com": {
+   "method": "none"
+  },
+  "latintimes.com": {
+   "method": "none"
+  },
+  "latitude33magazine.com": {
+   "method": "rest",
+   "base": "https://latitude33magazine.com"
+  },
+  "lavoice.com": {
+   "method": "rest",
+   "base": "https://lavoice.com"
+  },
+  "lawandcrime.com": {
+   "method": "none"
+  },
+  "laweekly.com": {
+   "method": "none"
+  },
+  "lawire.com": {
+   "method": "rest",
+   "base": "https://lawire.com"
+  },
+  "lawnewsday.com": {
+   "method": "rest",
+   "base": "https://lawnewsday.com"
+  },
+  "lawnewsnetwork.com": {
+   "method": "none"
+  },
+  "lawyerherald.com": {
+   "method": "none"
+  },
+  "lawyersweekly.com.au": {
+   "method": "none"
+  },
+  "lcsun-news.com": {
+   "method": "none"
+  },
+  "ldnews.com": {
+   "method": "none"
+  },
+  "leaderlive.co.uk": {
+   "method": "none"
+  },
+  "leaderpost.com": {
+   "method": "rest",
+   "base": "https://leaderpost.com"
+  },
+  "leadvilleherald.com": {
+   "method": "none"
+  },
+  "ledburyreporter.co.uk": {
+   "method": "none"
+  },
+  "leighjournal.co.uk": {
+   "method": "none"
+  },
+  "lenconnect.com": {
+   "method": "none"
+  },
+  "leoweekly.com": {
+   "method": "rest",
+   "base": "https://leoweekly.com"
+  },
+  "lexch.com": {
+   "method": "none"
+  },
+  "libn.com": {
+   "method": "none"
+  },
+  "lifeandstylemag.com": {
+   "method": "rest",
+   "base": "https://lifeandstylemag.com"
+  },
+  "lightandchampion.com": {
+   "method": "none"
+  },
+  "lincolncitizen.com": {
+   "method": "rest",
+   "base": "https://lincolncitizen.com"
+  },
+  "lincolncourier.com": {
+   "method": "none"
+  },
+  "linuxjournal.com": {
+   "method": "none"
+  },
+  "lismorecitynews.com.au": {
+   "method": "none"
+  },
+  "lithgowmercury.com.au": {
+   "method": "none"
+  },
+  "litmag.co.uk": {
+   "method": "rest",
+   "base": "https://litmag.co.uk"
+  },
+  "littletonindependent.net": {
+   "method": "none"
+  },
+  "livemint.com": {
+   "method": "none"
+  },
+  "livingstondaily.com": {
+   "method": "none"
+  },
+  "load2learn.org.uk": {
+   "method": "rest",
+   "base": "https://load2learn.org.uk"
+  },
+  "lofficielmonaco.com": {
+   "method": "rest",
+   "base": "https://lofficielmonaco.com"
+  },
+  "lohud.com": {
+   "method": "none"
+  },
+  "londonbusinessjournal.com": {
+   "method": "rest",
+   "base": "https://londonbusinessjournal.com"
+  },
+  "londoninsider.co.uk": {
+   "method": "rest",
+   "base": "https://londoninsider.co.uk"
+  },
+  "londonlovesbusiness.com": {
+   "method": "rest",
+   "base": "https://londonlovesbusiness.com"
+  },
+  "londonwebcam.co.uk": {
+   "method": "none"
+  },
+  "losangelesreporter.com": {
+   "method": "rest",
+   "base": "https://losangelesreporter.com"
+  },
+  "lowellsun.com": {
+   "method": "rest",
+   "base": "https://lowellsun.com"
+  },
+  "lowersouthamptonspirit.com": {
+   "method": "none"
+  },
+  "lowestoftjournal.co.uk": {
+   "method": "none"
+  },
+  "lubbockonline.com": {
+   "method": "none"
+  },
+  "ludlowadvertiser.co.uk": {
+   "method": "none"
+  },
+  "lureblog.com": {
+   "method": "rest",
+   "base": "https://lureblog.com"
+  },
+  "luxandent.com": {
+   "method": "none"
+  },
+  "luxuryadviser.com": {
+   "method": "none"
+  },
+  "luxurylamag.com": {
+   "method": "rest",
+   "base": "https://luxurylamag.com"
+  },
+  "luxurylifestylemag.co.uk": {
+   "method": "rest",
+   "base": "https://luxurylifestylemag.co.uk"
+  },
+  "luxurymiamimag.com": {
+   "method": "rest",
+   "base": "https://luxurymiamimag.com"
+  },
+  "luxurytravelmagazine.com": {
+   "method": "none"
+  },
+  "lvb.com": {
+   "method": "none"
+  },
+  "macleans.ca": {
+   "method": "none"
+  },
+  "macleayargus.com.au": {
+   "method": "none"
+  },
+  "macombdaily.com": {
+   "method": "rest",
+   "base": "https://macombdaily.com"
+  },
+  "macworld.com": {
+   "method": "rest",
+   "base": "https://macworld.com"
+  },
+  "madison.com": {
+   "method": "none"
+  },
+  "madisongraph.com": {
+   "method": "rest",
+   "base": "https://madisongraph.com"
+  },
+  "magicvalley.com": {
+   "method": "none"
+  },
+  "magneticmag.com": {
+   "method": "rest",
+   "base": "https://magneticmag.com"
+  },
+  "mainlinemedianews.com": {
+   "method": "rest",
+   "base": "https://mainlinemedianews.com"
+  },
+  "maitlandmercury.com.au": {
+   "method": "none"
+  },
+  "makeallure.com": {
+   "method": "rest",
+   "base": "https://makeallure.com"
+  },
+  "makeuseof.com": {
+   "method": "none"
+  },
+  "maldonandburnhamstandard.co.uk": {
+   "method": "none"
+  },
+  "malverngazette.co.uk": {
+   "method": "none"
+  },
+  "mandurahmail.com.au": {
+   "method": "none"
+  },
+  "manningrivertimes.com.au": {
+   "method": "none"
+  },
+  "mansfieldnewsjournal.com": {
+   "method": "none"
+  },
+  "margaretrivermail.com.au": {
+   "method": "rest",
+   "base": "https://margaretrivermail.com.au"
+  },
+  "marieclaire.nl": {
+   "method": "none"
+  },
+  "marieclaire.ua": {
+   "method": "rest",
+   "base": "https://marieclaire.ua"
+  },
+  "marinatimes.com": {
+   "method": "rest",
+   "base": "https://marinatimes.com"
+  },
+  "marionstar.com": {
+   "method": "none"
+  },
+  "marketdaily.com": {
+   "method": "rest",
+   "base": "https://marketdaily.com"
+  },
+  "marketing2business.com": {
+   "method": "rest",
+   "base": "https://marketing2business.com"
+  },
+  "marketinginno.com": {
+   "method": "rest",
+   "base": "https://marketinginno.com"
+  },
+  "marketingiz.com": {
+   "method": "rest",
+   "base": "https://marketingiz.com"
+  },
+  "marketingmarine.com": {
+   "method": "rest",
+   "base": "https://marketingmarine.com"
+  },
+  "marketrealist.com": {
+   "method": "none"
+  },
+  "markets.businessinsider.com": {
+   "method": "none"
+  },
+  "marketsherald.com": {
+   "method": "rest",
+   "base": "https://marketsherald.com"
+  },
+  "marketspy.com": {
+   "method": "none"
+  },
+  "marketwatchmedia.com": {
+   "method": "rest",
+   "base": "https://marketwatchmedia.com"
+  },
+  "markmeets.com": {
+   "method": "rest",
+   "base": "https://markmeets.com"
+  },
+  "marlindemocrat.com": {
+   "method": "none"
+  },
+  "marshfieldnewsherald.com": {
+   "method": "none"
+  },
+  "martinsvillebulletin.com": {
+   "method": "none"
+  },
+  "masala.com": {
+   "method": "none"
+  },
+  "masslawyersweekly.com": {
+   "method": "none"
+  },
+  "maxim.com": {
+   "method": "rest",
+   "base": "https://maxim.com"
+  },
+  "mcall.com": {
+   "method": "rest",
+   "base": "https://mcall.com"
+  },
+  "mcclatchydc.com": {
+   "method": "none"
+  },
+  "mcdonoughvoice.com": {
+   "method": "none"
+  },
+  "mcdowellnews.com": {
+   "method": "none"
+  },
+  "mecktimes.com": {
+   "method": "none"
+  },
+  "mediaite.com": {
+   "method": "none"
+  },
+  "medicaldaily.com": {
+   "method": "none"
+  },
+  "medicalherald.com": {
+   "method": "rest",
+   "base": "https://medicalherald.com"
+  },
+  "meditechtoday.com": {
+   "method": "rest",
+   "base": "https://meditechtoday.com"
+  },
+  "meditechwire.com": {
+   "method": "rest",
+   "base": "https://meditechwire.com"
+  },
+  "medium.com": {
+   "method": "none"
+  },
+  "medworldnews.com": {
+   "method": "rest",
+   "base": "https://medworldnews.com"
+  },
+  "mena.entrepreneur.com": {
+   "method": "none"
+  },
+  "mena.rollingstone.com": {
+   "method": "none"
+  },
+  "menafn.com": {
+   "method": "none"
+  },
+  "mensgolfjournal.com": {
+   "method": "rest",
+   "base": "https://mensgolfjournal.com"
+  },
+  "menshealth.com.au": {
+   "method": "none"
+  },
+  "mensmag.com": {
+   "method": "rest",
+   "base": "https://mensmag.com"
+  },
+  "menstuff.co.za": {
+   "method": "rest",
+   "base": "https://menstuff.co.za"
+  },
+  "mercedsunstar.com": {
+   "method": "none"
+  },
+  "mercurynews.com": {
+   "method": "rest",
+   "base": "https://mercurynews.com"
+  },
+  "merimbulanewsweekly.com.au": {
+   "method": "none"
+  },
+  "messengernewspapers.co.uk": {
+   "method": "none"
+  },
+  "metapress.com": {
+   "method": "rest",
+   "base": "https://metapress.com"
+  },
+  "metrophiladelphia.com": {
+   "method": "none"
+  },
+  "metrophillysbest.com": {
+   "method": "none"
+  },
+  "metropolitandesignmag.com": {
+   "method": "rest",
+   "base": "https://metropolitandesignmag.com"
+  },
+  "metrotimes.com": {
+   "method": "none"
+  },
+  "metrowestdailynews.com": {
+   "method": "none"
+  },
+  "mexianews.com": {
+   "method": "none"
+  },
+  "miamiherald.com": {
+   "method": "none"
+  },
+  "miamiweekly.com": {
+   "method": "rest",
+   "base": "https://miamiweekly.com"
+  },
+  "miamiwire.com": {
+   "method": "rest",
+   "base": "https://miamiwire.com"
+  },
+  "mic.com": {
+   "method": "none"
+  },
+  "mid-day.com": {
+   "method": "none"
+  },
+  "mid-east.info": {
+   "method": "feed",
+   "base": "https://mid-east.info"
+  },
+  "milawyersweekly.com": {
+   "method": "none"
+  },
+  "milforddailynews.com": {
+   "method": "none"
+  },
+  "miltonindependent.com": {
+   "method": "none"
+  },
+  "mindsetonline.com": {
+   "method": "rest",
+   "base": "https://mindsetonline.com"
+  },
+  "minnlawyer.com": {
+   "method": "none"
+  },
+  "mississippiindependent.com": {
+   "method": "none"
+  },
+  "missoulian.com": {
+   "method": "none"
+  },
+  "modbee.com": {
+   "method": "none"
+  },
+  "molawyersmedia.com": {
+   "method": "none"
+  },
+  "mombloglife.com": {
+   "method": "rest",
+   "base": "https://mombloglife.com"
+  },
+  "mommacuisine.com": {
+   "method": "none"
+  },
+  "moms.com": {
+   "method": "none"
+  },
+  "momthemag.com": {
+   "method": "rest",
+   "base": "https://momthemag.com"
+  },
+  "moneytimes.com": {
+   "method": "none"
+  },
+  "moneyunder30.com": {
+   "method": "rest",
+   "base": "https://moneyunder30.com"
+  },
+  "monroenews.com": {
+   "method": "none"
+  },
+  "montgomeryadvertiser.com": {
+   "method": "none"
+  },
+  "montrealgazette.com": {
+   "method": "rest",
+   "base": "https://montrealgazette.com"
+  },
+  "mooresvilletribune.com": {
+   "method": "none"
+  },
+  "moreechampion.com.au": {
+   "method": "none"
+  },
+  "morganton.com": {
+   "method": "none"
+  },
+  "morninghoney.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "morningjournal.com": {
+   "method": "rest",
+   "base": "https://morningjournal.com"
+  },
+  "morrisvilletimes.com": {
+   "method": "none"
+  },
+  "motortimes.com": {
+   "method": "none"
+  },
+  "movieweb.com": {
+   "method": "none"
+  },
+  "mpacorn.com": {
+   "method": "rest",
+   "base": "https://mpacorn.com"
+  },
+  "mpnnow.com": {
+   "method": "none"
+  },
+  "msn.com": {
+   "method": "none"
+  },
+  "mtshastanews.com": {
+   "method": "none"
+  },
+  "mtstandard.com": {
+   "method": "none"
+  },
+  "mudgeeguardian.com.au": {
+   "method": "none"
+  },
+  "multiplayerpiano.com": {
+   "method": "none"
+  },
+  "muscatinejournal.com": {
+   "method": "none"
+  },
+  "muscleandfitness.com": {
+   "method": "rest",
+   "base": "https://www.muscleandfitness.com"
+  },
+  "music-news.com": {
+   "method": "none"
+  },
+  "musicemu.com": {
+   "method": "rest",
+   "base": "https://musicemu.com"
+  },
+  "musicobserver.com": {
+   "method": "rest",
+   "base": "https://musicobserver.com"
+  },
+  "muswellbrookchronicle.com.au": {
+   "method": "none"
+  },
+  "muziquemagazine.com": {
+   "method": "rest",
+   "base": "https://muziquemagazine.com"
+  },
+  "myaggienation.com": {
+   "method": "none"
+  },
+  "mycentraljersey.com": {
+   "method": "none"
+  },
+  "myfacehunter.com": {
+   "method": "none"
+  },
+  "myrtlebeachonline.com": {
+   "method": "none"
+  },
+  "naludamagazine.com": {
+   "method": "rest",
+   "base": "https://naludamagazine.com"
+  },
+  "naplesnews.com": {
+   "method": "none"
+  },
+  "naroomanewsonline.com.au": {
+   "method": "none"
+  },
+  "narrominenewsonline.com.au": {
+   "method": "none"
+  },
+  "nashobavalleyvoice.com": {
+   "method": "rest",
+   "base": "https://nashobavalleyvoice.com"
+  },
+  "nationalpost.com": {
+   "method": "none"
+  },
+  "natlawreview.com": {
+   "method": "none"
+  },
+  "nclawyersweekly.com": {
+   "method": "none"
+  },
+  "ndinsider.com": {
+   "method": "none"
+  },
+  "neonmusic.co.uk": {
+   "method": "rest",
+   "base": "https://neonmusic.co.uk"
+  },
+  "networkworld.com": {
+   "method": "rest",
+   "base": "https://networkworld.com"
+  },
+  "networth.us": {
+   "method": "rest",
+   "base": "https://networth.us"
+  },
+  "newarkadvocate.com": {
+   "method": "none"
+  },
+  "newcastleherald.com.au": {
+   "method": "none"
+  },
+  "newdigitalhub.com": {
+   "method": "rest",
+   "base": "https://newdigitalhub.com"
+  },
+  "newfolks.com": {
+   "method": "none"
+  },
+  "newhamrecorder.co.uk": {
+   "method": "none"
+  },
+  "newhope-news.com": {
+   "method": "none"
+  },
+  "newjerseyindependent.com": {
+   "method": "none"
+  },
+  "neworleanscitybusiness.com": {
+   "method": "none"
+  },
+  "newportbeachindy.com": {
+   "method": "rest",
+   "base": "https://newportbeachindy.com"
+  },
+  "newportbeachmagazine.com": {
+   "method": "rest",
+   "base": "https://newportbeachmagazine.com"
+  },
+  "newportri.com": {
+   "method": "none"
+  },
+  "news-herald.com": {
+   "method": "rest",
+   "base": "https://news-herald.com"
+  },
+  "news-journalonline.com": {
+   "method": "none"
+  },
+  "news-leader.com": {
+   "method": "none"
+  },
+  "news-press.com": {
+   "method": "none"
+  },
+  "news.bitcoin.com": {
+   "method": "none"
+  },
+  "newsadvance.com": {
+   "method": "none"
+  },
+  "newsandstar.co.uk": {
+   "method": "none"
+  },
+  "newsblaze.com": {
+   "method": "rest",
+   "base": "https://newsblaze.com"
+  },
+  "newschief.com": {
+   "method": "none"
+  },
+  "newsherald.com": {
+   "method": "none"
+  },
+  "newsleader.com": {
+   "method": "none"
+  },
+  "newsmirror.net": {
+   "method": "none"
+  },
+  "newsobserver.com": {
+   "method": "none"
+  },
+  "newsshopper.co.uk": {
+   "method": "none"
+  },
+  "newstatesman.com": {
+   "method": "none"
+  },
+  "newstoday.co.uk": {
+   "method": "rest",
+   "base": "https://newstoday.co.uk"
+  },
+  "newsvirginian.com": {
+   "method": "none"
+  },
+  "newtowngazette.com": {
+   "method": "none"
+  },
+  "newyorkheadlines.com": {
+   "method": "rest",
+   "base": "https://newyorkheadlines.com"
+  },
+  "newyorkstreetfood.com": {
+   "method": "rest",
+   "base": "https://newyorkstreetfood.com"
+  },
+  "nextplay.nl": {
+   "method": "none"
+  },
+  "nextwebblog.com": {
+   "method": "rest",
+   "base": "https://nextwebblog.com"
+  },
+  "njbiz.com": {
+   "method": "none"
+  },
+  "njherald.com": {
+   "method": "none"
+  },
+  "nl.mashable.com": {
+   "method": "none"
+  },
+  "nohoartsdistrict.com": {
+   "method": "rest",
+   "base": "https://nohoartsdistrict.com"
+  },
+  "nonpareilonline.com": {
+   "method": "none"
+  },
+  "nordic.ign.com": {
+   "method": "none"
+  },
+  "northampton-herald.com": {
+   "method": "none"
+  },
+  "northerndailyleader.com.au": {
+   "method": "none"
+  },
+  "northjersey.com": {
+   "method": "none"
+  },
+  "northnorfolknews.co.uk": {
+   "method": "none"
+  },
+  "northqueenslandregister.com.au": {
+   "method": "none"
+  },
+  "northsomersettimes.co.uk": {
+   "method": "none"
+  },
+  "northwalespioneer.co.uk": {
+   "method": "none"
+  },
+  "northweststar.com.au": {
+   "method": "none"
+  },
+  "northwichguardian.co.uk": {
+   "method": "none"
+  },
+  "norwichbulletin.com": {
+   "method": "none"
+  },
+  "notion.online": {
+   "method": "rest",
+   "base": "https://notion.online"
+  },
+  "novabach.com": {
+   "method": "none"
+  },
+  "nowentertainment.net": {
+   "method": "rest",
+   "base": "https://nowentertainment.net"
+  },
+  "nptelegraph.com": {
+   "method": "none"
+  },
+  "nvi.com.au": {
+   "method": "none"
+  },
+  "nwemail.co.uk": {
+   "method": "none"
+  },
+  "nwfdailynews.com": {
+   "method": "none"
+  },
+  "nwitimes.com": {
+   "method": "none"
+  },
+  "ny-magazine.com": {
+   "method": "rest",
+   "base": "https://ny-magazine.com"
+  },
+  "nydailynews.com": {
+   "method": "rest",
+   "base": "https://nydailynews.com"
+  },
+  "nydailyrecord.com": {
+   "method": "none"
+  },
+  "nylon.com": {
+   "method": "none"
+  },
+  "nynganobserver.com.au": {
+   "method": "none"
+  },
+  "nypost.com": {
+   "method": "none"
+  },
+  "nyreport.com": {
+   "method": "rest",
+   "base": "https://nyreport.com"
+  },
+  "nytech.media": {
+   "method": "rest",
+   "base": "https://nytech.media"
+  },
+  "nytimesmag.com": {
+   "method": "feed",
+   "base": "https://nytimesmag.com"
+  },
+  "nyweekly.com": {
+   "method": "rest",
+   "base": "https://nyweekly.com"
+  },
+  "nywire.com": {
+   "method": "rest",
+   "base": "https://nywire.com"
+  },
+  "oakridger.com": {
+   "method": "none"
+  },
+  "oanow.com": {
+   "method": "none"
+  },
+  "oberonreview.com.au": {
+   "method": "none"
+  },
+  "ocala.com": {
+   "method": "none"
+  },
+  "ocregister.com": {
+   "method": "rest",
+   "base": "https://ocregister.com"
+  },
+  "ocweekly.com": {
+   "method": "rest",
+   "base": "https://ocweekly.com"
+  },
+  "off-road.com": {
+   "method": "none"
+  },
+  "offthemrkt.com": {
+   "method": "none"
+  },
+  "ognnews.com": {
+   "method": "none"
+  },
+  "ohmydish.com": {
+   "method": "none"
+  },
+  "ohmydish.nl": {
+   "method": "none"
+  },
+  "oklahoman.com": {
+   "method": "none"
+  },
+  "okmagazine.com": {
+   "method": "none"
+  },
+  "omaha.com": {
+   "method": "none"
+  },
+  "omglocallife.com": {
+   "method": "none"
+  },
+  "oneidadispatch.com": {
+   "method": "rest",
+   "base": "https://oneidadispatch.com"
+  },
+  "onlineathens.com": {
+   "method": "none"
+  },
+  "onlineworldnews.com": {
+   "method": "none"
+  },
+  "opulencemag.co.uk": {
+   "method": "rest",
+   "base": "https://opulencemag.co.uk"
+  },
+  "orangecoast.com": {
+   "method": "rest",
+   "base": "https://orangecoast.com"
+  },
+  "orangism.com": {
+   "method": "rest",
+   "base": "https://orangism.com"
+  },
+  "oregonobserver.com": {
+   "method": "none"
+  },
+  "orlandosentinel.com": {
+   "method": "rest",
+   "base": "https://www.orlandosentinel.com"
+  },
+  "ottawacitizen.com": {
+   "method": "rest",
+   "base": "https://ottawacitizen.com"
+  },
+  "ottawasun.com": {
+   "method": "rest",
+   "base": "https://ottawasun.com"
+  },
+  "ourkidthings.com": {
+   "method": "rest",
+   "base": "https://ourkidthings.com"
+  },
+  "outdoorhub.com": {
+   "method": "none"
+  },
+  "outlookindia.com": {
+   "method": "none"
+  },
+  "oxfordmail.co.uk": {
+   "method": "none"
+  },
+  "pagesix.com": {
+   "method": "none"
+  },
+  "pagosasun.com": {
+   "method": "none"
+  },
+  "pal-item.com": {
+   "method": "none"
+  },
+  "palmbayherald.com": {
+   "method": "none"
+  },
+  "palmbeachdailynews.com": {
+   "method": "none"
+  },
+  "palmbeachpost.com": {
+   "method": "none"
+  },
+  "pantagraph.com": {
+   "method": "none"
+  },
+  "parentherald.com": {
+   "method": "none"
+  },
+  "parkerchronicle.net": {
+   "method": "none"
+  },
+  "pasadenamag.com": {
+   "method": "rest",
+   "base": "https://pasadenamag.com"
+  },
+  "pasadenastarnews.com": {
+   "method": "rest",
+   "base": "https://pasadenastarnews.com"
+  },
+  "pasadenaweekly.com": {
+   "method": "none"
+  },
+  "pastemagazine.com": {
+   "method": "rest",
+   "base": "https://pastemagazine.com"
+  },
+  "patch.com": {
+   "method": "none"
+  },
+  "patriotledger.com": {
+   "method": "none"
+  },
+  "pawtracks.com": {
+   "method": "none"
+  },
+  "pcworld.com": {
+   "method": "rest",
+   "base": "https://pcworld.com"
+  },
+  "pcworldsolutions.com": {
+   "method": "rest",
+   "base": "https://pcworldsolutions.com"
+  },
+  "pekintimes.com": {
+   "method": "none"
+  },
+  "penarthtimes.co.uk": {
+   "method": "none"
+  },
+  "peoriatimes.com": {
+   "method": "none"
+  },
+  "percentagecalculatorshub.com": {
+   "method": "none"
+  },
+  "perezhilton.com": {
+   "method": "none"
+  },
+  "personalwatercraft.com": {
+   "method": "none"
+  },
+  "petage.com": {
+   "method": "none"
+  },
+  "petguide.com": {
+   "method": "none"
+  },
+  "petoskeynews.com": {
+   "method": "none"
+  },
+  "pharmatechnews.com": {
+   "method": "rest",
+   "base": "https://pharmatechnews.com"
+  },
+  "phillyburbs.com": {
+   "method": "none"
+  },
+  "phloxfitness.com": {
+   "method": "rest",
+   "base": "https://phloxfitness.com"
+  },
+  "phoenix.org": {
+   "method": "none"
+  },
+  "picketfencemedia.com": {
+   "method": "none"
+  },
+  "pilotonline.com": {
+   "method": "rest",
+   "base": "https://pilotonline.com"
+  },
+  "pitchfork.com": {
+   "method": "none"
+  },
+  "pix11.com": {
+   "method": "rest",
+   "base": "https://pix11.com"
+  },
+  "pjstar.com": {
+   "method": "none"
+  },
+  "plattershare.com": {
+   "method": "rest",
+   "base": "https://plattershare.com"
+  },
+  "playboy.nl": {
+   "method": "none"
+  },
+  "player.one": {
+   "method": "none"
+  },
+  "pnj.com": {
+   "method": "none"
+  },
+  "pocket-lint.com": {
+   "method": "none"
+  },
+  "poconorecord.com": {
+   "method": "none"
+  },
+  "politicalanthropologist.com": {
+   "method": "rest",
+   "base": "https://politicalanthropologist.com"
+  },
+  "polygon.com": {
+   "method": "none"
+  },
+  "pontiacdailyleader.com": {
+   "method": "none"
+  },
+  "portclintonnewsherald.com": {
+   "method": "none"
+  },
+  "portlandnews.com": {
+   "method": "rest",
+   "base": "https://portlandnews.com"
+  },
+  "portnews.com.au": {
+   "method": "none"
+  },
+  "portstephensexaminer.com.au": {
+   "method": "none"
+  },
+  "postcrescent.com": {
+   "method": "none"
+  },
+  "poststar.com": {
+   "method": "none"
+  },
+  "pottsmerc.com": {
+   "method": "rest",
+   "base": "https://pottsmerc.com"
+  },
+  "poughkeepsiejournal.com": {
+   "method": "none"
+  },
+  "press-citizen.com": {
+   "method": "none"
+  },
+  "pressconnects.com": {
+   "method": "none"
+  },
+  "pressenterprise.com": {
+   "method": "rest",
+   "base": "https://pressenterprise.com"
+  },
+  "pressofatlanticcity.com": {
+   "method": "none"
+  },
+  "presstelegram.com": {
+   "method": "rest",
+   "base": "https://presstelegram.com"
+  },
+  "prnewswire.com": {
+   "method": "none"
+  },
+  "professorshouse.com": {
+   "method": "rest",
+   "base": "https://professorshouse.com"
+  },
+  "progress-index.com": {
+   "method": "none"
+  },
+  "propertybuzz.com.au": {
+   "method": "none"
+  },
+  "providencejournal.com": {
+   "method": "none"
+  },
+  "providr.com": {
+   "method": "rest",
+   "base": "https://providr.com"
+  },
+  "psychreg.org": {
+   "method": "rest",
+   "base": "https://psychreg.org"
+  },
+  "publicopiniononline.com": {
+   "method": "none"
+  },
+  "pulse.co.ke": {
+   "method": "none"
+  },
+  "pulse.com.gh": {
+   "method": "none"
+  },
+  "pulse.ng": {
+   "method": "none"
+  },
+  "pulse.sn": {
+   "method": "none"
+  },
+  "pulse.ug": {
+   "method": "none"
+  },
+  "pulsesports.co.ke": {
+   "method": "none"
+  },
+  "pulsesports.ng": {
+   "method": "none"
+  },
+  "pulsesports.ug": {
+   "method": "none"
+  },
+  "qconline.com": {
+   "method": "none"
+  },
+  "qctimes.com": {
+   "method": "none"
+  },
+  "quantumtechdaily.com": {
+   "method": "rest",
+   "base": "https://quantumtechdaily.com"
+  },
+  "queanbeyanage.com.au": {
+   "method": "none"
+  },
+  "queencreektribune.com": {
+   "method": "none"
+  },
+  "queenslandcountrylife.com.au": {
+   "method": "none"
+  },
+  "radaronline.com": {
+   "method": "none"
+  },
+  "rapidcityjournal.com": {
+   "method": "none"
+  },
+  "rapreviews.com": {
+   "method": "rest",
+   "base": "https://rapreviews.com"
+  },
+  "ravallirepublic.com": {
+   "method": "none"
+  },
+  "ravishmag.co.uk": {
+   "method": "rest",
+   "base": "https://ravishmag.co.uk"
+  },
+  "rbj.net": {
+   "method": "none"
+  },
+  "rd.com": {
+   "method": "feed",
+   "base": "https://rd.com"
+  },
+  "readingchronicle.co.uk": {
+   "method": "none"
+  },
+  "readingeagle.com": {
+   "method": "rest",
+   "base": "https://readingeagle.com"
+  },
+  "realestatebusiness.com.au": {
+   "method": "none"
+  },
+  "realestatedigest.com": {
+   "method": "rest",
+   "base": "https://realestatedigest.com"
+  },
+  "realestatetoday.com": {
+   "method": "rest",
+   "base": "https://realestatetoday.com"
+  },
+  "realtytimes.com": {
+   "method": "none"
+  },
+  "record-courier.com": {
+   "method": "none"
+  },
+  "recordgazette.net": {
+   "method": "none"
+  },
+  "recordnet.com": {
+   "method": "none"
+  },
+  "recordonline.com": {
+   "method": "none"
+  },
+  "redding.com": {
+   "method": "none"
+  },
+  "redditchadvertiser.co.uk": {
+   "method": "none"
+  },
+  "redlandcitybulletin.com.au": {
+   "method": "none"
+  },
+  "redlandscommunitynews.com": {
+   "method": "none"
+  },
+  "redlandsdailyfacts.com": {
+   "method": "rest",
+   "base": "https://redlandsdailyfacts.com"
+  },
+  "redxmagazine.com": {
+   "method": "rest",
+   "base": "https://redxmagazine.com"
+  },
+  "registerguard.com": {
+   "method": "none"
+  },
+  "reporter-times.com": {
+   "method": "none"
+  },
+  "reporterherald.com": {
+   "method": "none"
+  },
+  "reporternews.com": {
+   "method": "none"
+  },
+  "republicaneagle.com": {
+   "method": "none"
+  },
+  "republicanherald.com": {
+   "method": "rest",
+   "base": "https://republicanherald.com"
+  },
+  "resident.com": {
+   "method": "none"
+  },
+  "restaurantsnapshot.com": {
+   "method": "rest",
+   "base": "https://restaurantsnapshot.com"
+  },
+  "restaurantwebexpert.com": {
+   "method": "rest",
+   "base": "https://restaurantwebexpert.com"
+  },
+  "restaurantwebexperts.com": {
+   "method": "rest",
+   "base": "https://restaurantwebexperts.com"
+  },
+  "restaurantwebx.com": {
+   "method": "rest",
+   "base": "https://restaurantwebx.com"
+  },
+  "retail-insider.com": {
+   "method": "rest",
+   "base": "https://retail-insider.com"
+  },
+  "reuters.com": {
+   "method": "none"
+  },
+  "reviewatlas.com": {
+   "method": "none"
+  },
+  "rgj.com": {
+   "method": "none"
+  },
+  "rhyljournal.co.uk": {
+   "method": "none"
+  },
+  "richestmagazine.com": {
+   "method": "rest",
+   "base": "https://richestmagazine.com"
+  },
+  "richmond.com": {
+   "method": "none"
+  },
+  "richmondandtwickenhamtimes.co.uk": {
+   "method": "none"
+  },
+  "rilawyersweekly.com": {
+   "method": "none"
+  },
+  "riponpress.com": {
+   "method": "none"
+  },
+  "ritzherald.com": {
+   "method": "rest",
+   "base": "https://ritzherald.com"
+  },
+  "riverfallsjournal.com": {
+   "method": "none"
+  },
+  "roanoke.com": {
+   "method": "none"
+  },
+  "robbreport.mx": {
+   "method": "rest",
+   "base": "https://robbreport.mx"
+  },
+  "rollingstone.co.uk": {
+   "method": "rest",
+   "base": "https://rollingstone.co.uk"
+  },
+  "rollingstone.com": {
+   "method": "rest",
+   "base": "https://rollingstone.com"
+  },
+  "rollingstone.it": {
+   "method": "rest",
+   "base": "https://rollingstone.it"
+  },
+  "romfordrecorder.co.uk": {
+   "method": "none"
+  },
+  "romper.com": {
+   "method": "none"
+  },
+  "rosepedia.com": {
+   "method": "none"
+  },
+  "royston-crow.co.uk": {
+   "method": "none"
+  },
+  "rrstar.com": {
+   "method": "none"
+  },
+  "rvguide.com": {
+   "method": "none"
+  },
+  "sacbee.com": {
+   "method": "none"
+  },
+  "saffronwaldenreporter.co.uk": {
+   "method": "none"
+  },
+  "salina.com": {
+   "method": "none"
+  },
+  "salisburyjournal.co.uk": {
+   "method": "none"
+  },
+  "samessenger.com": {
+   "method": "none"
+  },
+  "sandiegoreader.com": {
+   "method": "none"
+  },
+  "sandiegouniontribune.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "sanfranciscopost.com": {
+   "method": "rest",
+   "base": "https://sanfranciscopost.com"
+  },
+  "sanluisobispo.com": {
+   "method": "none"
+  },
+  "sanmarcosrecord.com": {
+   "method": "none"
+  },
+  "sapromo.com": {
+   "method": "rest",
+   "base": "https://sapromo.com"
+  },
+  "sarasotamagazine.com": {
+   "method": "none"
+  },
+  "saratogian.com": {
+   "method": "rest",
+   "base": "https://saratogian.com"
+  },
+  "saudigazette.com.sa": {
+   "method": "none"
+  },
+  "savannahnow.com": {
+   "method": "none"
+  },
+  "sbsun.com": {
+   "method": "rest",
+   "base": "https://sbsun.com"
+  },
+  "scarymommy.com": {
+   "method": "none"
+  },
+  "scbiznews.com": {
+   "method": "none"
+  },
+  "sciencetimes.com": {
+   "method": "none"
+  },
+  "sclawyersweekly.com": {
+   "method": "none"
+  },
+  "scnow.com": {
+   "method": "none"
+  },
+  "sconeadvocate.com.au": {
+   "method": "none"
+  },
+  "scoop.co.nz": {
+   "method": "none"
+  },
+  "scotlandb2b.co.uk": {
+   "method": "rest",
+   "base": "https://scotlandb2b.co.uk"
+  },
+  "scotlands-enchanting-kingdom.com": {
+   "method": "none"
+  },
+  "scottsdale.org": {
+   "method": "none"
+  },
+  "screenrant.com": {
+   "method": "none"
+  },
+  "sctimes.com": {
+   "method": "none"
+  },
+  "sdweekly.com": {
+   "method": "rest",
+   "base": "https://sdweekly.com"
+  },
+  "seacoastonline.com": {
+   "method": "none"
+  },
+  "securityboulevard.com": {
+   "method": "none"
+  },
+  "self.com": {
+   "method": "none"
+  },
+  "selfemployed.com ": {
+   "method": "none"
+  },
+  "sentinelandenterprise.com": {
+   "method": "rest",
+   "base": "https://sentinelandenterprise.com"
+  },
+  "sfexaminer.com": {
+   "method": "none"
+  },
+  "sfweekly.com": {
+   "method": "none"
+  },
+  "sgvtribune.com": {
+   "method": "rest",
+   "base": "https://sgvtribune.com"
+  },
+  "sheboyganpress.com": {
+   "method": "none"
+  },
+  "sheboygansun.com": {
+   "method": "none"
+  },
+  "sheenmagazine.com": {
+   "method": "rest",
+   "base": "https://sheenmagazine.com"
+  },
+  "shelbystar.com": {
+   "method": "none"
+  },
+  "shibleysmiles.com": {
+   "method": "rest",
+   "base": "https://shibleysmiles.com"
+  },
+  "shreveporttimes.com": {
+   "method": "none"
+  },
+  "sidmouthherald.co.uk": {
+   "method": "none"
+  },
+  "signalscv.com": {
+   "method": "none"
+  },
+  "siliconvalley.com": {
+   "method": "rest",
+   "base": "https://siliconvalley.com"
+  },
+  "simivalleyacorn.com": {
+   "method": "rest",
+   "base": "https://simivalleyacorn.com"
+  },
+  "simpleflying.com": {
+   "method": "none"
+  },
+  "singletonargus.com.au": {
+   "method": "none"
+  },
+  "siouxcityjournal.com": {
+   "method": "none"
+  },
+  "sj-r.com": {
+   "method": "none"
+  },
+  "slashdot.org": {
+   "method": "none"
+  },
+  "sloughobserver.co.uk": {
+   "method": "none"
+  },
+  "smartcompany.com.au": {
+   "method": "rest",
+   "base": "https://smartcompany.com.au"
+  },
+  "smartechdaily.com": {
+   "method": "rest",
+   "base": "https://smartechdaily.com"
+  },
+  "smartpropertyinvestment.com.au": {
+   "method": "none"
+  },
+  "smarttechdata.com": {
+   "method": "rest",
+   "base": "https://smarttechdata.com"
+  },
+  "snapchatplanet.com": {
+   "method": "rest",
+   "base": "https://snapchatplanet.com"
+  },
+  "snowmobile.com": {
+   "method": "none"
+  },
+  "soapoperadigest.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "somersetcountygazette.co.uk": {
+   "method": "none"
+  },
+  "sooeveningnews.com": {
+   "method": "none"
+  },
+  "soup.io": {
+   "method": "rest",
+   "base": "https://soup.io"
+  },
+  "sourceforge.net": {
+   "method": "none"
+  },
+  "sourcingjournal.com": {
+   "method": "rest",
+   "base": "https://sourcingjournal.com"
+  },
+  "southbendtribune.com": {
+   "method": "none"
+  },
+  "southcoastregister.com.au": {
+   "method": "none"
+  },
+  "southcoasttoday.com": {
+   "method": "none"
+  },
+  "southernhighlandnews.com.au": {
+   "method": "none"
+  },
+  "southwalesargus.co.uk": {
+   "method": "none"
+  },
+  "southwalesguardian.co.uk": {
+   "method": "none"
+  },
+  "spaceconnectonline.com.au": {
+   "method": "none"
+  },
+  "speakinno.com": {
+   "method": "rest",
+   "base": "https://speakinno.com"
+  },
+  "spinmagazine.com": {
+   "method": "rest",
+   "base": "https://spinmagazine.com"
+  },
+  "sponsored.browardpalmbeach.com": {
+   "method": "none"
+  },
+  "sportstechtoday.com": {
+   "method": "rest",
+   "base": "https://sportstechtoday.com"
+  },
+  "ssnewstelegram.com": {
+   "method": "none"
+  },
+  "standard.co.uk": {
+   "method": "none"
+  },
+  "standard.net.au": {
+   "method": "none"
+  },
+  "standardspeaker.com": {
+   "method": "rest",
+   "base": "https://standardspeaker.com"
+  },
+  "star-telegram.com": {
+   "method": "none"
+  },
+  "starcourier.com": {
+   "method": "none"
+  },
+  "starexponent.com": {
+   "method": "none"
+  },
+  "stargazette.com": {
+   "method": "none"
+  },
+  "starherald.com": {
+   "method": "none"
+  },
+  "starnewsonline.com": {
+   "method": "none"
+  },
+  "startupbooted.com": {
+   "method": "none"
+  },
+  "startupobserver.com": {
+   "method": "none"
+  },
+  "statesville.com": {
+   "method": "none"
+  },
+  "staugustine.com": {
+   "method": "none"
+  },
+  "steelcountrybee.com": {
+   "method": "none"
+  },
+  "stephilareine.com": {
+   "method": "rest",
+   "base": "https://stephilareine.com"
+  },
+  "stevenspointjournal.com": {
+   "method": "none"
+  },
+  "sthelensstar.co.uk": {
+   "method": "none"
+  },
+  "stltoday.com": {
+   "method": "none"
+  },
+  "stockandland.com.au": {
+   "method": "none"
+  },
+  "stockjournal.com.au": {
+   "method": "none"
+  },
+  "storyconsole.dallasobserver.com": {
+   "method": "rest",
+   "base": "https://storyconsole.dallasobserver.com"
+  },
+  "storyconsole.miaminewtimes.com": {
+   "method": "rest",
+   "base": "https://storyconsole.miaminewtimes.com"
+  },
+  "storyconsole.phoenixnewtimes.com": {
+   "method": "rest",
+   "base": "https://storyconsole.phoenixnewtimes.com"
+  },
+  "storyconsole.westword.com": {
+   "method": "rest",
+   "base": "https://storyconsole.westword.com"
+  },
+  "stoughtonnews.com": {
+   "method": "none"
+  },
+  "stourbridgenews.co.uk": {
+   "method": "none"
+  },
+  "strategyeye.com": {
+   "method": "rest",
+   "base": "https://strategyeye.com"
+  },
+  "stroudnewsandjournal.co.uk": {
+   "method": "none"
+  },
+  "sturgisjournal.com": {
+   "method": "none"
+  },
+  "stylebeautyhealth.com": {
+   "method": "rest",
+   "base": "https://stylebeautyhealth.com"
+  },
+  "sun-sentinel.com": {
+   "method": "rest",
+   "base": "https://sun-sentinel.com"
+  },
+  "sundial.csun.edu": {
+   "method": "rest",
+   "base": "https://sundial.csun.edu"
+  },
+  "sunherald.com": {
+   "method": "none"
+  },
+  "supercomputerworld.com": {
+   "method": "rest",
+   "base": "https://supercomputerworld.com"
+  },
+  "supercryptonews.com": {
+   "method": "rest",
+   "base": "https://supercryptonews.com"
+  },
+  "surreycomet.co.uk": {
+   "method": "none"
+  },
+  "swaggermagazine.com": {
+   "method": "rest",
+   "base": "https://swaggermagazine.com"
+  },
+  "sweetyhigh.com": {
+   "method": "rest",
+   "base": "https://sweetyhigh.com"
+  },
+  "swindonadvertiser.co.uk": {
+   "method": "none"
+  },
+  "swtimes.com": {
+   "method": "none"
+  },
+  "swvatoday.com": {
+   "method": "none"
+  },
+  "talksport.com": {
+   "method": "rest",
+   "base": "https://talksport.com"
+  },
+  "tallahassee.com": {
+   "method": "none"
+  },
+  "tasteofhome.com": {
+   "method": "rest",
+   "base": "https://tasteofhome.com"
+  },
+  "tauntongazette.com": {
+   "method": "none"
+  },
+  "taxscan.in": {
+   "method": "none"
+  },
+  "tcpalm.com": {
+   "method": "none"
+  },
+  "tdn.com": {
+   "method": "none"
+  },
+  "techadvisor.com": {
+   "method": "rest",
+   "base": "https://techadvisor.com"
+  },
+  "techannouncer.com": {
+   "method": "none"
+  },
+  "techbullion.com": {
+   "method": "rest",
+   "base": "https://techbullion.com"
+  },
+  "techcrunch.com": {
+   "method": "rest",
+   "base": "https://techcrunch.com"
+  },
+  "techgeeksblogger.com": {
+   "method": "rest",
+   "base": "https://techgeeksblogger.com"
+  },
+  "techgyd.com": {
+   "method": "rest",
+   "base": "https://techgyd.com"
+  },
+  "techiesin.com": {
+   "method": "rest",
+   "base": "https://techiesin.com"
+  },
+  "techlicious.com": {
+   "method": "none"
+  },
+  "technology.org": {
+   "method": "none"
+  },
+  "technologycompanians.com": {
+   "method": "rest",
+   "base": "https://technologycompanians.com"
+  },
+  "technologydispatch.com": {
+   "method": "none"
+  },
+  "technologyify.com": {
+   "method": "rest",
+   "base": "https://technologyify.com"
+  },
+  "technologynewsmedia.com": {
+   "method": "rest",
+   "base": "https://technologynewsmedia.com"
+  },
+  "technologytimesnow.com": {
+   "method": "rest",
+   "base": "https://technologytimesnow.com"
+  },
+  "technologytipsonline.com": {
+   "method": "rest",
+   "base": "https://technologytipsonline.com"
+  },
+  "technoreporter.com": {
+   "method": "rest",
+   "base": "https://technoreporter.com"
+  },
+  "technori.com": {
+   "method": "rest",
+   "base": "https://technori.com"
+  },
+  "techpinions.com": {
+   "method": "rest",
+   "base": "https://techpinions.com"
+  },
+  "techround.co.uk": {
+   "method": "rest",
+   "base": "https://techround.co.uk"
+  },
+  "techsmartinfo.com": {
+   "method": "rest",
+   "base": "https://techsmartinfo.com"
+  },
+  "techstory.in": {
+   "method": "rest",
+   "base": "https://techstory.in"
+  },
+  "techtimes.com": {
+   "method": "none"
+  },
+  "teenvogue.com": {
+   "method": "none"
+  },
+  "telegram.com": {
+   "method": "none"
+  },
+  "tempenews.com": {
+   "method": "none"
+  },
+  "tennessean.com": {
+   "method": "none"
+  },
+  "tenterfieldstar.com.au": {
+   "method": "none"
+  },
+  "texastoday.com": {
+   "method": "rest",
+   "base": "https://texastoday.com"
+  },
+  "the-daily-record.com": {
+   "method": "none"
+  },
+  "the-influential.com": {
+   "method": "none"
+  },
+  "the-leader.com": {
+   "method": "none"
+  },
+  "the-review.com": {
+   "method": "none"
+  },
+  "the-sun.com": {
+   "method": "rest",
+   "base": "https://the-sun.com"
+  },
+  "theacorn.com": {
+   "method": "rest",
+   "base": "https://theacorn.com"
+  },
+  "theadvertiser.com": {
+   "method": "none"
+  },
+  "theadviser.com.au": {
+   "method": "none"
+  },
+  "theadvocate.com.au": {
+   "method": "none"
+  },
+  "theargus.co.uk": {
+   "method": "none"
+  },
+  "theblast.com": {
+   "method": "rest",
+   "base": "https://theblast.com"
+  },
+  "theblock.co": {
+   "method": "none"
+  },
+  "theboltonnews.co.uk": {
+   "method": "none"
+  },
+  "thebossmagazine.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "thebraggingmommy.com": {
+   "method": "rest",
+   "base": "https://thebraggingmommy.com"
+  },
+  "thecalifornian.com": {
+   "method": "none"
+  },
+  "thecamarilloacorn.com": {
+   "method": "rest",
+   "base": "https://thecamarilloacorn.com"
+  },
+  "theceo.in": {
+   "method": "none"
+  },
+  "thechicagojournal.com": {
+   "method": "rest",
+   "base": "https://thechicagojournal.com"
+  },
+  "thecloudvibe.com": {
+   "method": "rest",
+   "base": "https://thecloudvibe.com"
+  },
+  "thecoachingmag.com": {
+   "method": "rest",
+   "base": "https://thecoachingmag.com"
+  },
+  "thecomet.net": {
+   "method": "none"
+  },
+  "thecomputermedia.com": {
+   "method": "rest",
+   "base": "https://thecomputermedia.com"
+  },
+  "thecourier.com.au": {
+   "method": "none"
+  },
+  "thedailyblog.co.nz": {
+   "method": "rest",
+   "base": "https://thedailyblog.co.nz"
+  },
+  "thedailyjournal.com": {
+   "method": "none"
+  },
+  "thedailypour.com": {
+   "method": "rest",
+   "base": "https://thedailypour.com"
+  },
+  "thedailyrecord.com": {
+   "method": "none"
+  },
+  "thedailyreporter.com": {
+   "method": "none"
+  },
+  "thededicatedhouse.com": {
+   "method": "none"
+  },
+  "thedefiant.io": {
+   "method": "none"
+  },
+  "thedestinlog.com": {
+   "method": "none"
+  },
+  "theeagle.com": {
+   "method": "none"
+  },
+  "theepochtimes.com": {
+   "method": "none"
+  },
+  "theflume.com": {
+   "method": "none"
+  },
+  "thefoothillsfocus.com": {
+   "method": "none"
+  },
+  "thefranklinnewspost.com": {
+   "method": "none"
+  },
+  "thegamer.com": {
+   "method": "none"
+  },
+  "thegardnernews.com": {
+   "method": "none"
+  },
+  "thegetaway.com": {
+   "method": "none"
+  },
+  "thegleaner.com": {
+   "method": "none"
+  },
+  "thegreensheet.com": {
+   "method": "none"
+  },
+  "theguide.com": {
+   "method": "none"
+  },
+  "thehabitat.com": {
+   "method": "none"
+  },
+  "thehackernews.com": {
+   "method": "none"
+  },
+  "thehealthgrades.com": {
+   "method": "rest",
+   "base": "https://thehealthgrades.com"
+  },
+  "thehealthy.com": {
+   "method": "feed",
+   "base": "https://www.thehealthy.com"
+  },
+  "thehypemagazine.com": {
+   "method": "rest",
+   "base": "https://thehypemagazine.com"
+  },
+  "theiconusa.com": {
+   "method": "none"
+  },
+  "theindependent.com": {
+   "method": "none"
+  },
+  "theland.com.au": {
+   "method": "none"
+  },
+  "theleadernews.com": {
+   "method": "none"
+  },
+  "theleafchronicle.com": {
+   "method": "none"
+  },
+  "theledger.com": {
+   "method": "none"
+  },
+  "thelosangelestribune.com": {
+   "method": "rest",
+   "base": "https://thelosangelestribune.com"
+  },
+  "theluxeinsider.com": {
+   "method": "rest",
+   "base": "https://theluxeinsider.com"
+  },
+  "themakeupandbeauty.com": {
+   "method": "rest",
+   "base": "https://themakeupandbeauty.com"
+  },
+  "themakeupandglam.com": {
+   "method": "rest",
+   "base": "https://themakeupandglam.com"
+  },
+  "themanual.com": {
+   "method": "none"
+  },
+  "themarketingpilot.com": {
+   "method": "rest",
+   "base": "https://themarketingpilot.com"
+  },
+  "themesatribune.com": {
+   "method": "none"
+  },
+  "themorningsun.com": {
+   "method": "rest",
+   "base": "https://themorningsun.com"
+  },
+  "themountainmail.com": {
+   "method": "none"
+  },
+  "thenaptimereviewer.com": {
+   "method": "rest",
+   "base": "https://thenaptimereviewer.com"
+  },
+  "thenational.scot": {
+   "method": "none"
+  },
+  "thenewboston.com": {
+   "method": "rest",
+   "base": "https://thenewboston.com"
+  },
+  "thenews-messenger.com": {
+   "method": "none"
+  },
+  "thenewsherald.com": {
+   "method": "rest",
+   "base": "https://thenewsherald.com"
+  },
+  "thenewsstar.com": {
+   "method": "none"
+  },
+  "thenewstribune.com": {
+   "method": "none"
+  },
+  "thenextweb.com": {
+   "method": "none"
+  },
+  "thenorthernecho.co.uk": {
+   "method": "none"
+  },
+  "thenorthwestern.com": {
+   "method": "none"
+  },
+  "theoaklandpress.com": {
+   "method": "rest",
+   "base": "https://theoaklandpress.com"
+  },
+  "theoldhamtimes.co.uk": {
+   "method": "none"
+  },
+  "theolympian.com": {
+   "method": "none"
+  },
+  "thepinnaclelist.com": {
+   "method": "none"
+  },
+  "thepowerofsilence.co": {
+   "method": "rest",
+   "base": "https://thepowerofsilence.co"
+  },
+  "theprovince.com": {
+   "method": "rest",
+   "base": "https://theprovince.com"
+  },
+  "thepublicopinion.com": {
+   "method": "none"
+  },
+  "therealdeal.com": {
+   "method": "none"
+  },
+  "therecordherald.com": {
+   "method": "none"
+  },
+  "theredditblog.com": {
+   "method": "rest",
+   "base": "https://theredditblog.com"
+  },
+  "thereporteronline.com": {
+   "method": "rest",
+   "base": "https://thereporteronline.com"
+  },
+  "therichest.com": {
+   "method": "none"
+  },
+  "therichreporter.com": {
+   "method": "rest",
+   "base": "https://therichreporter.com"
+  },
+  "therural.com.au": {
+   "method": "none"
+  },
+  "thesanfranciscotribune.com": {
+   "method": "rest",
+   "base": "https://thesanfranciscotribune.com"
+  },
+  "thesenior.com.au": {
+   "method": "none"
+  },
+  "thesiliconreview.com": {
+   "method": "none"
+  },
+  "thesource.com": {
+   "method": "rest",
+   "base": "https://thesource.com"
+  },
+  "thesouthafrican.com": {
+   "method": "feed",
+   "base": "https://www.thesouthafrican.com"
+  },
+  "thespectrum.com": {
+   "method": "none"
+  },
+  "thesportsreport.com": {
+   "method": "rest",
+   "base": "https://thesportsreport.com"
+  },
+  "thesportster.com": {
+   "method": "none"
+  },
+  "thestarphoenix.com": {
+   "method": "rest",
+   "base": "https://thestarphoenix.com"
+  },
+  "thestarpress.com": {
+   "method": "none"
+  },
+  "thestate.com": {
+   "method": "none"
+  },
+  "thestreet.com": {
+   "method": "none"
+  },
+  "thesun.co.uk": {
+   "method": "rest",
+   "base": "https://thesun.co.uk"
+  },
+  "thesustainablepost.com": {
+   "method": "none"
+  },
+  "thetandd.com": {
+   "method": "none"
+  },
+  "thetelegraphandargus.co.uk": {
+   "method": "none"
+  },
+  "thetexasdeveloper.com": {
+   "method": "none"
+  },
+  "thethings.com": {
+   "method": "none"
+  },
+  "thetimes-tribune.com": {
+   "method": "rest",
+   "base": "https://thetimes-tribune.com"
+  },
+  "thetimes.com": {
+   "method": "none"
+  },
+  "thetimesherald.com": {
+   "method": "none"
+  },
+  "thetottenhamindependent.co.uk": {
+   "method": "none"
+  },
+  "thetowntalk.com": {
+   "method": "none"
+  },
+  "thetravel.com": {
+   "method": "none"
+  },
+  "theubj.com": {
+   "method": "none"
+  },
+  "theuniversalcharm.com": {
+   "method": "rest",
+   "base": "https://theuniversalcharm.com"
+  },
+  "theuniversalglam.com": {
+   "method": "rest",
+   "base": "https://theuniversalglam.com"
+  },
+  "theupcoming.co.uk": {
+   "method": "feed",
+   "base": "https://theupcoming.co.uk"
+  },
+  "thewestmorlandgazette.co.uk": {
+   "method": "none"
+  },
+  "thewestonmercury.co.uk": {
+   "method": "none"
+  },
+  "thezoereport.com": {
+   "method": "none"
+  },
+  "thisiswiltshire.co.uk": {
+   "method": "none"
+  },
+  "thisvid.de.com": {
+   "method": "rest",
+   "base": "https://thisvid.de.com"
+  },
+  "thurrockgazette.co.uk": {
+   "method": "none"
+  },
+  "tidbitsofexperience.com": {
+   "method": "rest",
+   "base": "https://tidbitsofexperience.com"
+  },
+  "time.com": {
+   "method": "none"
+  },
+  "times-gazette.com": {
+   "method": "none"
+  },
+  "times-series.co.uk": {
+   "method": "none"
+  },
+  "timesandstar.co.uk": {
+   "method": "none"
+  },
+  "timescall.com": {
+   "method": "none"
+  },
+  "timesherald.com": {
+   "method": "rest",
+   "base": "https://timesherald.com"
+  },
+  "timesla.com": {
+   "method": "rest",
+   "base": "https://timesla.com"
+  },
+  "timesmonaco.com": {
+   "method": "rest",
+   "base": "https://timesmonaco.com"
+  },
+  "timesofisrael.com": {
+   "method": "none"
+  },
+  "timesofmalta.com": {
+   "method": "none"
+  },
+  "timesonline.com": {
+   "method": "none"
+  },
+  "timesquarejournal.com": {
+   "method": "none"
+  },
+  "timesrecordnews.com": {
+   "method": "none"
+  },
+  "timesreporter.com": {
+   "method": "none"
+  },
+  "timestelegram.com": {
+   "method": "none"
+  },
+  "tivysideadvertiser.co.uk": {
+   "method": "none"
+  },
+  "tmcnet.com": {
+   "method": "none"
+  },
+  "tmnews.com": {
+   "method": "none"
+  },
+  "toacorn.com": {
+   "method": "rest",
+   "base": "https://toacorn.com"
+  },
+  "todaysparent.com": {
+   "method": "none"
+  },
+  "toomuchlovemagazine.com": {
+   "method": "none"
+  },
+  "topbusinesssoftware.com": {
+   "method": "none"
+  },
+  "topgearmiddleeast.com": {
+   "method": "rest",
+   "base": "https://www.topgearmiddleeast.com"
+  },
+  "topspeed.com": {
+   "method": "none"
+  },
+  "torontolife.com": {
+   "method": "none"
+  },
+  "torontosun.com": {
+   "method": "rest",
+   "base": "https://torontosun.com"
+  },
+  "toughjobs.com": {
+   "method": "none"
+  },
+  "tractor.com": {
+   "method": "none"
+  },
+  "tradearabia.com": {
+   "method": "none"
+  },
+  "tradingherald.com": {
+   "method": "none"
+  },
+  "transittomorrow.com": {
+   "method": "rest",
+   "base": "https://transittomorrow.com"
+  },
+  "travelandleisure-es.com": {
+   "method": "rest",
+   "base": "https://travelandleisure-es.com"
+  },
+  "trentonian.com": {
+   "method": "rest",
+   "base": "https://trentonian.com"
+  },
+  "tri-cityherald.com": {
+   "method": "none"
+  },
+  "trib.com": {
+   "method": "none"
+  },
+  "tribnow.com": {
+   "method": "none"
+  },
+  "tribuneindia.com": {
+   "method": "feed",
+   "base": "https://tribuneindia.com"
+  },
+  "tricountyindependent.com": {
+   "method": "none"
+  },
+  "troyrecord.com": {
+   "method": "rest",
+   "base": "https://troyrecord.com"
+  },
+  "ttnonline.com": {
+   "method": "none"
+  },
+  "tucson.com": {
+   "method": "none"
+  },
+  "tucsonlocalmedia.com": {
+   "method": "none"
+  },
+  "tucsonweekly.com": {
+   "method": "rest",
+   "base": "https://tucsonweekly.com"
+  },
+  "tulsaworld.com": {
+   "method": "none"
+  },
+  "tuscaloosanews.com": {
+   "method": "none"
+  },
+  "twincities.com": {
+   "method": "rest",
+   "base": "https://twincities.com"
+  },
+  "uk.entrepreneur.com": {
+   "method": "none"
+  },
+  "uk.investing.com": {
+   "method": "none"
+  },
+  "ulladullatimes.com.au": {
+   "method": "none"
+  },
+  "unfinishedman.com": {
+   "method": "rest",
+   "base": "https://unfinishedman.com"
+  },
+  "upscalelivingmag.com": {
+   "method": "rest",
+   "base": "https://upscalelivingmag.com"
+  },
+  "urbankenyans.com": {
+   "method": "rest",
+   "base": "https://urbankenyans.com"
+  },
+  "usa.inquirer.net": {
+   "method": "none"
+  },
+  "usatoday.com": {
+   "method": "none"
+  },
+  "usaweekly.com": {
+   "method": "rest",
+   "base": "https://usaweekly.com"
+  },
+  "usbusinessnews.com": {
+   "method": "rest",
+   "base": "https://usbusinessnews.com"
+  },
+  "usinsider.com": {
+   "method": "rest",
+   "base": "https://usinsider.com"
+  },
+  "usmagazine.com": {
+   "method": "rest",
+   "base": "https://usmagazine.com"
+  },
+  "usreader.com": {
+   "method": "rest",
+   "base": "https://usreader.com"
+  },
+  "usreporter.com": {
+   "method": "rest",
+   "base": "https://usreporter.com"
+  },
+  "usweeklyblog.com": {
+   "method": "rest",
+   "base": "https://usweeklyblog.com"
+  },
+  "uticaod.com": {
+   "method": "none"
+  },
+  "valawyersweekly.com": {
+   "method": "none"
+  },
+  "vancouversun.com": {
+   "method": "rest",
+   "base": "https://vancouversun.com"
+  },
+  "variety.com": {
+   "method": "rest",
+   "base": "https://variety.com"
+  },
+  "vcmagazine.com": {
+   "method": "rest",
+   "base": "https://vcmagazine.com"
+  },
+  "vcpost.com": {
+   "method": "none"
+  },
+  "vcreporter.com": {
+   "method": "none"
+  },
+  "vcstar.com": {
+   "method": "none"
+  },
+  "vegasnews.com": {
+   "method": "rest",
+   "base": "https://vegasnews.com"
+  },
+  "ventanamonthly.com": {
+   "method": "none"
+  },
+  "ventsmagazine.com": {
+   "method": "none"
+  },
+  "venturebeat.com": {
+   "method": "none"
+  },
+  "veronapress.com": {
+   "method": "none"
+  },
+  "villagevoice.com": {
+   "method": "none"
+  },
+  "virginiabusiness.com": {
+   "method": "none"
+  },
+  "visaliatimesdelta.com": {
+   "method": "none"
+  },
+  "vogue.com.tr": {
+   "method": "none"
+  },
+  "vogue.ua": {
+   "method": "none"
+  },
+  "voyageny.com": {
+   "method": "rest",
+   "base": "https://voyageny.com"
+  },
+  "vvdailypress.com": {
+   "method": "none"
+  },
+  "wacotrib.com": {
+   "method": "none"
+  },
+  "wahoo-ashland-waverly.com": {
+   "method": "none"
+  },
+  "wallstreettimes.com": {
+   "method": "rest",
+   "base": "https://wallstreettimes.com"
+  },
+  "wandsworthguardian.co.uk": {
+   "method": "none"
+  },
+  "warringtonguardian.co.uk": {
+   "method": "none"
+  },
+  "warwickjournal.com": {
+   "method": "none"
+  },
+  "washingtonguardian.com": {
+   "method": "rest",
+   "base": "https://washingtonguardian.com"
+  },
+  "washingtonindependent.org": {
+   "method": "none"
+  },
+  "watchpro.com": {
+   "method": "rest",
+   "base": "https://watchpro.com"
+  },
+  "watfordobserver.co.uk": {
+   "method": "none"
+  },
+  "wausaudailyherald.com": {
+   "method": "none"
+  },
+  "wcexaminer.com": {
+   "method": "rest",
+   "base": "https://wcexaminer.com"
+  },
+  "wcfcourier.com": {
+   "method": "none"
+  },
+  "wcleaderjournal.com": {
+   "method": "none"
+  },
+  "weallaround.com": {
+   "method": "rest",
+   "base": "https://weallaround.com"
+  },
+  "wealthtechdaily.com": {
+   "method": "rest",
+   "base": "https://wealthtechdaily.com"
+  },
+  "wealthtribune.com": {
+   "method": "none"
+  },
+  "weblawinfo.com": {
+   "method": "rest",
+   "base": "https://weblawinfo.com"
+  },
+  "weedtimes.com": {
+   "method": "rest",
+   "base": "https://weedtimes.com"
+  },
+  "wellbeingguides.com": {
+   "method": "rest",
+   "base": "https://wellbeingguides.com"
+  },
+  "wellingtontimes.com.au": {
+   "method": "none"
+  },
+  "wellnessdaily.com.au": {
+   "method": "none"
+  },
+  "weraveyou.com": {
+   "method": "rest",
+   "base": "https://weraveyou.com"
+  },
+  "westernadvocate.com.au": {
+   "method": "none"
+  },
+  "westerntelegraph.co.uk": {
+   "method": "none"
+  },
+  "westhollywoodweekly.com": {
+   "method": "none"
+  },
+  "westvalleyview.com": {
+   "method": "none"
+  },
+  "wetechtitans.com": {
+   "method": "rest",
+   "base": "https://wetechtitans.com"
+  },
+  "wf-vision.com": {
+   "method": "none"
+  },
+  "wharfedaleobserver.co.uk": {
+   "method": "none"
+  },
+  "whatson.ae": {
+   "method": "rest",
+   "base": "https://whatson.ae"
+  },
+  "whitchurchherald.co.uk": {
+   "method": "none"
+  },
+  "whitehavennews.co.uk": {
+   "method": "none"
+  },
+  "whittierdailynews.com": {
+   "method": "rest",
+   "base": "https://whittierdailynews.com"
+  },
+  "whodesigntoday.com": {
+   "method": "rest",
+   "base": "https://whodesigntoday.com"
+  },
+  "whtimes.co.uk": {
+   "method": "none"
+  },
+  "wickedlocal.com": {
+   "method": "none"
+  },
+  "wiltsglosstandard.co.uk": {
+   "method": "none"
+  },
+  "wiltshiretimes.co.uk": {
+   "method": "none"
+  },
+  "wimberleyview.com": {
+   "method": "none"
+  },
+  "windsorstar.com": {
+   "method": "rest",
+   "base": "https://windsorstar.com"
+  },
+  "winonadailynews.com": {
+   "method": "none"
+  },
+  "wirralglobe.co.uk": {
+   "method": "none"
+  },
+  "wisbechstandard.co.uk": {
+   "method": "none"
+  },
+  "wisconsinrapidstribune.com": {
+   "method": "none"
+  },
+  "wislawjournal.com": {
+   "method": "none"
+  },
+  "witneygazette.co.uk": {
+   "method": "none"
+  },
+  "womansworld.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "womenmag.com": {
+   "method": "rest",
+   "base": "https://womenmag.com"
+  },
+  "womensdayblog.com": {
+   "method": "rest",
+   "base": "https://womensdayblog.com"
+  },
+  "womensgolfjournal.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "womenshealth.com.au": {
+   "method": "none"
+  },
+  "womensjournal.com": {
+   "method": "rest",
+   "base": "https://womensjournal.com"
+  },
+  "womenstuff.co.za": {
+   "method": "rest",
+   "base": "https://womenstuff.co.za"
+  },
+  "wonderwall.com": {
+   "method": "none",
+   "reason": "search ignores the query"
+  },
+  "worcesternews.co.uk": {
+   "method": "none"
+  },
+  "worldfinancialreview.com": {
+   "method": "rest",
+   "base": "https://worldfinancialreview.com"
+  },
+  "worldreporter.com": {
+   "method": "rest",
+   "base": "https://worldreporter.com"
+  },
+  "wsj.com": {
+   "method": "none"
+  },
+  "wwd.com": {
+   "method": "rest",
+   "base": "https://wwd.com"
+  },
+  "wwjournals.com": {
+   "method": "none"
+  },
+  "xda-developers.com": {
+   "method": "none"
+  },
+  "yardleyvoice.com": {
+   "method": "none"
+  },
+  "yasstribune.com.au": {
+   "method": "none"
+  },
+  "ydr.com": {
+   "method": "none"
+  },
+  "yorknewstimes.com": {
+   "method": "none"
+  },
+  "yorkpress.co.uk": {
+   "method": "none"
+  },
+  "yourlocalguardian.co.uk": {
+   "method": "none"
+  },
+  "youthhealthmag.com": {
+   "method": "none"
+  },
+  "za.investing.com": {
+   "method": "none"
+  },
+  "zanesvilletimesrecorder.com": {
+   "method": "none"
+  },
+  "zycrypto.com": {
+   "method": "rest",
+   "base": "https://zycrypto.com"
+  }
+ }
+}

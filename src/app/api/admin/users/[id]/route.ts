@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { verifySession, logActivity, hashToken } from '@/lib/auth';
 import db from '@/lib/db';
 import { passwordViewEnabled, storePasswordCopy } from '@/lib/password-vault';
+import { UNLIMITED, setAuditLimit } from '@/lib/audit/store';
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -20,8 +21,11 @@ async function findUser(id: string) {
   return result.rows[0] ?? null;
 }
 
-// Set a new password. The user is signed out everywhere so the old one stops
-// working at once (an admin changing their own keeps this session).
+const MAX_AUDIT_LIMIT = 10000;
+
+// Change a user's settings: their monthly audit limit, or their password.
+// A new password signs them out everywhere so the old one stops working at
+// once (an admin changing their own keeps this session).
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const admin = await requireAdmin(request);
   if (!admin) return NextResponse.json({ message: 'Admin access required' }, { status: 403 });
@@ -30,6 +34,24 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   if (!user) return NextResponse.json({ message: 'User not found' }, { status: 404 });
 
   const body = await request.json().catch(() => ({}));
+
+  // auditLimit: a number (0 = none), "unlimited", or null for the default.
+  if ('auditLimit' in body) {
+    const raw = body.auditLimit;
+    const limit = raw === null ? null : raw === 'unlimited' ? UNLIMITED : Number(raw);
+    if (limit !== null && limit !== UNLIMITED && (!Number.isInteger(limit) || limit < 0 || limit > MAX_AUDIT_LIMIT)) {
+      return NextResponse.json({ message: `Audit limit must be a whole number from 0 to ${MAX_AUDIT_LIMIT}` }, { status: 400 });
+    }
+    try {
+      await setAuditLimit(user.id, limit);
+      logActivity(admin.id, 'AUDIT_LIMIT_SET', `USER:${user.id}:${limit ?? 'default'}`).catch(() => {});
+      return NextResponse.json({ success: true, auditLimit: limit });
+    } catch (error) {
+      console.error('Error setting audit limit:', error);
+      return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    }
+  }
+
   const password = String(body.password ?? '');
   if (password.length < MIN_PASSWORD_LENGTH) {
     return NextResponse.json(

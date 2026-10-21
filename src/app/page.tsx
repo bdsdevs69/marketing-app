@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback, useTransition, useRef, useDeferredValue } from 'react';
-import { Filter, Search, SlidersHorizontal, X, Mic, Database, Tv, Radio, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, UsersRound, DollarSign, List, Star, Tag } from 'lucide-react';
+import { Filter, Search, SlidersHorizontal, X, Mic, Database, Tv, Radio, LogOut, UserPlus, KeyRound, ArrowUpDown, ArrowUp, ArrowDown, Download, UsersRound, ScanSearch, DollarSign, List, Star, Tag } from 'lucide-react';
 
 // Import the invitation modal
 import InvitationModal from '../components/InvitationModal';
@@ -898,6 +898,15 @@ export default function Page() {
                   <span className="hidden sm:inline text-sm text-black font-medium">Invite User</span>
                 </button>
               )}
+
+              {/* Client audit — every partner */}
+              <a
+                href="/audit"
+                className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all"
+              >
+                <ScanSearch size={16} className="text-black" />
+                <span className="hidden sm:inline text-sm text-black font-medium">Client audit</span>
+              </a>
 
               <ThemeToggle className="flex items-center space-x-2 px-3 py-1.5 bg-black/20 hover:bg-black/30 rounded-lg transition-all" />
               

@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession } from '@/lib/auth';
 import db from '@/lib/db';
 import { ensureUserPricesTable } from '@/lib/catalog';
+import { MONTHLY_AUDITS, ensureAuditLimitColumn, ensureAuditTable } from '@/lib/audit/store';
 import { ensurePasswordColumn, passwordViewEnabled } from '@/lib/password-vault';
 
 export async function GET(request: NextRequest) {
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    await Promise.all([ensurePasswordColumn(), ensureUserPricesTable()]);
+    await Promise.all([ensurePasswordColumn(), ensureUserPricesTable(), ensureAuditTable(), ensureAuditLimitColumn()]);
 
     // Last login comes from the activity log, which records every sign-in.
     const [users, factors] = await Promise.all([
@@ -25,7 +26,9 @@ export async function GET(request: NextRequest) {
           upf.factor_id, pf.name AS factor_name,
           ll.last_login, COALESCE(ll.login_count, 0)::int AS login_count,
           COALESCE(cp.custom_prices, 0)::int AS custom_prices,
-          (u.password_view IS NOT NULL) AS has_password_copy
+          (u.password_view IS NOT NULL) AS has_password_copy,
+          u.audit_limit,
+          COALESCE(au.audits_this_month, 0)::int AS audits_this_month
         FROM users u
         LEFT JOIN user_pricing_factors upf ON upf.user_id = u.id
         LEFT JOIN pricing_factors pf ON pf.id = upf.factor_id
@@ -36,6 +39,10 @@ export async function GET(request: NextRequest) {
         LEFT JOIN LATERAL (
           SELECT COUNT(*) AS custom_prices FROM user_price_overrides o WHERE o.user_id = u.id
         ) cp ON true
+        LEFT JOIN LATERAL (
+          SELECT COUNT(*) AS audits_this_month FROM client_audits a
+           WHERE a.user_id = u.id AND a.created_at >= date_trunc('month', NOW())
+        ) au ON true
         ORDER BY u.created_at DESC
       `),
       db.query('SELECT id, name, is_active FROM pricing_factors ORDER BY is_active DESC, name'),
@@ -45,6 +52,7 @@ export async function GET(request: NextRequest) {
       users: users.rows,
       factors: factors.rows,
       passwordView: passwordViewEnabled(),
+      defaultAuditLimit: MONTHLY_AUDITS,
       currentUserId: sessionData.id,
     });
   } catch (error) {

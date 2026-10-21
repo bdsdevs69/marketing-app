@@ -35,6 +35,8 @@ interface UserRow {
   login_count: number;
   custom_prices: number;
   has_password_copy: boolean;
+  audit_limit: number | null; // null = default, -1 = unlimited, 0 = off
+  audits_this_month: number;
 }
 
 interface FactorOption {
@@ -46,6 +48,14 @@ interface FactorOption {
 type StatusFilter = 'all' | 'active' | 'restricted';
 
 const MIN_PASSWORD_LENGTH = 8;
+const UNLIMITED = -1;
+
+// "3 / 20", "3 / Unlimited", "Off" — admins are never limited.
+function auditAllowance(u: UserRow, fallback: number) {
+  if (u.role === 'admin' || u.audit_limit === UNLIMITED) return 'Unlimited';
+  if (u.audit_limit === 0) return 'Off';
+  return String(u.audit_limit ?? fallback);
+}
 
 const displayName = (u: UserRow) => [u.first_name, u.last_name].filter(Boolean).join(' ') || u.email;
 const initials = (u: UserRow) =>
@@ -88,6 +98,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [factors, setFactors] = useState<FactorOption[]>([]);
   const [passwordView, setPasswordView] = useState(false);
+  const [defaultLimit, setDefaultLimit] = useState(20);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -108,6 +119,7 @@ export default function UsersPage() {
       setUsers(data.users);
       setFactors(data.factors);
       setPasswordView(Boolean(data.passwordView));
+      setDefaultLimit(data.defaultAuditLimit ?? 20);
       setCurrentUserId(data.currentUserId ?? null);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load users');
@@ -222,6 +234,7 @@ export default function UsersPage() {
                 <th className="text-left">Status</th>
                 <th className="text-left">Last login</th>
                 <th className="text-left">Created</th>
+                <th className="text-right">Audits this month</th>
                 <th className="text-right">Custom prices</th>
                 <th />
               </tr>
@@ -229,7 +242,7 @@ export default function UsersPage() {
             <tbody>
               {visible.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-16 text-center text-gray-400">No users match.</td>
+                  <td colSpan={8} className="py-16 text-center text-gray-400">No users match.</td>
                 </tr>
               ) : (
                 visible.map((u) => (
@@ -260,6 +273,9 @@ export default function UsersPage() {
                     </td>
                     <td className="text-gray-300" title={fullDate(u.last_login)}>{timeAgo(u.last_login)}</td>
                     <td className="text-gray-400">{new Date(u.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                    <td className="text-right tabular-nums text-gray-300">
+                      {auditAllowance(u, defaultLimit) === 'Off' ? 'Off' : `${u.audits_this_month} / ${auditAllowance(u, defaultLimit)}`}
+                    </td>
                     <td className="text-right tabular-nums text-gray-300">{u.custom_prices || '—'}</td>
                     <td className="text-right text-gray-500"><ChevronRight size={16} /></td>
                   </tr>
@@ -281,6 +297,7 @@ export default function UsersPage() {
             key={selected.id}
             user={selected}
             factors={factors}
+            defaultLimit={defaultLimit}
             passwordView={passwordView}
             isSelf={selected.id === currentUserId}
             onChange={(patch) => updateUser(selected.id, patch)}
@@ -298,13 +315,14 @@ export default function UsersPage() {
 interface UserPanelProps {
   user: UserRow;
   factors: FactorOption[];
+  defaultLimit: number;
   passwordView: boolean;
   isSelf: boolean;
   onChange: (patch: Partial<UserRow>) => void;
   onDeleted: () => void;
 }
 
-function UserPanel({ user, factors, passwordView, isSelf, onChange, onDeleted }: UserPanelProps) {
+function UserPanel({ user, factors, defaultLimit, passwordView, isSelf, onChange, onDeleted }: UserPanelProps) {
   const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -313,6 +331,9 @@ function UserPanel({ user, factors, passwordView, isSelf, onChange, onDeleted }:
   const [copied, setCopied] = useState(false);
 
   const [newPassword, setNewPassword] = useState('');
+  const [limitDraft, setLimitDraft] = useState(
+    user.audit_limit === null || user.audit_limit === UNLIMITED ? String(defaultLimit) : String(user.audit_limit)
+  );
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const protectedAccount = user.role === 'admin' || isSelf;
@@ -400,6 +421,28 @@ function UserPanel({ user, factors, passwordView, isSelf, onChange, onDeleted }:
     }
   };
 
+  // value: a number, 'unlimited', or null to go back to the default.
+  const saveLimit = async (value: number | 'unlimited' | null) => {
+    try {
+      const data = await request('limit', `/api/admin/users/${user.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ auditLimit: value }),
+      });
+      onChange({ audit_limit: data.auditLimit });
+      if (data.auditLimit === null) setLimitDraft(String(defaultLimit));
+      say(
+        true,
+        data.auditLimit === UNLIMITED
+          ? 'Unlimited audits'
+          : data.auditLimit === 0
+            ? 'Audits switched off for this user'
+            : `Limit set to ${data.auditLimit ?? defaultLimit} audits a month`
+      );
+    } catch (e) {
+      say(false, e instanceof Error ? e.message : 'Could not change the limit');
+    }
+  };
+
   const toggleAccess = async () => {
     try {
       await request('access', '/api/admin/users/toggle-status', {
@@ -479,6 +522,53 @@ function UserPanel({ user, factors, passwordView, isSelf, onChange, onDeleted }:
             : 'Set custom prices for this user'}
           <ChevronRight size={14} />
         </Link>
+      </section>
+
+      <section className="user-section">
+        <h3>Client audits</h3>
+        {user.role === 'admin' ? (
+          <p className="user-hint">Admins can run unlimited audits.</p>
+        ) : (
+          <>
+            <p className="user-hint">
+              {user.audits_this_month} used this month ·{' '}
+              {user.audit_limit === UNLIMITED
+                ? 'unlimited'
+                : user.audit_limit === 0
+                  ? 'switched off'
+                  : `limit ${user.audit_limit ?? defaultLimit}${user.audit_limit === null ? ' (default)' : ''}`}
+              . Opening saved audits is always free.
+            </p>
+            <div className="user-password-form">
+              <input
+                className="filter-input user-input !pl-3"
+                type="number"
+                min={0}
+                max={10000}
+                value={limitDraft}
+                onChange={(e) => setLimitDraft(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && saveLimit(Number(limitDraft))}
+                aria-label="Audits per month"
+              />
+              <button type="button" className="catalog-save !h-10" disabled={busy === 'limit' || limitDraft === ''} onClick={() => saveLimit(Number(limitDraft))}>
+                Set
+              </button>
+              <button
+                type="button"
+                className={`toolbar-button !h-10${user.audit_limit === UNLIMITED ? ' is-active' : ''}`}
+                disabled={busy === 'limit'}
+                onClick={() => saveLimit(user.audit_limit === UNLIMITED ? null : 'unlimited')}
+              >
+                Unlimited
+              </button>
+            </div>
+            {user.audit_limit !== null && (
+              <button type="button" className="user-link !text-sm" disabled={busy === 'limit'} onClick={() => saveLimit(null)}>
+                Back to the default ({defaultLimit} a month)
+              </button>
+            )}
+          </>
+        )}
       </section>
 
       <section className="user-section">
