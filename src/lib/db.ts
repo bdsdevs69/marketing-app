@@ -25,6 +25,9 @@ class Database {
       // that arrived during a cold start fail.
       connectionTimeoutMillis: 10000,
     });
+    // An idle connection dropping (network change, Neon restart) must not
+    // take the whole server down; the pool replaces it on the next query.
+    this.pool.on('error', (error) => console.error('Idle database connection lost:', error.message));
   }
 
   async getClient(): Promise<PoolClient> {

@@ -8,7 +8,7 @@ import { buildPlans, catalogueGenres, competitorPress, industryFits, splitCovera
 import { llmConfigured } from './llm';
 import type { Market } from './markets';
 import { safeFetch } from './fetch-site';
-import { findPeople } from './people';
+import { findPeople, looksLikePerson } from './people';
 import { findPress, PRESS_VERSION } from './press';
 import { scanSite } from './scan';
 import { runSeoChecks } from './seo-checks';
@@ -28,7 +28,8 @@ const coverageReady = (data: AuditData) => data.coverage?.v === PRESS_VERSION;
 // People named on the homepage; audits saved before people were recorded
 // read the homepage again.
 async function peopleFor(row: AuditRow, brand: string): Promise<string[]> {
-  if (row.data.facts.people) return row.data.facts.people;
+  // Lists saved by older versions can hold phrases that aren't names.
+  if (row.data.facts.people) return row.data.facts.people.filter(looksLikePerson);
   try {
     const page = await safeFetch(row.data.facts.finalUrl, { timeoutMs: 8000 });
     return findPeople(page.body, brand);

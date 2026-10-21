@@ -7,6 +7,8 @@ import dns from 'dns/promises';
 import net from 'net';
 
 const UA = 'Mozilla/5.0 (compatible; DNA-ClientAudit/1.0; +https://dnapricing.com)';
+// News sites turn away anything that doesn't look like a browser.
+export const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 const MAX_REDIRECTS = 5;
 
 function isPrivateIp(ip: string): boolean {
@@ -49,7 +51,7 @@ export interface FetchedPage {
 
 // GET a URL, following up to five redirects, each re-checked. Reads at most
 // `maxBytes` of the body.
-export async function safeFetch(rawUrl: string, { timeoutMs = 10000, maxBytes = 1_500_000 } = {}): Promise<FetchedPage> {
+export async function safeFetch(rawUrl: string, { timeoutMs = 10000, maxBytes = 1_500_000, userAgent = UA } = {}): Promise<FetchedPage> {
   const started = Date.now();
   const redirects: string[] = [];
   let url = new URL(rawUrl);
@@ -58,7 +60,7 @@ export async function safeFetch(rawUrl: string, { timeoutMs = 10000, maxBytes = 
     await assertPublicHost(url);
     const res = await fetch(url, {
       redirect: 'manual',
-      headers: { 'user-agent': UA, accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' },
+      headers: { 'user-agent': userAgent, accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' },
       signal: AbortSignal.timeout(timeoutMs),
     });
 

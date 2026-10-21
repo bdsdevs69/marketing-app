@@ -6,15 +6,21 @@
 import { parse } from 'node-html-parser';
 
 const NAME = "[A-Z][a-z]+(?:\\s[A-Z]\\.)?\\s[A-Z][a-zA-Z'’-]+";
-const ROLE = '(?:founder|co-founder|ceo|chief executive|president|medical director|managing director|owner)';
+// Role words in any case; names only ever capitalised ("bestselling author" isn't a person).
+const anyCase = (s: string) => s.replace(/[a-z]/g, (c) => `[${c}${c.toUpperCase()}]`);
+const ROLE = `(?:${['founder', 'co-founder', 'ceo', 'chief executive', 'president', 'medical director', 'managing director', 'owner'].map(anyCase).join('|')})`;
 const NOT_PEOPLE = /^(read more|learn more|contact us|privacy policy|united states|new york|los angeles|san francisco|south africa)$/i;
+const NOT_NAME_WORDS = /\b(author|bestselling|best-selling|award|winning|founder|director|officer|chief|president|executive|team|agency|company|group|media|digital|news|our|the)\b/i;
+
+export const looksLikePerson = (name: string) =>
+  /^[A-Z]/.test(name) && name.split(' ').length >= 2 && !NOT_PEOPLE.test(name) && !NOT_NAME_WORDS.test(name);
 
 export function findPeople(html: string, brand: string, limit = 2): string[] {
   const root = parse(html);
   const scores = new Map<string, number>();
   const bump = (name: string, by: number) => {
     const clean = name.replace(/\s+/g, ' ').trim();
-    if (clean.split(' ').length < 2 || NOT_PEOPLE.test(clean) || brand.toLowerCase().includes(clean.toLowerCase())) return;
+    if (!looksLikePerson(clean) || brand.toLowerCase().includes(clean.toLowerCase())) return;
     scores.set(clean, (scores.get(clean) ?? 0) + by);
   };
 
@@ -27,7 +33,7 @@ export function findPeople(html: string, brand: string, limit = 2): string[] {
   root.querySelectorAll('script,style,noscript,svg').forEach((n) => n.remove());
   const text = root.text.replace(/\s+/g, ' ');
   for (const m of text.matchAll(new RegExp(`\\bDr\\.?\\s+(${NAME})`, 'g'))) bump(m[1], 2);
-  for (const m of text.matchAll(new RegExp(`\\b${ROLE}[,:]?\\s+(?:and\\s+\\w+\\s+)?(?:Dr\\.?\\s+)?(${NAME})`, 'gi'))) bump(m[1], 3);
+  for (const m of text.matchAll(new RegExp(`\\b${ROLE}[,:]?\\s+(?:and\\s+\\w+\\s+)?(?:Dr\\.?\\s+)?(${NAME})`, 'g'))) bump(m[1], 3);
   for (const m of text.matchAll(new RegExp(`(${NAME}),?\\s+(?:the\\s+|our\\s+)?${ROLE}`, 'g'))) bump(m[1], 3);
 
   return [...scores.entries()]

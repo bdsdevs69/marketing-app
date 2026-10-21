@@ -280,7 +280,7 @@ export default function AuditResult({ audit, onUpdate, onRefresh, canRefresh }: 
                 </strong>
                 <p>
                   {pressPending
-                    ? `Searching ${coverage.searchable} of our publications for articles linking to ${audit.domain}.`
+                    ? `Searching our publications and the news for articles linking to ${audit.domain}.`
                     : featured.length
                       ? `${featured.slice(0, 3).map((f) => f.name).join(', ')}${featured.length > 3 ? ' and more' : ''} — left out of the suggestions below.`
                       : 'Every placement would be new coverage for them.'}
@@ -408,7 +408,7 @@ export default function AuditResult({ audit, onUpdate, onRefresh, canRefresh }: 
             ) : (
               <>
                 <Loader2 size={18} className="animate-spin" />
-                Searching {coverage.searchable} of our publications for articles linking to {audit.domain}… about 30 seconds.
+                Searching our publications and the news for articles linking to {audit.domain}… about 30 seconds.
               </>
             )}
           </div>
@@ -446,8 +446,8 @@ export default function AuditResult({ audit, onUpdate, onRefresh, canRefresh }: 
           </div>
         )}
         <p className="audit-footnote">
-          Every article listed links to {audit.domain} or names {audit.brand} in its headline. We search the {coverage.searchable} catalogue
-          publications that have a public search, plus news headlines for the rest.
+          Every article listed was opened and links to {audit.domain} in the article itself. A name alone never counts. {coverage.searchable}{' '}
+          of our publications are searched directly; the others don&apos;t allow searching, so they&apos;re covered through news results.
         </p>
       </section>
 

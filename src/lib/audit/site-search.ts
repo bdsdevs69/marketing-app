@@ -2,14 +2,14 @@
 // catalogue publication with a public search (WordPress REST search or its
 // search feed — mapped by scripts/map-search.mjs) is asked for articles
 // containing a domain. Each result's full text is then read back through
-// the site's own API (or search feed) and kept only if it really contains
-// the domain — a link or the written address. Anything that can't be
-// confirmed is dropped.
+// the site's own API (or search feed) and kept only if it really links to
+// the domain (or prints it). Anything that can't be confirmed is dropped.
 
 import fs from 'fs';
 import path from 'path';
 import { readCatalogFile } from '@/lib/catalog-files';
 import { hostOf } from './coverage';
+import { isDomainHost, linksTo } from './links';
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 
@@ -61,7 +61,6 @@ const decode = (s: string) =>
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
     .trim();
 
-const contains = (text: string, domain: string) => text.toLowerCase().includes(domain.toLowerCase());
 const pubDate = (raw: string | undefined | null) => (raw && !Number.isNaN(Date.parse(raw)) ? new Date(raw).toISOString() : null);
 
 class Unreachable extends Error {}
@@ -103,7 +102,7 @@ async function searchSite(host: string, site: Required<SiteMethod>, domain: stri
           const post = parseJson<{ link?: string; date?: string; content?: { rendered?: string } }>(
             await get(`${site.base}/wp-json/wp/v2/${kind}/${r.id}?_fields=link,date,content`, timeoutMs).catch(() => null)
           );
-          if (!post?.content?.rendered || !contains(post.content.rendered, domain)) return null;
+          if (!post?.content?.rendered || !linksTo(post.content.rendered, domain)) return null;
           return { host, title: decode(r.title ?? ''), url: post.link || r.url!, date: pubDate(post.date) };
         })
     );
@@ -113,7 +112,15 @@ async function searchSite(host: string, site: Required<SiteMethod>, domain: stri
   const xml = await get(`${site.base}/?s=${q}&feed=rss2`, timeoutMs);
   if (!xml) return [];
   return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 10).flatMap(([, item]) => {
-    if (!contains(item, domain)) return []; // the feed carries the article text
+    // The feed carries the article text, sometimes as escaped HTML.
+    const text = [...item.matchAll(/<(content:encoded|description)>([\s\S]*?)<\/\1>/g)]
+      .map((m) => m[2])
+      .join(' ')
+      .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"');
+    if (!linksTo(text, domain)) return [];
     const url = decode(item.match(/<link>([\s\S]*?)<\/link>/)?.[1] ?? '');
     return url
       ? [{ host, title: decode(item.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? ''), url, date: pubDate(item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]) }]
@@ -121,7 +128,7 @@ async function searchSite(host: string, site: Required<SiteMethod>, domain: stri
   });
 }
 
-async function pool<T, R>(items: T[], size: number, work: (item: T) => Promise<R>, deadline: number): Promise<R[]> {
+export async function pool<T, R>(items: T[], size: number, work: (item: T) => Promise<R>, deadline: number): Promise<R[]> {
   const results: R[] = [];
   let next = 0;
   await Promise.all(
@@ -148,6 +155,6 @@ export async function searchCatalogueSites(domain: string, budgetMs = 34000) {
   found.push(...(await pool(retry, 40, (entry) => attempt(entry, 8000), deadline)).flat());
   const hits = [...new Map(found.map((h) => [h.url.replace(/[?#].*$/, ''), h])).values()]
     // The client's own site isn't press.
-    .filter((h) => hostOf(h.url) !== domain && !hostOf(h.url).endsWith(`.${domain}`));
+    .filter((h) => !isDomainHost(hostOf(h.url), domain));
   return { hits, searched: sites.length };
 }

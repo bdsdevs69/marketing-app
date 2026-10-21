@@ -1,6 +1,9 @@
 // Google News search feeds (free, no key), for press on outlets whose own
-// site can't be searched. News search matches loosely, so press.ts only
-// keeps a result when the headline itself names the brand.
+// site can't be searched. News search matches loosely, so its results are
+// only leads: press.ts opens every article at the publisher and keeps it
+// only if it links to the client.
+
+import { BROWSER_UA } from './fetch-site';
 
 export interface Mention {
   title: string;
@@ -77,6 +80,40 @@ async function googleNews(query: string, market: string): Promise<Mention[]> {
   }
 }
 
+// Google News links point at Google, not the publisher. Older ones carry the
+// publisher's address inside the link; current ones have to be asked for,
+// with a signature from the article's Google page. null when Google won't say.
+export async function publisherUrl(link: string, timeoutMs = 8000): Promise<string | null> {
+  const id = link.match(/news\.google\.com\/(?:rss\/)?articles\/([\w-]+)/)?.[1];
+  if (!id) return null;
+  const raw = Buffer.from(id.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('latin1');
+  if (!raw.includes('AU_yqL')) return raw.match(/https?:\/\/[\x21-\x7e]+/)?.[0] ?? null;
+
+  const signal = AbortSignal.timeout(Math.max(1000, timeoutMs));
+  try {
+    const page = await (await fetch(`https://news.google.com/rss/articles/${id}`, { headers: { 'user-agent': BROWSER_UA }, signal })).text();
+    const sg = page.match(/data-n-a-sg="([^"]+)"/)?.[1];
+    const ts = page.match(/data-n-a-ts="(\d+)"/)?.[1];
+    if (!sg || !ts) return null;
+    const ask = `["garturlreq",[["X","X",["X","X"],null,null,1,1,"US:en",null,1,null,null,null,null,null,0,1],"X","X",1,[1,1,1],1,1,null,0,0,null,0],${JSON.stringify(id)},${ts},${JSON.stringify(sg)}]`;
+    const res = await fetch('https://news.google.com/_/DotsSplashUi/data/batchexecute', {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded;charset=UTF-8', 'user-agent': BROWSER_UA },
+      body: `f.req=${encodeURIComponent(JSON.stringify([[['Fbv4je', ask, null, 'generic']]]))}`,
+      signal,
+    });
+    // Answer: a JSON line [["wrb.fr","Fbv4je","[\"garturlres\",\"<url>\",1]",...]].
+    for (const line of (await res.text()).split('\n')) {
+      if (!line.startsWith('[["wrb.fr"')) continue;
+      const answer = JSON.parse(JSON.parse(line)[0][2]);
+      return answer?.[0] === 'garturlres' && /^https?:\/\//.test(answer[1]) ? answer[1] : null;
+    }
+  } catch {
+    // Google said no or took too long
+  }
+  return null;
+}
+
 // Every article mentioning any of the terms, in the US edition and the
 // client's own market, newest first, without repeats.
 export async function findMentions(terms: string[], market: string, rawQuery = false): Promise<Mention[]> {
@@ -107,8 +144,10 @@ export function brandName(domain: string, siteName: string, title: string): stri
   const label = domain.split('.')[0];
   const words = label.split(/[-_]/).filter(Boolean);
   const parts = title.split(/\s[|\-–—:·•]\s/).map(strip).filter(Boolean);
+  // "Digital Networking Agency" matches digitalnetworkingagency.com.
+  const squash = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
   const scored = parts
-    .map((p) => ({ p, hits: words.filter((w) => p.toLowerCase().includes(w.toLowerCase())).length }))
+    .map((p) => ({ p, hits: words.filter((w) => squash(p).includes(squash(w))).length }))
     .sort((a, b) => b.hits - a.hits || a.p.length - b.p.length);
   if (scored[0]?.hits) return scored[0].p;
   return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
