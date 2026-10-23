@@ -89695,6 +89695,62 @@
             "erotic": null,
             "gambling": null,
             "health": null
+        },
+        {
+            "_id": "forbes-usa",
+            "name": "Forbes USA",
+            "slug": "forbes-usa",
+            "url": "https://www.forbes.com/",
+            "defaultPrice": [
+                3750
+            ],
+            "customPrice": [],
+            "badges": [],
+            "genres": [
+                {
+                    "description": null,
+                    "name": "Business",
+                    "slug": "business"
+                },
+                {
+                    "description": null,
+                    "name": "Finance",
+                    "slug": "finance"
+                },
+                {
+                    "description": null,
+                    "name": "Tech",
+                    "slug": "tech"
+                },
+                {
+                    "description": null,
+                    "name": "Lifestyle",
+                    "slug": "lifestyle"
+                }
+            ],
+            "regions": [
+                {
+                    "description": null,
+                    "name": "United States",
+                    "slug": "united-states"
+                }
+            ],
+            "listicles": null,
+            "example_url": "https://www.forbes.com/sites/glennllopis/2026/08/19/ai-is-accelerating-the-same-identity-crisis-in-c-suites-and-teenagers/",
+            "logo_url": "/logos/forbes.png",
+            "estimated_time": "3-4 Weeks",
+            "sponsored": "no",
+            "indexed": "yes",
+            "do_follow": "no",
+            "llm_aeo": "yes",
+            "domain_authority": 95,
+            "domain_rating": 94,
+            "monthly_visits": 13300000,
+            "cbd": null,
+            "crypto": null,
+            "erotic": null,
+            "gambling": null,
+            "health": null
         }
     ]
 }

@@ -54,7 +54,7 @@ const KEEP_EXAMPLE = new Set(['MSN'].map((n) => n.toLowerCase()));
 const OUR_FIELDS = ['listicle_example_url', 'hot_seller'];
 
 // Sold by us but not carried by Ascend (by _id): never pruned.
-const OUR_OWN = new Set(['dna-pr-blast', 'times-square-journal', 'the-icon', 'fluenciaga']);
+const OUR_OWN = new Set(['dna-pr-blast', 'times-square-journal', 'the-icon', 'fluenciaga', 'forbes-usa']);
 
 // Ascend fields that are about the reseller account, not the publication.
 const DROP = new Set(['price', 'customPrice', 'rating', 'business']);
