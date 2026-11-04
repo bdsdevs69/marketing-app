@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { displayPrice } from '@/lib/pricing-math';
-import { getRulesForPagesRequest } from '@/lib/catalog';
+import { getPricingForPagesRequest } from '@/lib/catalog';
 import { parseRate, readCatalogCsv } from '@/lib/catalog-csv';
 
 // Columns of data/data2.csv ("Segement Length" is spelled that way in the file).
@@ -37,7 +37,8 @@ export default async function handler(
   res: NextApiResponse<TransformedCSVItem[] | { error: string }>
 ) {
   try {
-    const rules = await getRulesForPagesRequest(req);
+    const { rules, ended } = await getPricingForPagesRequest(req);
+    if (ended) return res.status(401).json({ error: 'Your login has ended. Please sign in again.' });
     const rows = readCatalogCsv<CSVRow>('data2.csv');
 
     const transformed = rows.map((item) => {

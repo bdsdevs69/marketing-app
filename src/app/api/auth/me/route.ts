@@ -1,18 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/auth';
+import { verifySession } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get('auth-token')?.value;
-    
-    if (!token) {
-      return NextResponse.json({ message: 'No token provided' }, { status: 401 });
-    }
+    // The login must still exist, not just the cookie: a logged-out or
+    // expired login is turned away here so the dashboard can send the
+    // person back to sign in.
+    const user = await verifySession(request);
 
-    const user = verifyToken(token);
-    
     if (!user) {
-      return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
+      return NextResponse.json({ message: 'Not signed in' }, { status: 401 });
     }
 
     return NextResponse.json({

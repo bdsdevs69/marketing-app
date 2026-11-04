@@ -76,10 +76,11 @@ export default async function handler(
   res: NextApiResponse<PublicationRow[] | { error: string }>
 ) {
   try {
-    const [{ rules, userPrices }, overrides] = await Promise.all([
+    const [{ rules, userPrices, ended }, overrides] = await Promise.all([
       getPricingForPagesRequest(req, 'publication'),
       getOverrides('publication'),
     ]);
+    if (ended) return res.status(401).json({ error: 'Your login has ended. Please sign in again.' });
 
     const rows: PublicationRow[] = readCatalogFile<CatalogRecord>('data.json').map((item) => {
       // An admin-set base in the database wins over the supplier cost in the file.

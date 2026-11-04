@@ -380,6 +380,10 @@ export default function Page() {
   // but shown only if the last visit was an admin's (html[data-role], set in
   // layout.tsx before first paint), so they don't pop in on every refresh.
   // It only affects which buttons show — admin actions are checked server-side.
+  const signInAgain = () => {
+    try { window.localStorage.removeItem(ROLE_CACHE_KEY); } catch {}
+    window.location.href = '/login';
+  };
   const [roleKnown, setRoleKnown] = useState(false);
   const showAdminButtons = userRole === 'admin' || !roleKnown;
 
@@ -387,6 +391,7 @@ export default function Page() {
     const checkUserRole = async () => {
       try {
         const response = await fetch('/api/auth/me');
+        if (response.status === 401) return signInAgain();
         if (response.ok) {
           const userData = await response.json();
           const role = userData.role || 'user';
@@ -415,6 +420,12 @@ export default function Page() {
       const endpoint = TABLE_ENDPOINTS[tableType];
       inflight.current[tableType] = fetch(endpoint)
         .then(async (res) => {
+          // The login has ended (logged out elsewhere, expired, restricted):
+          // sign in again rather than show prices that aren't theirs.
+          if (res.status === 401) {
+            signInAgain();
+            throw new Error('Login ended');
+          }
           const body: unknown = await res.json();
           // A failed request returns an error object, not rows; never put
           // that into the table (it would crash the page).

@@ -34,10 +34,11 @@ export default async function handler(
   res: NextApiResponse<PodcastRow[] | { error: string }>
 ) {
   try {
-    const [{ rules, userPrices }, overrides] = await Promise.all([
+    const [{ rules, userPrices, ended }, overrides] = await Promise.all([
       getPricingForPagesRequest(req, 'podcast'),
       getOverrides('podcast'),
     ]);
+    if (ended) return res.status(401).json({ error: 'Your login has ended. Please sign in again.' });
 
     const rows = readCatalogFile<PodcastRecord>('podcasts.json').map((item) => {
       const base = overrides.get(item._id) ?? Number(item.defaultPrice?.[0]);
