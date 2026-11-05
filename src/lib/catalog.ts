@@ -181,15 +181,13 @@ export interface RequestPricing {
   rules: PricingRule[] | null;
   // Exact prices set for this user, by item id (empty without a catalog).
   userPrices: Map<string, number>;
-  // A login cookie was sent but that login has ended (logged out, expired,
-  // password changed, account restricted). Callers answer 401 so the
-  // dashboard sends the person to sign in, instead of quietly showing them
-  // the public prices.
+  // No active login: none sent, or it has ended (logged out, expired,
+  // password changed, account restricted). Prices are for signed-in users
+  // only, so callers answer 401 and the dashboard sends the person to sign in.
   ended: boolean;
 }
 
-const NO_PRICING: RequestPricing = { rules: null, userPrices: new Map(), ended: false };
-const ENDED: RequestPricing = { ...NO_PRICING, ended: true };
+const ENDED: RequestPricing = { rules: null, userPrices: new Map(), ended: true };
 
 // Pricing for whoever made this request. The session check, the rules and
 // the per-user prices are fetched side by side, and only used if the
@@ -200,7 +198,7 @@ export async function getPricingForPagesRequest(req: NextApiRequest, catalog?: C
 
 // Same, from the auth cookie's value (for app-router routes).
 export async function getPricingForToken(token: string | undefined, catalog?: CatalogKind): Promise<RequestPricing> {
-  if (!token) return NO_PRICING;
+  if (!token) return ENDED;
   const user = verifyToken(token);
   if (!user) return ENDED;
   const [session, rules, userPrices] = await Promise.all([
